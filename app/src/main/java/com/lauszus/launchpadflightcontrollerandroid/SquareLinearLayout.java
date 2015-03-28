@@ -18,24 +18,22 @@
 
 package com.lauszus.launchpadflightcontrollerandroid;
 
-import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.LinearLayout;
 
+public class SquareLinearLayout extends LinearLayout {
+    public SquareLinearLayout(Context context) {
+        super(context);
+    }
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class LaunchPadFlightControllerActivityFragment extends Fragment {
-
-    public LaunchPadFlightControllerActivityFragment() {
+    public SquareLinearLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_launch_pad_flight_controller, container, false);
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec); // Make the layout square
+        setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth());
     }
 }
