@@ -26,10 +26,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.cardiomood.android.controls.gauge.SpeedometerGauge;
+import com.cardiomood.android.speedometer.SpeedometerView;
 
 public class InfoFragment extends Fragment {
-    private SpeedometerGauge mSpeed;
+    private SpeedometerView mSpeed;
 
     TextView mCurrentDraw, mTurning, mBatteryLevel, mRunTime;
 
@@ -41,14 +41,14 @@ public class InfoFragment extends Fragment {
             throw new RuntimeException();
 
         // Customize SpeedometerView
-        mSpeed = (SpeedometerGauge) v.findViewById(R.id.speedometer);
+        mSpeed = (SpeedometerView) v.findViewById(R.id.speedometer);
         mCurrentDraw = (TextView) v.findViewById(R.id.current);
         mTurning = (TextView) v.findViewById(R.id.turning);
         mBatteryLevel = (TextView) v.findViewById(R.id.battery);
         mRunTime = (TextView) v.findViewById(R.id.runTime);
 
         // Add label converter
-        mSpeed.setLabelConverter(new SpeedometerGauge.LabelConverter() {
+        mSpeed.setLabelConverter(new SpeedometerView.LabelConverter() {
             @Override
             public String getLabelFor(double progress, double maxProgress) {
                 return String.valueOf((int) Math.round(progress));

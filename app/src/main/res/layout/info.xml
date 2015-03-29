@@ -116,7 +116,7 @@
             android:textIsSelectable="false" />
 
         <!-- PWM -->
-        <com.cardiomood.android.controls.gauge.SpeedometerGauge
+        <com.cardiomood.android.speedometer.SpeedometerView
             android:id="@+id/speedometer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
