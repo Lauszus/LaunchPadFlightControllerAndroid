@@ -16,7 +16,7 @@
  * e-mail   :  kristianl@tkjelectronics.com
  ******************************************************************************/
 
-package com.lauszus.launchpadflightcontrollerandroid;
+package com.lauszus.launchpadflightcontrollerandroid.app;
 
 import android.content.Context;
 import android.util.AttributeSet;

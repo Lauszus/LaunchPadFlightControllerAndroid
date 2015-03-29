@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package com.lauszus.launchpadflightcontrollerandroid;
-
+package com.lauszus.launchpadflightcontrollerandroid.app;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -38,7 +37,7 @@ import java.util.UUID;
 public class BluetoothChatService {
     // Debugging
     private static final String TAG = "BluetoothChatService";
-    private static final boolean D = BalancingRobotFullSizeActivity.D;
+    private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     // RFCOMM/SPP UUID
     private static final UUID UUID_RFCOMM_GENERIC = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -86,7 +85,7 @@ public class BluetoothChatService {
             Log.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_STATE_CHANGE, state,
+        mHandler.obtainMessage(LaunchPadFlightControllerActivity.MESSAGE_STATE_CHANGE, state,
                 -1).sendToTarget();
     }
 
@@ -179,9 +178,9 @@ public class BluetoothChatService {
         mConnectedThread.start();
 
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_DEVICE_NAME);
+        Message msg = mHandler.obtainMessage(LaunchPadFlightControllerActivity.MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
-        bundle.putString(BalancingRobotFullSizeActivity.DEVICE_NAME, device.getName());
+        bundle.putString(LaunchPadFlightControllerActivity.DEVICE_NAME, device.getName());
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -243,12 +242,12 @@ public class BluetoothChatService {
         if (nRetries < MAX_RETRIES) { // There is a bug in the Android core, so we need to connect twice for it to work all every time
             nRetries++;
             // Send a retry message back to the Activity
-            msg = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_RETRY);
+            msg = mHandler.obtainMessage(LaunchPadFlightControllerActivity.MESSAGE_RETRY);
         } else {
             // Send a failure message back to the Activity
-            msg = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_DISCONNECTED);
+            msg = mHandler.obtainMessage(LaunchPadFlightControllerActivity.MESSAGE_DISCONNECTED);
             Bundle bundle = new Bundle();
-            bundle.putString(BalancingRobotFullSizeActivity.TOAST, "Unable to connect to device");
+            bundle.putString(LaunchPadFlightControllerActivity.TOAST, "Unable to connect to device");
             msg.setData(bundle);
         }
         if (!newConnection) {
@@ -262,9 +261,9 @@ public class BluetoothChatService {
      */
     private void connectionLost() { // Send a failure message back to the Activity
         setState(STATE_NONE);
-        Message msg = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_DISCONNECTED);
+        Message msg = mHandler.obtainMessage(LaunchPadFlightControllerActivity.MESSAGE_DISCONNECTED);
         Bundle bundle = new Bundle();
-        bundle.putString(BalancingRobotFullSizeActivity.TOAST, "Device connection was lost");
+        bundle.putString(LaunchPadFlightControllerActivity.TOAST, "Device connection was lost");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -274,9 +273,9 @@ public class BluetoothChatService {
 
     private void disconnectSuccess() {
         // Send a success message back to the Activity
-        Message msg = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_DISCONNECTED);
+        Message msg = mHandler.obtainMessage(LaunchPadFlightControllerActivity.MESSAGE_DISCONNECTED);
         Bundle bundle = new Bundle();
-        bundle.putString(BalancingRobotFullSizeActivity.TOAST, "Disconnected successfully");
+        bundle.putString(LaunchPadFlightControllerActivity.TOAST, "Disconnected successfully");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 

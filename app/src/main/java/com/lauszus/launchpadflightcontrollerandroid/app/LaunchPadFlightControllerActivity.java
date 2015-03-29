@@ -16,31 +16,36 @@
  * e-mail   :  kristianl@tkjelectronics.com
  ******************************************************************************/
 
-package com.lauszus.launchpadflightcontrollerandroid;
+package com.lauszus.launchpadflightcontrollerandroid.app;
 
-import android.support.v7.app.ActionBarActivity;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.viewpagerindicator.UnderlinePageIndicator;
+
 import java.lang.ref.WeakReference;
 
-public class LaunchPadFlightControllerActivity extends ActionBarActivity {
-    private static final String TAG = "BalancingRobotFullSizeActivity";
+public class LaunchPadFlightControllerActivity extends ActionBarActivity implements ActionBar.TabListener {
+    private static final String TAG = "LaunchPadFlightControllerActivity";
     public static final boolean D = BuildConfig.DEBUG; // This is automatically set when building
 
     // Message types sent from the BluetoothChatService Handler
@@ -102,7 +107,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_balancing_robot_full_size);
+        setContentView(R.layout.activity_launch_pad_flight_controller);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -110,7 +115,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity {
 
         // Get local Bluetooth adapter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            mBluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+            mBluetoothAdapter = (BluetoothAdapter) getSystemService(Context.BLUETOOTH_SERVICE);
         else
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -233,7 +238,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getSupportMenuInflater().inflate(R.menu.balancing_robot_full_size, menu);
+        getMenuInflater().inflate(R.menu.menu_launch_pad_flight_controller, menu);
         return true;
     }
 
@@ -358,67 +363,67 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity {
         }
     }
 
-    public SherlockFragment getFragment(int item) {
-        return (SherlockFragment)mViewPagerAdapter.instantiateItem(mViewPager, item);
+    public Fragment getFragment(int item) {
+        return (Fragment) mViewPagerAdapter.instantiateItem(mViewPager, item);
     }
 
     // The Handler class that gets information back from the BluetoothChatService
     private static class BluetoothHandler extends Handler {
-        private final WeakReference<BalancingRobotFullSizeActivity> mActivity; // See: http://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
+        private final WeakReference<LaunchPadFlightControllerActivity> mActivity; // See: http://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
         PIDFragment pidFragment;
         InfoFragment infoFragment;
         GraphFragment graphFragment;
         private String mConnectedDeviceName; // Name of the connected device
 
-        BluetoothHandler(BalancingRobotFullSizeActivity activity) {
-            mActivity  = new WeakReference<BalancingRobotFullSizeActivity>(activity);
+        BluetoothHandler(LaunchPadFlightControllerActivity activity) {
+            mActivity  = new WeakReference<LaunchPadFlightControllerActivity>(activity);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
-            if (mBalancingRobotFullSizeActivity == null)
+            LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
+            if (mLaunchPadFlightControllerActivity == null)
                 return;
             switch (msg.what) {
                 case MESSAGE_STATE_CHANGE:
-                    mBalancingRobotFullSizeActivity.supportInvalidateOptionsMenu();
+                    mLaunchPadFlightControllerActivity.supportInvalidateOptionsMenu();
                     if (D)
                         Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
                     switch (msg.arg1) {
                         case BluetoothChatService.STATE_CONNECTED:
-                            mBalancingRobotFullSizeActivity.showToast(mBalancingRobotFullSizeActivity.getString(R.string.connected_to) + " " + mConnectedDeviceName, Toast.LENGTH_SHORT);
-                            if (mBalancingRobotFullSizeActivity.mChatService == null)
+                            mLaunchPadFlightControllerActivity.showToast(mLaunchPadFlightControllerActivity.getString(R.string.connected_to) + " " + mConnectedDeviceName, Toast.LENGTH_SHORT);
+                            if (mLaunchPadFlightControllerActivity.mChatService == null)
                                 return;
                             Handler mHandler = new Handler();
                             mHandler.postDelayed(new Runnable() {
                                 public void run() {
-                                    BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
-                                    if (mBalancingRobotFullSizeActivity != null) {
-                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getPID();
-                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getTarget();
-                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getTurning();
-                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getKalman();
+                                    LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
+                                    if (mLaunchPadFlightControllerActivity != null) {
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPID();
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getTarget();
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getTurning();
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getKalman();
                                     }
                                 }
                             }, 1000); // Wait 1 second before sending the message
 
-                            if (mBalancingRobotFullSizeActivity.checkTab(ViewPagerAdapter.INFO_FRAGMENT)) {
+                            if (mLaunchPadFlightControllerActivity.checkTab(ViewPagerAdapter.INFO_FRAGMENT)) {
                                 mHandler.postDelayed(new Runnable() {
                                     public void run() {
-                                        BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
-                                        if (mBalancingRobotFullSizeActivity != null)
-                                            mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.startInfo(); // Request info
+                                        LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
+                                        if (mLaunchPadFlightControllerActivity != null)
+                                            mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.startInfo(); // Request info
                                     }
                                 }, 2000); // Wait 2 seconds before sending the message
-                            } else if (mBalancingRobotFullSizeActivity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
+                            } else if (mLaunchPadFlightControllerActivity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
                                 mHandler.postDelayed(new Runnable() {
                                     public void run() {
-                                        BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
-                                        if (mBalancingRobotFullSizeActivity != null) {
+                                        LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
+                                        if (mLaunchPadFlightControllerActivity != null) {
                                             if (GraphFragment.mToggleButton.isChecked())
-                                                mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.startImu(); // Request data
+                                                mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.startImu(); // Request data
                                             else
-                                                mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
+                                                mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
                                         }
                                     }
                                 }, 2000); // Wait 2 seconds before sending the message
@@ -427,7 +432,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity {
                         case BluetoothChatService.STATE_CONNECTING:
                             break;
                     }
-                    pidFragment = (PIDFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
+                    pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                     if (pidFragment != null)
                         pidFragment.updateButton();
                     break;
@@ -435,7 +440,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity {
                 case MESSAGE_READ:
                     Bundle data = msg.getData();
                     if (data != null) {
-                        pidFragment = (PIDFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
+                        pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                         if (pidFragment != null) {
                             if (data.containsKey(KP_VALUE) && data.containsKey(KI_VALUE) && data.containsKey(KD_VALUE))
                                 pidFragment.updatePID(data.getString(KP_VALUE), data.getString(KI_VALUE), data.getString(KD_VALUE));
@@ -446,19 +451,19 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity {
                         }
 
                         if (data.containsKey(SPEED_VALUE) && data.containsKey(CURRENT_DRAW) && data.containsKey(TURNING_VALUE) && data.containsKey(BATTERY_LEVEL) && data.containsKey(RUN_TIME)) {
-                            infoFragment = (InfoFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.INFO_FRAGMENT);
+                            infoFragment = (InfoFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.INFO_FRAGMENT);
                             if (infoFragment != null)
                                 infoFragment.updateView(data.getInt(SPEED_VALUE), data.getInt(CURRENT_DRAW), data.getInt(TURNING_VALUE), data.getInt(BATTERY_LEVEL), data.getLong(RUN_TIME));
                         }
 
                         if (data.containsKey(QANGLE_VALUE) && data.containsKey(QBIAS_VALUE) && data.containsKey(RMEASURE_VALUE)) {
-                            graphFragment = (GraphFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.GRAPH_FRAGMENT);
+                            graphFragment = (GraphFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.GRAPH_FRAGMENT);
                             if (graphFragment != null)
                                 graphFragment.updateKalman(data.getString(QANGLE_VALUE), data.getString(QBIAS_VALUE), data.getString(RMEASURE_VALUE));
                         }
 
                         if (data.containsKey(ACC_ANGLE) && data.containsKey(GYRO_ANGLE) && data.containsKey(KALMAN_ANGLE)) {
-                            graphFragment = (GraphFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.GRAPH_FRAGMENT);
+                            graphFragment = (GraphFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.GRAPH_FRAGMENT);
                             if (graphFragment != null)
                                 graphFragment.updateIMUValues(data.getString(ACC_ANGLE), data.getString(GYRO_ANGLE), data.getString(KALMAN_ANGLE));
                         }
@@ -469,51 +474,19 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity {
                         mConnectedDeviceName = msg.getData().getString(DEVICE_NAME); // Save the connected device's name
                     break;
                 case MESSAGE_DISCONNECTED:
-                    mBalancingRobotFullSizeActivity.supportInvalidateOptionsMenu();
-                    pidFragment = (PIDFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
+                    mLaunchPadFlightControllerActivity.supportInvalidateOptionsMenu();
+                    pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                     if (pidFragment != null)
                         pidFragment.updateButton();
                     if (msg.getData() != null)
-                        mBalancingRobotFullSizeActivity.showToast(msg.getData().getString(TOAST), Toast.LENGTH_SHORT);
+                        mLaunchPadFlightControllerActivity.showToast(msg.getData().getString(TOAST), Toast.LENGTH_SHORT);
                     break;
                 case MESSAGE_RETRY:
                     if (D)
                         Log.d(TAG, "MESSAGE_RETRY");
-                    mBalancingRobotFullSizeActivity.connectDevice(null, true);
+                    mLaunchPadFlightControllerActivity.connectDevice(null, true);
                     break;
             }
         }
     }
 }
-
-/*
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_launch_pad_flight_controller);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_launch_pad_flight_controller, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-*/

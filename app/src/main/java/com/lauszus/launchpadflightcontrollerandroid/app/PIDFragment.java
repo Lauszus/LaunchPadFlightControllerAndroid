@@ -16,11 +16,11 @@
  * e-mail   :  kristianl@tkjelectronics.com
  ******************************************************************************/
 
-package com.lauszus.launchpadflightcontrollerandroid;
-
+package com.lauszus.launchpadflightcontrollerandroid.app;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +30,9 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-public class PIDFragment extends SherlockFragment {
+public class PIDFragment extends Fragment {
     private static final String TAG = "PIDFragment";
-    private static final boolean D = BalancingRobotFullSizeActivity.D;
+    private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     Button mButton;
     TextView mKpView, mKiView, mKdView, mTargetAngleView, mTurningView;
@@ -132,7 +130,7 @@ public class PIDFragment extends SherlockFragment {
         mButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+                LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                 if (activity == null || activity.mChatService == null) {
                     if (D)
                         Log.e(TAG, "mChatService == null");
@@ -145,7 +143,7 @@ public class PIDFragment extends SherlockFragment {
                         oldKdValue = mKdSeekBarValue.getText();
                         mHandler.post(new Runnable() {
                             public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+                                LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                                 if (activity != null)
                                     activity.mChatService.mBluetoothProtocol.setPID((int) (Float.parseFloat(mKpSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKiSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKdSeekBarValue.getText().toString()) * 100.0f));
                             }
@@ -153,7 +151,7 @@ public class PIDFragment extends SherlockFragment {
                         counter += 25;
                         mHandler.post(new Runnable() {
                             public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+                                LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                                 if (activity != null)
                                     activity.mChatService.mBluetoothProtocol.getPID();
                             }
@@ -165,7 +163,7 @@ public class PIDFragment extends SherlockFragment {
                         oldTargetAngleValue = mTargetAngleSeekBarValue.getText();
                         mHandler.postDelayed(new Runnable() {
                             public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+                                LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                                 if (activity != null)
                                     activity.mChatService.mBluetoothProtocol.setTarget((int) (Float.parseFloat(mTargetAngleSeekBarValue.getText().toString()) * 100.0f) ); // The SeekBar can't handle negative numbers, do this to convert it
                             }
@@ -173,7 +171,7 @@ public class PIDFragment extends SherlockFragment {
                         counter += 25;
                         mHandler.postDelayed(new Runnable() {
                             public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+                                LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                                 if (activity != null)
                                     activity.mChatService.mBluetoothProtocol.getTarget();
                             }
@@ -185,7 +183,7 @@ public class PIDFragment extends SherlockFragment {
                         oldTurningValue = mTurningSeekBarValue.getText();
                         mHandler.postDelayed(new Runnable() {
                             public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+                                LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                                 if (activity != null)
                                     activity.mChatService.mBluetoothProtocol.setTurning(Byte.parseByte(mTurningSeekBarValue.getText().toString()));
                             }
@@ -193,7 +191,7 @@ public class PIDFragment extends SherlockFragment {
                         counter += 25;
                         mHandler.postDelayed(new Runnable() {
                             public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+                                LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                                 if (activity != null)
                                     activity.mChatService.mBluetoothProtocol.getTurning();
                             }
@@ -324,7 +322,7 @@ public class PIDFragment extends SherlockFragment {
     }
 
     public void updateButton() {
-        BalancingRobotFullSizeActivity activity = ((BalancingRobotFullSizeActivity) getActivity());
+        LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
         if (activity != null && activity.mChatService != null && mButton != null) {
             if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED)
                 mButton.setText(R.string.updateValues);
@@ -337,7 +335,7 @@ public class PIDFragment extends SherlockFragment {
     public void onResume() {
         super.onResume();
         // When the user resumes the view, then set the values again
-        BalancingRobotFullSizeActivity activity = ((BalancingRobotFullSizeActivity) getActivity());
+        LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
         if (activity != null && activity.mChatService != null)
             updateButton();
     }

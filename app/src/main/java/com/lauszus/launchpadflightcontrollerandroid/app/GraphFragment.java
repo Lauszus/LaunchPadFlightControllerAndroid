@@ -16,10 +16,11 @@
  * e-mail   :  kristianl@tkjelectronics.com
  ******************************************************************************/
 
-package com.lauszus.launchpadflightcontrollerandroid;
+package com.lauszus.launchpadflightcontrollerandroid.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -40,9 +40,9 @@ import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.LineGraphView;
 
 // TODO: Remove static
-public class GraphFragment extends SherlockFragment {
+public class GraphFragment extends Fragment {
     private static final String TAG = "GraphFragment";
-    private static final boolean D = BalancingRobotFullSizeActivity.D;
+    private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     private static LineGraphView graphView;
     private static GraphViewSeries accSeries, gyroSeries, kalmanSeries;
@@ -160,7 +160,7 @@ public class GraphFragment extends SherlockFragment {
                 else
                     mToggleButton.setText("Start");
 
-                BalancingRobotFullSizeActivity activity = ((BalancingRobotFullSizeActivity) getActivity());
+                LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
                 if (activity != null && activity.mChatService != null) {
                     if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED && activity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
                         if (((ToggleButton) v).isChecked())
@@ -179,7 +179,7 @@ public class GraphFragment extends SherlockFragment {
         mButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                BalancingRobotFullSizeActivity activity = ((BalancingRobotFullSizeActivity) getActivity());
+                LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
                 if (activity == null || activity.mChatService == null) {
                     if (D)
                         Log.e(TAG, "mChatService == null");
@@ -244,7 +244,7 @@ public class GraphFragment extends SherlockFragment {
         else
             mToggleButton.setText("Start");
 
-        BalancingRobotFullSizeActivity activity = ((BalancingRobotFullSizeActivity) getActivity());
+        LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
         if (activity != null && activity.mChatService != null && activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED && activity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
             if (mToggleButton.isChecked())
                 activity.mChatService.mBluetoothProtocol.startImu(); // Request data

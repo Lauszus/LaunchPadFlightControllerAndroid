@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.lauszus.launchpadflightcontrollerandroid;
+package com.lauszus.launchpadflightcontrollerandroid.app;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -48,7 +47,7 @@ import java.util.Set;
 public class DeviceListActivity extends Activity {
     // Debugging
     private static final String TAG = "DeviceListActivity";
-    private static final boolean D = BalancingRobotFullSizeActivity.D;
+    private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     // Return Intent extra
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
@@ -67,7 +66,7 @@ public class DeviceListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_list);
 
-        BalancingRobotFullSizeActivity.stopRetrying = true; // Stop retrying connecting to another device
+        LaunchPadFlightControllerActivity.stopRetrying = true; // Stop retrying connecting to another device
 
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
@@ -106,7 +105,7 @@ public class DeviceListActivity extends Activity {
 
         // Get the local Bluetooth adapter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            mBtAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+            mBtAdapter = (BluetoothAdapter) getSystemService(Context.BLUETOOTH_SERVICE);
         else
             mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 

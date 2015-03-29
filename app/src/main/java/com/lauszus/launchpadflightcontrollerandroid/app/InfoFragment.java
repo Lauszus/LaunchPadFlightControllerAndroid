@@ -16,20 +16,20 @@
  * e-mail   :  kristianl@tkjelectronics.com
  ******************************************************************************/
 
-package com.lauszus.launchpadflightcontrollerandroid;
+package com.lauszus.launchpadflightcontrollerandroid.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.cardiomood.android.speedometer.SpeedometerView;
+import com.cardiomood.android.controls.gauge.SpeedometerGauge;
 
-public class InfoFragment extends SherlockFragment {
-    private SpeedometerView mSpeed;
+public class InfoFragment extends Fragment {
+    private SpeedometerGauge mSpeed;
 
     TextView mCurrentDraw, mTurning, mBatteryLevel, mRunTime;
 
@@ -41,14 +41,14 @@ public class InfoFragment extends SherlockFragment {
             throw new RuntimeException();
 
         // Customize SpeedometerView
-        mSpeed = (SpeedometerView) v.findViewById(R.id.speedometer);
+        mSpeed = (SpeedometerGauge) v.findViewById(R.id.speedometer);
         mCurrentDraw = (TextView) v.findViewById(R.id.current);
         mTurning = (TextView) v.findViewById(R.id.turning);
         mBatteryLevel = (TextView) v.findViewById(R.id.battery);
         mRunTime = (TextView) v.findViewById(R.id.runTime);
 
         // Add label converter
-        mSpeed.setLabelConverter(new SpeedometerView.LabelConverter() {
+        mSpeed.setLabelConverter(new SpeedometerGauge.LabelConverter() {
             @Override
             public String getLabelFor(double progress, double maxProgress) {
                 return String.valueOf((int) Math.round(progress));
@@ -71,7 +71,7 @@ public class InfoFragment extends SherlockFragment {
     public void updateView(int speed, int current, int turning, int batteryLevel, long runTime) {
         // TODO: Implement this properly
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) // Animation is only supported on API level >= 11
-            mSpeed.setSpeed((float)speed / 100.0f + 0.001, 500, 50);
+            mSpeed.setSpeed((float)speed / 100.0f, 500, 50);
         else*/
             mSpeed.setSpeed((float)speed / 100.0f);
 
@@ -96,7 +96,7 @@ public class InfoFragment extends SherlockFragment {
     public void onResume() {
         super.onResume();
 
-        BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+        LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
         if (activity != null && activity.mChatService != null && activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED && activity.checkTab(ViewPagerAdapter.INFO_FRAGMENT))
             activity.mChatService.mBluetoothProtocol.startInfo(); // Request data
     }

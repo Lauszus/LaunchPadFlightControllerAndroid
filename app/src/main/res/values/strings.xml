@@ -1,5 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Activity string -->
     <string name="app_name">LaunchPadFlightControllerAndroid</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving The application!</string>
+    <string name="connecting">Connecting&#8230;</string>
+    <string name="connected_to">Connected to:</string>
+    <string name="button">Connect to a device first</string>
+
+    <!-- Options Menu -->
+    <string name="action_connect">Connect</string>
     <string name="action_settings">Settings</string>
+
+    <!--  DeviceListActivity -->
+    <string name="scanning">Scanning for devices&#8230;</string>
+    <string name="select_device">Select a device to connect</string>
+    <string name="none_paired">No devices have been paired</string>
+    <string name="none_found">No devices found</string>
+    <string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="button_scan">Scan for devices</string>
+
+    <!-- Info Fragment -->
+    <string name="manufacturer">by Mads Bornebusch and Kristian Lauszus</string>
+    <string name="currentDraw">Current draw:</string>
+    <string name="turningValue">Turning value:</string>
+    <string name="battery">Battery level:</string>
+    <string name="runTime">Run time:</string>
+
+    <!-- PID Fragment -->
+    <string name="Kp">P:</string>
+    <string name="Ki">I:</string>
+    <string name="Kd">D:</string>
+    <string name="targetAngle">Target Angle:</string>
+    <string name="turningScale">Turning scale:</string>
+    <string name="currentValues">Current Values:</string>
+    <string name="adjustValues">Adjust Values:</string>
+    <string name="updateValues">Press to update PID values</string>
+
+    <!-- Graph Fragment -->
+    <string name="acc">Accelerometer</string>
+    <string name="gyro">Gyro</string>
+    <string name="kalman">Kalman filter</string>
+    <string name="Qangle">Q<small><small>angle</small></small></string>
+    <string name="Qbias">Q<small><small>bias</small></small></string>
+    <string name="Rmeasure">R<small><small>measure</small></small></string>
+    <string name="update">Update</string>
+
 </resources>

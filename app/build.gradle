@@ -5,7 +5,7 @@ android {
     buildToolsVersion '22.0.1'
 
     defaultConfig {
-        applicationId "com.lauszus.launchpadflightcontrollerandroid"
+        applicationId "com.lauszus.launchpadflightcontrollerandroid.app"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
@@ -24,6 +24,10 @@ android {
 }
 
 dependencies {
+    compile 'fr.baloomba:viewpagerindicator:2.4.2'
+    compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.jjoe64:graphview:3.1.4'
+    compile 'com.cardiomood.android:android-widgets:0.1.1'
     compile 'com.android.support:appcompat-v7:22.0.0'
 }
 

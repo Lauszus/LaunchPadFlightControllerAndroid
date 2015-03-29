@@ -1,5 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="margin">10dp</dimen>
+
+    <!-- Up and down arrow buttons -->
+    <dimen name="arrow_size">35dp</dimen>
+    <dimen name="arrow_margin">5sp</dimen>
+    <dimen name="arrow_down_margin_top">9sp</dimen>
+    <dimen name="arrow_up_margin_bottom">9sp</dimen>
 </resources>

@@ -49,4 +49,4 @@ build
 .DS_Store
 
 # Hide the Google Maps API key
-#app/src/main/res/values/private.xml
+app/src/main/res/values/private.xml
