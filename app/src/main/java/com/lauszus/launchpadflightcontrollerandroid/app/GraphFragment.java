@@ -41,7 +41,7 @@ import com.jjoe64.graphview.LineGraphView;
 
 // TODO: Remove static
 public class GraphFragment extends Fragment {
-    private static final String TAG = "GraphFragment";
+    private static final String TAG = GraphFragment.class.getSimpleName();
     private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     private static LineGraphView graphView;

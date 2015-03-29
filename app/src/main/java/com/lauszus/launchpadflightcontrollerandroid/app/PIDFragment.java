@@ -31,7 +31,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class PIDFragment extends Fragment {
-    private static final String TAG = "PIDFragment";
+    private static final String TAG = PIDFragment.class.getSimpleName();
     private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     Button mButton;

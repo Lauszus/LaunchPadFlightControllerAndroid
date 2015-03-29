@@ -46,7 +46,7 @@ import com.viewpagerindicator.UnderlinePageIndicator;
 import java.lang.ref.WeakReference;
 
 public class LaunchPadFlightControllerActivity extends ActionBarActivity implements ActionBar.TabListener {
-    private static final String TAG = "LaunchPadFlight";
+    private static final String TAG = LaunchPadFlightControllerActivity.class.getSimpleName();
     public static final boolean D = BuildConfig.DEBUG; // This is automatically set when building
 
     // Message types sent from the BluetoothChatService Handler

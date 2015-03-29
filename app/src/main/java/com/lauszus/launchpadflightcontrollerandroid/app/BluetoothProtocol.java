@@ -26,7 +26,7 @@ import android.util.Log;
 
 public class BluetoothProtocol {
     // Debugging
-    private static final String TAG = "BluetoothProtocol";
+    private static final String TAG = BluetoothProtocol.class.getSimpleName();
     private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     static final byte SET_PID = 0;

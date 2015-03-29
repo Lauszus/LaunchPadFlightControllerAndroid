@@ -36,7 +36,7 @@ import java.util.UUID;
  */
 public class BluetoothChatService {
     // Debugging
-    private static final String TAG = "BluetoothChatService";
+    private static final String TAG = BluetoothChatService.class.getSimpleName();
     private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     // RFCOMM/SPP UUID

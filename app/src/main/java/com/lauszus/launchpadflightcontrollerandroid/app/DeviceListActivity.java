@@ -47,7 +47,7 @@ import java.util.Set;
  */
 public class DeviceListActivity extends Activity {
     // Debugging
-    private static final String TAG = "DeviceListActivity";
+    private static final String TAG = DeviceListActivity.class.getSimpleName();
     private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     // Return Intent extra
