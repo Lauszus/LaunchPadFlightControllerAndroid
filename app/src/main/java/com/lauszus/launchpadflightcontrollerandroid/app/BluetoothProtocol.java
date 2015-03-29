@@ -65,9 +65,10 @@ public class BluetoothProtocol {
 
     /**
      * Set PID values. All floats/doubles are multiplied by 100.0 before sending.
-     * @param Kp    Kp value.
-     * @param Ki    Ki value.
-     * @param Kd    Kd value.
+     *
+     * @param Kp Kp value.
+     * @param Ki Ki value.
+     * @param Kd Kd value.
      */
     public void setPID(int Kp, int Ki, int Kd) {
         if (D)
@@ -76,17 +77,19 @@ public class BluetoothProtocol {
         byte output[] = {
                 SET_PID, // Cmd
                 6, // Length
-                (byte)(Kp & 0xFF),
-                (byte)(Kp >> 8),
-                (byte)(Ki & 0xFF),
-                (byte)(Ki >> 8),
-                (byte)(Kd & 0xFF),
-                (byte)(Kd >> 8),
+                (byte) (Kp & 0xFF),
+                (byte) (Kp >> 8),
+                (byte) (Ki & 0xFF),
+                (byte) (Ki >> 8),
+                (byte) (Kd & 0xFF),
+                (byte) (Kd >> 8),
         };
         sendCommand(output); // Set PID values
     }
 
-    /** Use this to request PID values. */
+    /**
+     * Use this to request PID values.
+     */
     public void getPID() {
         byte output[] = {
                 GET_PID, // Cmd
@@ -97,7 +100,8 @@ public class BluetoothProtocol {
 
     /**
      * Set the target angle of the robot. All floats/doubles are multiplied by 100.0 before sending.
-     * @param targetAngle   Target angle value.
+     *
+     * @param targetAngle Target angle value.
      */
     public void setTarget(int targetAngle) {
         if (D)
@@ -106,8 +110,8 @@ public class BluetoothProtocol {
         byte output[] = {
                 SET_TARGET, // Cmd
                 2, // Length
-                (byte)(targetAngle & 0xFF),
-                (byte)(targetAngle >> 8),
+                (byte) (targetAngle & 0xFF),
+                (byte) (targetAngle >> 8),
         };
         sendCommand(output); // Set PID values
     }
@@ -121,6 +125,9 @@ public class BluetoothProtocol {
     }
 
     public void setTurning(byte turningValue) {
+        if (D)
+            Log.i(TAG, "setTurning " + turningValue);
+
         byte output[] = {
                 SET_TURNING, // Cmd
                 1, // Length
@@ -140,21 +147,24 @@ public class BluetoothProtocol {
     /**
      * Set the Kalman coeficients. All floats/doubles are multiplied by 10000.0 before sending.
      * See: http://blog.tkjelectronics.dk/2012/09/a-practical-approach-to-kalman-filter-and-how-to-implement-it/.
-     * @param Qangle    Qangle
-     * @param Qbias     Qbias
-     * @param Rmeasure  Rmeasure
+     *
+     * @param Qangle   Qangle
+     * @param Qbias    Qbias
+     * @param Rmeasure Rmeasure
      */
-
     public void setKalman(int Qangle, int Qbias, int Rmeasure) {
+        if (D)
+            Log.i(TAG, "setKalman " + Qangle + " " + Qbias + " " + Rmeasure);
+
         byte output[] = {
                 SET_KALMAN, // Cmd
                 6, // Length
-                (byte)(Qangle & 0xFF),
-                (byte)(Qangle >> 8),
-                (byte)(Qbias & 0xFF),
-                (byte)(Qbias >> 8),
-                (byte)(Rmeasure & 0xFF),
-                (byte)(Rmeasure >> 8),
+                (byte) (Qangle & 0xFF),
+                (byte) (Qangle >> 8),
+                (byte) (Qbias & 0xFF),
+                (byte) (Qbias >> 8),
+                (byte) (Rmeasure & 0xFF),
+                (byte) (Rmeasure >> 8),
         };
         sendCommand(output); // Set PID values
     }
@@ -259,9 +269,9 @@ public class BluetoothProtocol {
                         int Kd = input[4] | (input[5] << 8);
 
                         // TODO: Just store this as an int
-                        bundle.putString(LaunchPadFlightControllerActivity.KP_VALUE, String.format("%.2f", (float)Kp / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.KI_VALUE, String.format("%.2f", (float)Ki / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.KD_VALUE, String.format("%.2f", (float)Kd / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.KP_VALUE, String.format("%.2f", (float) Kp / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.KI_VALUE, String.format("%.2f", (float) Ki / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.KD_VALUE, String.format("%.2f", (float) Kd / 100.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
@@ -273,7 +283,7 @@ public class BluetoothProtocol {
                         int target = input[0] | ((byte) input[1] << 8); // This can be negative as well
 
                         // TODO: Just store this as an int
-                        bundle.putString(LaunchPadFlightControllerActivity.TARGET_ANGLE, String.format("%.2f", (float)target / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.TARGET_ANGLE, String.format("%.2f", (float) target / 100.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
@@ -281,7 +291,6 @@ public class BluetoothProtocol {
                         if (D)
                             Log.i(TAG, "Target: " + Integer.toString(target));
                         break;
-
                     case GET_TURNING:
                         bundle.putInt(LaunchPadFlightControllerActivity.TURNING_SCALE, input[0]);
 
@@ -296,9 +305,9 @@ public class BluetoothProtocol {
                         int Qbias = input[2] | (input[3] << 8);
                         int Rmeasure = input[4] | (input[5] << 8);
 
-                        bundle.putString(LaunchPadFlightControllerActivity.QANGLE_VALUE, String.format("%.4f", (float)Qangle / 10000.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.QBIAS_VALUE, String.format("%.4f", (float)Qbias / 10000.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.RMEASURE_VALUE, String.format("%.4f", (float)Rmeasure / 10000.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.QANGLE_VALUE, String.format("%.4f", (float) Qangle / 10000.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.QBIAS_VALUE, String.format("%.4f", (float) Qbias / 10000.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.RMEASURE_VALUE, String.format("%.4f", (float) Rmeasure / 10000.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
@@ -311,7 +320,7 @@ public class BluetoothProtocol {
                         int current = input[2] | ((byte) input[3] << 8); // This can be negative as well
                         int turning = input[4] | ((byte) input[5] << 8); // This can be negative as well
                         int battery = input[6] | (input[7] << 8);
-                        long runTime = input[8] | (input[9] << 8) | ((long)input[10] << 16) | ((long)input[11] << 24);
+                        long runTime = input[8] | (input[9] << 8) | ((long) input[10] << 16) | ((long) input[11] << 24);
 
                         bundle.putInt(LaunchPadFlightControllerActivity.SPEED_VALUE, speed);
                         bundle.putInt(LaunchPadFlightControllerActivity.CURRENT_DRAW, current);
@@ -330,9 +339,9 @@ public class BluetoothProtocol {
                         int gyro = input[2] | ((byte) input[3] << 8); // This can be negative as well
                         int kalman = input[4] | ((byte) input[5] << 8); // This can be negative as well
 
-                        bundle.putString(LaunchPadFlightControllerActivity.ACC_ANGLE, String.format("%.2f", (float)acc / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.GYRO_ANGLE, String.format("%.2f", (float)gyro / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.KALMAN_ANGLE, String.format("%.2f", (float)kalman / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.ACC_ANGLE, String.format("%.2f", (float) acc / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.GYRO_ANGLE, String.format("%.2f", (float) gyro / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.KALMAN_ANGLE, String.format("%.2f", (float) kalman / 100.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
@@ -355,7 +364,6 @@ public class BluetoothProtocol {
         }
     }
 
-    // TODO: Combine these two
     private byte getChecksum(byte data[]) {
         byte checksum = 0;
         for (byte val : data)
