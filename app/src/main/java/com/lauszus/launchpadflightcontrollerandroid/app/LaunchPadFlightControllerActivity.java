@@ -22,6 +22,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -45,7 +46,7 @@ import com.viewpagerindicator.UnderlinePageIndicator;
 import java.lang.ref.WeakReference;
 
 public class LaunchPadFlightControllerActivity extends ActionBarActivity implements ActionBar.TabListener {
-    private static final String TAG = "LaunchPadFlightControllerActivity";
+    private static final String TAG = "LaunchPadFlight";
     public static final boolean D = BuildConfig.DEBUG; // This is automatically set when building
 
     // Message types sent from the BluetoothChatService Handler
@@ -115,7 +116,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
 
         // Get local Bluetooth adapter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            mBluetoothAdapter = (BluetoothAdapter) getSystemService(Context.BLUETOOTH_SERVICE);
+            mBluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         else
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 

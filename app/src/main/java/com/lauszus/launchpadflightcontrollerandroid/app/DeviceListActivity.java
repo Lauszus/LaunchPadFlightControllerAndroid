@@ -20,6 +20,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -105,7 +106,7 @@ public class DeviceListActivity extends Activity {
 
         // Get the local Bluetooth adapter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            mBtAdapter = (BluetoothAdapter) getSystemService(Context.BLUETOOTH_SERVICE);
+            mBtAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         else
             mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
