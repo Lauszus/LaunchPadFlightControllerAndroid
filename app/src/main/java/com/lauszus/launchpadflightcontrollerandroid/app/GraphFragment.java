@@ -185,7 +185,7 @@ public class GraphFragment extends Fragment {
                         Log.e(TAG, "mChatService == null");
                     return;
                 }
-                if (mQangle.getText() != null && mQbias.getText() != null && mRmeasure.getText() != null)
+                if (!mQangle.getText().toString().isEmpty() && !mQbias.getText().toString().isEmpty() && !mRmeasure.getText().toString().isEmpty())
                     activity.mChatService.mBluetoothProtocol.setKalman((int) (Float.parseFloat(mQangle.getText().toString()) * 10000.0f), (int) (Float.parseFloat(mQbias.getText().toString()) * 10000.0f), (int) (Float.parseFloat(mRmeasure.getText().toString()) * 10000.0f));
             }
         });
