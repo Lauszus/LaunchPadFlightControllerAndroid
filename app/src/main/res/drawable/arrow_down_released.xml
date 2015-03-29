@@ -8,9 +8,9 @@
         </shape>
     </item>
 
-    <item android:drawable="@android:drawable/arrow_down_float"
+    <item
         android:left="@dimen/arrow_margin"
-        android:right="@dimen/arrow_margin"
-        android:bottom="@dimen/arrow_margin"
-        android:top="@dimen/arrow_down_margin_top" />
+        android:right="@dimen/arrow_margin" >
+        <bitmap android:src="@drawable/ic_find_next_mtrl_alpha" />
+    </item>
 </layer-list>

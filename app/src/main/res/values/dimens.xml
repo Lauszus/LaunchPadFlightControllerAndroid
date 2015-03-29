@@ -8,7 +8,5 @@
 
     <!-- Up and down arrow buttons -->
     <dimen name="arrow_size">35dp</dimen>
-    <dimen name="arrow_margin">5sp</dimen>
-    <dimen name="arrow_down_margin_top">9sp</dimen>
-    <dimen name="arrow_up_margin_bottom">9sp</dimen>
+    <dimen name="arrow_margin">3sp</dimen>
 </resources>
