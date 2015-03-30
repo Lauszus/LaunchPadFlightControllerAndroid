@@ -274,9 +274,8 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
             if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
                 mChatService.mBluetoothProtocol.startInfo();
             else if (checkTab(ViewPagerAdapter.PID_FRAGMENT)) {
-                mChatService.mBluetoothProtocol.getPID();
-                mChatService.mBluetoothProtocol.getTarget();
-                mChatService.mBluetoothProtocol.getTurning();
+                mChatService.mBluetoothProtocol.getPIDRollPitch();
+                mChatService.mBluetoothProtocol.getPIDYaw();
             } else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
                 mChatService.mBluetoothProtocol.getKalman();
                 if (GraphFragment.mToggleButton != null) {
@@ -400,9 +399,8 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                                 public void run() {
                                     LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
                                     if (mLaunchPadFlightControllerActivity != null) {
-                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPID();
-                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getTarget();
-                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getTurning();
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDRollPitch();
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDYaw();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getKalman();
                                     }
                                 }

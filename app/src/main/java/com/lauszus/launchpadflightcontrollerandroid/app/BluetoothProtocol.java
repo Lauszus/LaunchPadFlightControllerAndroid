@@ -29,20 +29,25 @@ public class BluetoothProtocol {
     private static final String TAG = BluetoothProtocol.class.getSimpleName();
     private static final boolean D = LaunchPadFlightControllerActivity.D;
 
-    static final byte SET_PID = 0;
-    static final byte GET_PID = 1;
-    static final byte SET_TARGET = 2;
-    static final byte GET_TARGET = 3;
-    static final byte SET_TURNING = 4;
-    static final byte GET_TURNING = 5;
-    static final byte SET_KALMAN = 6;
-    static final byte GET_KALMAN = 7;
+    static final byte SET_PID_ROLL_PITCH = 0;
+    static final byte GET_PID_ROLL_PITCH = 1;
+    static final byte SET_PID_YAW = 2;
+    static final byte GET_PID_YAW = 3;
+    static final byte SET_ANGLE_KP = 4;
+    static final byte GET_ANGLE_KP = 5;
+    static final byte SET_STICK_SCALING = 6;
+    static final byte GET_STICK_SCALING = 7;
+    static final byte SET_ANGLE_MAX_INC = 8;
+    static final byte GET_ANGLE_MAX_INC = 9;
+    static final byte SET_KALMAN = 10;
+    static final byte GET_KALMAN = 11;
 
-    static final byte START_INFO = 8;
-    static final byte STOP_INFO = 9;
-    static final byte START_IMU = 10;
-    static final byte STOP_IMU = 11;
-
+    static final byte START_IMU = 12;
+    static final byte STOP_IMU = 13;
+/*
+    static final byte START_INFO = 14;
+    static final byte STOP_INFO = 15;
+*/
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
     static final String responseEnd = "\r\n";
@@ -64,81 +69,74 @@ public class BluetoothProtocol {
     }
 
     /**
-     * Set PID values. All floats/doubles are multiplied by 100.0 before sending.
+     * Set PID values for roll and pitch. All floats/doubles are multiplied by 100.0 before sending.
      *
      * @param Kp Kp value.
      * @param Ki Ki value.
      * @param Kd Kd value.
      */
-    public void setPID(int Kp, int Ki, int Kd) {
+    public void setPIDRollPitch(int Kp, int Ki, int Kd, int integrationLimit) {
         if (D)
-            Log.i(TAG, "setPID " + Kp + " " + Ki + " " + Kd);
+            Log.i(TAG, "setPID roll & pitch: " + Kp + " " + Ki + " " + Kd + " " + integrationLimit);
 
         byte output[] = {
-                SET_PID, // Cmd
-                6, // Length
+                SET_PID_ROLL_PITCH, // Cmd
+                8, // Length
                 (byte) (Kp & 0xFF),
                 (byte) (Kp >> 8),
                 (byte) (Ki & 0xFF),
                 (byte) (Ki >> 8),
                 (byte) (Kd & 0xFF),
                 (byte) (Kd >> 8),
+                (byte) (integrationLimit & 0xFF),
+                (byte) (integrationLimit >> 8),
         };
         sendCommand(output); // Set PID values
     }
 
     /**
-     * Use this to request PID values.
+     * Use this to request PID values for roll and pitch.
      */
-    public void getPID() {
+    public void getPIDRollPitch() {
         byte output[] = {
-                GET_PID, // Cmd
+                GET_PID_ROLL_PITCH, // Cmd
                 0, // Length
         };
         sendCommand(output); // Send output
     }
 
     /**
-     * Set the target angle of the robot. All floats/doubles are multiplied by 100.0 before sending.
+     * Set PID values for yaw. All floats/doubles are multiplied by 100.0 before sending.
      *
-     * @param targetAngle Target angle value.
+     * @param Kp Kp value.
+     * @param Ki Ki value.
+     * @param Kd Kd value.
      */
-    public void setTarget(int targetAngle) {
+    public void setPIDYaw(int Kp, int Ki, int Kd, int integrationLimit) {
         if (D)
-            Log.i(TAG, "setTarget: " + targetAngle);
+            Log.i(TAG, "setPID yaw: " + Kp + " " + Ki + " " + Kd + " " + integrationLimit);
 
         byte output[] = {
-                SET_TARGET, // Cmd
-                2, // Length
-                (byte) (targetAngle & 0xFF),
-                (byte) (targetAngle >> 8),
+                SET_PID_YAW, // Cmd
+                8, // Length
+                (byte) (Kp & 0xFF),
+                (byte) (Kp >> 8),
+                (byte) (Ki & 0xFF),
+                (byte) (Ki >> 8),
+                (byte) (Kd & 0xFF),
+                (byte) (Kd >> 8),
+                (byte) (integrationLimit & 0xFF),
+                (byte) (integrationLimit >> 8),
         };
         sendCommand(output); // Set PID values
     }
 
-    public void getTarget() {
+    /**
+     * Use this to request PID values for yaw.
+     */
+    public void getPIDYaw() {
         byte output[] = {
-                GET_TARGET, // Cmd
-                0, // Length
-        };
-        sendCommand(output); // Send output
-    }
-
-    public void setTurning(byte turningValue) {
-        if (D)
-            Log.i(TAG, "setTurning " + turningValue);
-
-        byte output[] = {
-                SET_TURNING, // Cmd
-                1, // Length
-                turningValue,
-        };
-        sendCommand(output); // Set PID values
-    }
-
-    public void getTurning() {
-        byte output[] = {
-                GET_TURNING, // Cmd
+                GET_PID_YAW, // Cmd
                 0, // Length
         };
         sendCommand(output); // Send output
@@ -178,19 +176,23 @@ public class BluetoothProtocol {
     }
 
     public void startInfo() {
+        /*
         byte output[] = {
                 START_INFO, // Cmd
                 0, // Length
         };
         sendCommand(output); // Send output
+        */
     }
 
     public void stopInfo() {
+        /*
         byte output[] = {
                 STOP_INFO, // Cmd
                 0, // Length
         };
         sendCommand(output); // Send output
+        */
     }
 
     public void startImu() {
@@ -248,15 +250,18 @@ public class BluetoothProtocol {
                 input[i] = data[i + responseHeader.length() + 2];
             int checksum = data[i + responseHeader.length() + 2];
 
-            if (checksum == (cmd ^ msgLength ^ getChecksum(input))) {
+            int msgChecksum = cmd ^ msgLength ^ getChecksum(input);
+
+            if (checksum == msgChecksum) {
                 Message message = mHandler.obtainMessage(LaunchPadFlightControllerActivity.MESSAGE_READ); // Send message back to the UI Activity
                 Bundle bundle = new Bundle();
 
                 switch (cmd) {
-                    case GET_PID:
+                    case GET_PID_ROLL_PITCH:
                         int Kp = input[0] | (input[1] << 8);
                         int Ki = input[2] | (input[3] << 8);
                         int Kd = input[4] | (input[5] << 8);
+                        int integrationLimit = input[6] | (input[7] << 8);
 
                         // TODO: Just store this as an int
                         bundle.putString(LaunchPadFlightControllerActivity.KP_VALUE, String.format("%.2f", (float) Kp / 100.0f));
@@ -267,28 +272,7 @@ public class BluetoothProtocol {
                         mHandler.sendMessage(message);
 
                         if (D)
-                            Log.i(TAG, "PID: " + Kp + " " + Ki + " " + Kd);
-                        break;
-                    case GET_TARGET:
-                        int target = input[0] | ((byte) input[1] << 8); // This can be negative as well
-
-                        // TODO: Just store this as an int
-                        bundle.putString(LaunchPadFlightControllerActivity.TARGET_ANGLE, String.format("%.2f", (float) target / 100.0f));
-
-                        message.setData(bundle);
-                        mHandler.sendMessage(message);
-
-                        if (D)
-                            Log.i(TAG, "Target: " + Integer.toString(target));
-                        break;
-                    case GET_TURNING:
-                        bundle.putInt(LaunchPadFlightControllerActivity.TURNING_SCALE, input[0]);
-
-                        message.setData(bundle);
-                        mHandler.sendMessage(message);
-
-                        if (D)
-                            Log.i(TAG, "Turning: " + Integer.toString(input[0]));
+                            Log.i(TAG, "PID: " + Kp + " " + Ki + " " + Kd + " " + integrationLimit);
                         break;
                     case GET_KALMAN:
                         int Qangle = input[0] | (input[1] << 8);
@@ -305,6 +289,7 @@ public class BluetoothProtocol {
                         if (D)
                             Log.i(TAG, "Kalman: " + Qangle + " " + Qbias + " " + Rmeasure);
                         break;
+/*
                     case START_INFO:
                         int speed = input[0] | (input[1] << 8);
                         int current = input[2] | ((byte) input[3] << 8); // This can be negative as well
@@ -324,6 +309,7 @@ public class BluetoothProtocol {
                         if (D)
                             Log.v(TAG, "Speed: " + speed + " Current: " + current + " Turning: " + turning + " Battery: " + battery + " Run time: " + runTime);
                         break;
+*/
                     case START_IMU:
                         int acc = input[0] | ((byte) input[1] << 8); // This can be negative as well
                         int gyro = input[2] | ((byte) input[3] << 8); // This can be negative as well
@@ -346,7 +332,7 @@ public class BluetoothProtocol {
                 }
             } else {
                 if (D)
-                    Log.e(TAG, "Checksum error!");
+                    Log.e(TAG, "Checksum error! Got: " + checksum + " Expected: " + msgChecksum);
             }
         } else {
             if (D)

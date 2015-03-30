@@ -145,7 +145,7 @@ public class PIDFragment extends Fragment {
                             public void run() {
                                 LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                                 if (activity != null)
-                                    activity.mChatService.mBluetoothProtocol.setPID((int) (Float.parseFloat(mKpSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKiSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKdSeekBarValue.getText().toString()) * 100.0f));
+                                    activity.mChatService.mBluetoothProtocol.setPIDRollPitch((int) (Float.parseFloat(mKpSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKiSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKdSeekBarValue.getText().toString()) * 100.0f), 60);
                             }
                         }); // Wait before sending the message
                         counter += 25;
@@ -153,12 +153,12 @@ public class PIDFragment extends Fragment {
                             public void run() {
                                 LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                                 if (activity != null)
-                                    activity.mChatService.mBluetoothProtocol.getPID();
+                                    activity.mChatService.mBluetoothProtocol.getPIDRollPitch();
                             }
                         }); // Wait before sending the message
                         counter += 25;
                     }
-
+/*
                     if (mTargetAngleSeekBarValue.getText() != null && !mTargetAngleSeekBarValue.getText().equals(oldTargetAngleValue)) {
                         oldTargetAngleValue = mTargetAngleSeekBarValue.getText();
                         mHandler.postDelayed(new Runnable() {
@@ -198,6 +198,7 @@ public class PIDFragment extends Fragment {
                         }, counter); // Wait before sending the message
                         counter += 25;
                     }
+*/
                     counter = 0; // Reset counter
                 }
             }
