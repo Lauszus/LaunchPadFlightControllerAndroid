@@ -209,16 +209,6 @@ public class BluetoothProtocol {
         sendCommand(output); // Send output
     }
 
-    private byte[] concat(byte[] A, byte[] B) { // Source: http://stackoverflow.com/a/80503/2175837
-        int aLen = A.length;
-        int bLen = B.length;
-        byte[] C = new byte[aLen + bLen];
-        System.arraycopy(A, 0, C, 0, aLen);
-        System.arraycopy(B, 0, C, aLen, bLen);
-        return C;
-    }
-
-
     private byte[] buffer = new byte[1024];
 
     public void parseData(byte msg[], int offset, int length) {

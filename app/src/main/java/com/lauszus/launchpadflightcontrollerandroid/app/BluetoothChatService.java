@@ -358,7 +358,7 @@ public class BluetoothChatService {
         }
     }
 
-    /** This thread runs during a connection with a remote device. It handles all  incoming and outgoing transmissions. */
+    /** This thread runs during a connection with a remote device. It handles all incoming and outgoing transmissions. */
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
@@ -432,63 +432,6 @@ public class BluetoothChatService {
                             } else
                                 mBluetoothProtocol.parseData(buffer, start, end - start + BluetoothProtocol.responseEnd.length());
                         }
-
-/*
-                        for (int i = 0; i < splitMessage.length; i++)
-                            splitMessage[i] = splitMessage[i].trim(); // Trim message
-
-                        if (splitMessage[0].equals(BalanduinoActivity.responsePIDValues) && splitMessage.length == BalanduinoActivity.responsePIDValuesLength) {
-                            BalanduinoActivity.pValue = splitMessage[1];
-                            BalanduinoActivity.iValue = splitMessage[2];
-                            BalanduinoActivity.dValue = splitMessage[3];
-                            BalanduinoActivity.targetAngleValue = splitMessage[4];
-                            BalanduinoActivity.newPIDValues = true;
-
-                            mHandler.obtainMessage(BalanduinoActivity.MESSAGE_READ).sendToTarget(); // Send message back to the UI Activity
-                        } else if (splitMessage[0].equals(BalanduinoActivity.responseEncoderValues) && splitMessage.length == BalanduinoActivity.responseEncoderValuesLength) {
-                            BalanduinoActivity.encoderPValue = splitMessage[1];
-                            BalanduinoActivity.encoderIValue = splitMessage[2];
-                            BalanduinoActivity.encoderDValue = splitMessage[3];
-                            BalanduinoActivity.newEncoderValues = true;
-
-                            mHandler.obtainMessage(BalanduinoActivity.MESSAGE_READ).sendToTarget(); // Send message back to the UI Activity
-                        } else if (splitMessage[0].equals(BalanduinoActivity.responseSettings) && splitMessage.length == BalanduinoActivity.responseSettingsLength) {
-                            BalanduinoActivity.backToSpot = splitMessage[1].equals("1");
-                            BalanduinoActivity.maxAngle = Integer.parseInt(splitMessage[2]);
-                            BalanduinoActivity.maxTurning = Integer.parseInt(splitMessage[3]);
-                        } else if (splitMessage[0].equals(BalanduinoActivity.responseInfo) && splitMessage.length == BalanduinoActivity.responseInfoLength) {
-                            BalanduinoActivity.firmwareVersion = splitMessage[1];
-                            BalanduinoActivity.eepromVersion = splitMessage[2];
-                            BalanduinoActivity.mcu = splitMessage[3];
-                            BalanduinoActivity.newInfo = true;
-
-                            mHandler.obtainMessage(BalanduinoActivity.MESSAGE_READ).sendToTarget(); // Send message back to the UI Activity
-                        } else if (splitMessage[0].equals(BalanduinoActivity.responseStatus) && splitMessage.length == BalanduinoActivity.responseStatusLength) {
-                            BalanduinoActivity.batteryLevel = splitMessage[1];
-                            BalanduinoActivity.runtime = Double.parseDouble(splitMessage[2]);
-                            BalanduinoActivity.newStatus = true;
-
-                            mHandler.obtainMessage(BalanduinoActivity.MESSAGE_READ).sendToTarget(); // Send message back to the UI Activity
-                        } else if (splitMessage[0].equals(BalanduinoActivity.responseKalmanValues) && splitMessage.length == BalanduinoActivity.responseKalmanValuesLength) {
-                            BalanduinoActivity.Qangle = splitMessage[1];
-                            BalanduinoActivity.Qbias = splitMessage[2];
-                            BalanduinoActivity.Rmeasure = splitMessage[3];
-                            BalanduinoActivity.newKalmanValues = true;
-
-                            mHandler.obtainMessage(BalanduinoActivity.MESSAGE_READ).sendToTarget(); // Send message back to the UI Activity
-                        } else if (splitMessage[0].equals(BalanduinoActivity.responseIMU) && splitMessage.length == BalanduinoActivity.responseIMULength) {
-                            BalanduinoActivity.accValue = splitMessage[1];
-                            BalanduinoActivity.gyroValue = splitMessage[2];
-                            BalanduinoActivity.kalmanValue = splitMessage[3];
-                            BalanduinoActivity.newIMUValues = true;
-
-                            mHandler.obtainMessage(BalanduinoActivity.MESSAGE_READ).sendToTarget(); // Send message back to the UI Activity
-                        } else if (splitMessage[0].equals(BalanduinoActivity.responsePairConfirmation) && splitMessage.length == BalanduinoActivity.responsePairConfirmationLength) {
-                            BalanduinoActivity.pairingWithDevice = true;
-
-                            mHandler.obtainMessage(BalanduinoActivity.MESSAGE_READ).sendToTarget(); // Send message back to the UI Activity
-                        }
-*/
                     }
                 } catch (IOException e) {
                     if (D)
