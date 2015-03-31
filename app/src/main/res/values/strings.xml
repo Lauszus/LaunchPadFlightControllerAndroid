@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Activity string -->
-    <string name="app_name">LaunchPadFlightControllerAndroid</string>
+    <string name="app_name">LaunchPadFlightController</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving The application!</string>
     <string name="connecting">Connecting&#8230;</string>
     <string name="connected_to">Connected to:</string>
@@ -21,7 +21,7 @@
     <string name="button_scan">Scan for devices</string>
 
     <!-- Info Fragment -->
-    <string name="manufacturer">by Mads Bornebusch and Kristian Lauszus</string>
+    <string name="manufacturer">by Kristian Sloth Lauszus</string>
     <string name="currentDraw">Current draw:</string>
     <string name="turningValue">Turning value:</string>
     <string name="battery">Battery level:</string>
