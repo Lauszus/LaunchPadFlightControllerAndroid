@@ -41,13 +41,9 @@ public class BluetoothProtocol {
     static final byte GET_ANGLE_MAX_INC = 9;
     static final byte SET_KALMAN = 10;
     static final byte GET_KALMAN = 11;
+    static final byte SEND_ANGLES = 12;
+    static final byte SEND_INFO = 13;
 
-    static final byte START_IMU = 12;
-    static final byte STOP_IMU = 13;
-/*
-    static final byte START_INFO = 14;
-    static final byte STOP_INFO = 15;
-*/
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
     static final String responseEnd = "\r\n";
@@ -175,38 +171,20 @@ public class BluetoothProtocol {
         sendCommand(output); // Send output
     }
 
-    public void startInfo() {
-        /*
+    public void sendAngles(byte enable) {
         byte output[] = {
-                START_INFO, // Cmd
-                0, // Length
-        };
-        sendCommand(output); // Send output
-        */
-    }
-
-    public void stopInfo() {
-        /*
-        byte output[] = {
-                STOP_INFO, // Cmd
-                0, // Length
-        };
-        sendCommand(output); // Send output
-        */
-    }
-
-    public void startImu() {
-        byte output[] = {
-                START_IMU, // Cmd
-                0, // Length
+                SEND_ANGLES, // Cmd
+                1, // Length
+                enable,
         };
         sendCommand(output); // Send output
     }
 
-    public void stopImu() {
+    public void sendInfo(byte enable) {
         byte output[] = {
-                STOP_IMU, // Cmd
-                0, // Length
+                SEND_INFO, // Cmd
+                1, // Length
+                enable,
         };
         sendCommand(output); // Send output
     }
@@ -310,20 +288,20 @@ public class BluetoothProtocol {
                             Log.v(TAG, "Speed: " + speed + " Current: " + current + " Turning: " + turning + " Battery: " + battery + " Run time: " + runTime);
                         break;
 */
-                    case START_IMU:
-                        int acc = input[0] | ((byte) input[1] << 8); // This can be negative as well
-                        int gyro = input[2] | ((byte) input[3] << 8); // This can be negative as well
-                        int kalman = input[4] | ((byte) input[5] << 8); // This can be negative as well
+                    case SEND_ANGLES:
+                        int roll = input[0] | ((byte) input[1] << 8); // This can be negative as well
+                        int pitch = input[2] | ((byte) input[3] << 8); // This can be negative as well
+                        int yaw = input[4] | ((byte) input[5] << 8); // This can be negative as well
 
-                        bundle.putString(LaunchPadFlightControllerActivity.ACC_ANGLE, String.format("%.2f", (float) acc / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.GYRO_ANGLE, String.format("%.2f", (float) gyro / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.KALMAN_ANGLE, String.format("%.2f", (float) kalman / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.ROLL_ANGLE, String.format("%.2f", (float) roll / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.PITCH_ANGLE, String.format("%.2f", (float) pitch / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.YAW_ANGLE, String.format("%.2f", (float) yaw / 100.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
 
                         if (D)
-                            Log.v(TAG, "Acc: " + acc + " Gyro: " + gyro + " Kalman: " + kalman);
+                            Log.v(TAG, "Acc: " + roll + " Gyro: " + pitch + " Kalman: " + yaw);
                         break;
                     default:
                         if (D)

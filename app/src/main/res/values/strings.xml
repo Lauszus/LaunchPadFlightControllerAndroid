@@ -38,9 +38,9 @@
     <string name="updateValues">Press to update PID values</string>
 
     <!-- Graph Fragment -->
-    <string name="acc">Accelerometer</string>
-    <string name="gyro">Gyro</string>
-    <string name="kalman">Kalman filter</string>
+    <string name="roll">Roll</string>
+    <string name="pitch">Pitch</string>
+    <string name="yaw">Yaw</string>
     <string name="Qangle">Q<small><small>angle</small></small></string>
     <string name="Qbias">Q<small><small>bias</small></small></string>
     <string name="Rmeasure">R<small><small>measure</small></small></string>

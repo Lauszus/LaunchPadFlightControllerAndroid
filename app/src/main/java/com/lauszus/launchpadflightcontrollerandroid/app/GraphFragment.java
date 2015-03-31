@@ -45,7 +45,7 @@ public class GraphFragment extends Fragment {
     private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     private static LineGraphView graphView;
-    private static GraphViewSeries accSeries, gyroSeries, kalmanSeries;
+    private static GraphViewSeries rollSeries, pitchSeries, yawSeries;
     private static double counter = 100.0;
 
     private static CheckBox mCheckBox1, mCheckBox2, mCheckBox3;
@@ -77,26 +77,26 @@ public class GraphFragment extends Fragment {
             data2[i] = new GraphViewData(counter - 100 + i, buffer[2][i]);
         }
 
-        accSeries = new GraphViewSeries("Accelerometer", new GraphViewSeriesStyle(Color.RED, 2), data0);
-        gyroSeries = new GraphViewSeries("Gyro", new GraphViewSeriesStyle(Color.GREEN, 2), data1);
-        kalmanSeries = new GraphViewSeries("Kalman", new GraphViewSeriesStyle(Color.BLUE, 2), data2);
+        rollSeries = new GraphViewSeries("Roll", new GraphViewSeriesStyle(Color.RED, 2), data0);
+        pitchSeries = new GraphViewSeries("Pitch", new GraphViewSeriesStyle(Color.GREEN, 2), data1);
+        yawSeries = new GraphViewSeries("Yaw", new GraphViewSeriesStyle(Color.BLUE, 2), data2);
 
         graphView = new LineGraphView(getActivity(), "");
         if (mCheckBox1 != null) {
             if (mCheckBox1.isChecked())
-                graphView.addSeries(accSeries);
+                graphView.addSeries(rollSeries);
         } else
-            graphView.addSeries(accSeries);
+            graphView.addSeries(rollSeries);
         if (mCheckBox2 != null) {
             if (mCheckBox2.isChecked())
-                graphView.addSeries(gyroSeries);
+                graphView.addSeries(pitchSeries);
         } else
-            graphView.addSeries(gyroSeries);
+            graphView.addSeries(pitchSeries);
         if (mCheckBox3 != null) {
             if (mCheckBox3.isChecked())
-                graphView.addSeries(kalmanSeries);
+                graphView.addSeries(yawSeries);
         } else
-            graphView.addSeries(kalmanSeries);
+            graphView.addSeries(yawSeries);
 
         graphView.setManualYAxisBounds(180, -180);
         graphView.setViewPort(0, 100);
@@ -125,9 +125,9 @@ public class GraphFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked())
-                    graphView.addSeries(accSeries);
+                    graphView.addSeries(rollSeries);
                 else
-                    graphView.removeSeries(accSeries);
+                    graphView.removeSeries(rollSeries);
             }
         });
         mCheckBox2 = (CheckBox) v.findViewById(R.id.checkBox2);
@@ -135,9 +135,9 @@ public class GraphFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked())
-                    graphView.addSeries(gyroSeries);
+                    graphView.addSeries(pitchSeries);
                 else
-                    graphView.removeSeries(gyroSeries);
+                    graphView.removeSeries(pitchSeries);
             }
         });
         mCheckBox3 = (CheckBox) v.findViewById(R.id.checkBox3);
@@ -145,9 +145,9 @@ public class GraphFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked())
-                    graphView.addSeries(kalmanSeries);
+                    graphView.addSeries(yawSeries);
                 else
-                    graphView.removeSeries(kalmanSeries);
+                    graphView.removeSeries(yawSeries);
             }
         });
 
@@ -164,9 +164,9 @@ public class GraphFragment extends Fragment {
                 if (activity != null && activity.mChatService != null) {
                     if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED && activity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
                         if (((ToggleButton) v).isChecked())
-                            activity.mChatService.mBluetoothProtocol.startImu(); // Request data
+                            activity.mChatService.mBluetoothProtocol.sendAngles((byte) 1); // Request data
                         else
-                            activity.mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
+                            activity.mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending data
                     }
                 }
             }
@@ -208,7 +208,7 @@ public class GraphFragment extends Fragment {
         }
     }
 
-    public void updateIMUValues(String accValue, String gyroValue, String kalmanValue) {
+    public void updateAngles(String rollValue, String pitchValue, String yawValue) {
         if (mToggleButton == null || !(mToggleButton.isChecked()))
             return;
 
@@ -216,9 +216,9 @@ public class GraphFragment extends Fragment {
             System.arraycopy(buffer[i], 1, buffer[i], 0, 100);
 
         try { // In some rare occasions the values can be corrupted
-            buffer[0][100] = Double.parseDouble(accValue);
-            buffer[1][100] = Double.parseDouble(gyroValue);
-            buffer[2][100] = Double.parseDouble(kalmanValue);
+            buffer[0][100] = Double.parseDouble(rollValue);
+            buffer[1][100] = Double.parseDouble(pitchValue);
+            buffer[2][100] = Double.parseDouble(yawValue);
         } catch (NumberFormatException e) {
             if (D)
                 Log.e(TAG, "Error in input", e);
@@ -228,9 +228,9 @@ public class GraphFragment extends Fragment {
         boolean scroll = mCheckBox1.isChecked() || mCheckBox2.isChecked() || mCheckBox3.isChecked();
 
         counter++;
-        accSeries.appendData(new GraphViewData(counter, buffer[0][100]), scroll, 101);
-        gyroSeries.appendData(new GraphViewData(counter, buffer[1][100]), scroll, 101);
-        kalmanSeries.appendData(new GraphViewData(counter, buffer[2][100]), scroll, 101);
+        rollSeries.appendData(new GraphViewData(counter, buffer[0][100]), scroll, 101);
+        pitchSeries.appendData(new GraphViewData(counter, buffer[1][100]), scroll, 101);
+        yawSeries.appendData(new GraphViewData(counter, buffer[2][100]), scroll, 101);
 
         if (!scroll)
             graphView.redrawAll();
@@ -247,9 +247,9 @@ public class GraphFragment extends Fragment {
         LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
         if (activity != null && activity.mChatService != null && activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED && activity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
             if (mToggleButton.isChecked())
-                activity.mChatService.mBluetoothProtocol.startImu(); // Request data
+                activity.mChatService.mBluetoothProtocol.sendAngles((byte) 1); // Request data
             else
-                activity.mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
+                activity.mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending data
         }
     }
 }

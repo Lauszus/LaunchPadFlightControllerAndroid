@@ -76,9 +76,9 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     public static final String QBIAS_VALUE = "qbias_value";
     public static final String RMEASURE_VALUE = "rmeasure_value";
 
-    public static final String ACC_ANGLE = "acc_angle";
-    public static final String GYRO_ANGLE = "gyro_angle";
-    public static final String KALMAN_ANGLE = "kalman_angle";
+    public static final String ROLL_ANGLE = "roll_angle";
+    public static final String PITCH_ANGLE = "pitch_angle";
+    public static final String YAW_ANGLE = "yaw_angle";
 
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE = 1;
@@ -209,8 +209,8 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
             Log.d(TAG, "- ON PAUSE -");
         if (mChatService != null) { // Send stop command and stop sending graph data command
             if (mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
-                mChatService.mBluetoothProtocol.stopInfo();
-                mChatService.mBluetoothProtocol.stopImu();
+                mChatService.mBluetoothProtocol.sendInfo((byte) 0); // Stop sending info
+                mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending angles
             }
         }
     }
@@ -272,7 +272,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
 
         if (mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
             if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
-                mChatService.mBluetoothProtocol.startInfo();
+                mChatService.mBluetoothProtocol.sendInfo((byte) 1); // Request info
             else if (checkTab(ViewPagerAdapter.PID_FRAGMENT)) {
                 mChatService.mBluetoothProtocol.getPIDRollPitch();
                 mChatService.mBluetoothProtocol.getPIDYaw();
@@ -280,9 +280,9 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                 mChatService.mBluetoothProtocol.getKalman();
                 if (GraphFragment.mToggleButton != null) {
                     if (GraphFragment.mToggleButton.isChecked())
-                        mChatService.mBluetoothProtocol.startImu(); // Request data
+                        mChatService.mBluetoothProtocol.sendAngles((byte) 1); // Request data
                     else
-                        mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
+                        mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending data
                 }
             }
         }
@@ -300,9 +300,9 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
 
         if (mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
             if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
-                mChatService.mBluetoothProtocol.stopInfo(); // Stop sending info
+                mChatService.mBluetoothProtocol.sendInfo((byte) 0); // Stop sending info
             else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT))
-                mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
+                mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending data
         }
 
         if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
@@ -411,7 +411,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                                     public void run() {
                                         LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
                                         if (mLaunchPadFlightControllerActivity != null)
-                                            mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.startInfo(); // Request info
+                                            mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.sendInfo((byte) 1); // Request info
                                     }
                                 }, 2000); // Wait 2 seconds before sending the message
                             } else if (mLaunchPadFlightControllerActivity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
@@ -420,9 +420,9 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                                         LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
                                         if (mLaunchPadFlightControllerActivity != null) {
                                             if (GraphFragment.mToggleButton.isChecked())
-                                                mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.startImu(); // Request data
+                                                mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.sendAngles((byte) 1); // Request data
                                             else
-                                                mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
+                                                mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending data
                                         }
                                     }
                                 }, 2000); // Wait 2 seconds before sending the message
@@ -461,10 +461,10 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                                 graphFragment.updateKalman(data.getString(QANGLE_VALUE), data.getString(QBIAS_VALUE), data.getString(RMEASURE_VALUE));
                         }
 
-                        if (data.containsKey(ACC_ANGLE) && data.containsKey(GYRO_ANGLE) && data.containsKey(KALMAN_ANGLE)) {
+                        if (data.containsKey(ROLL_ANGLE) && data.containsKey(PITCH_ANGLE) && data.containsKey(YAW_ANGLE)) {
                             graphFragment = (GraphFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.GRAPH_FRAGMENT);
                             if (graphFragment != null)
-                                graphFragment.updateIMUValues(data.getString(ACC_ANGLE), data.getString(GYRO_ANGLE), data.getString(KALMAN_ANGLE));
+                                graphFragment.updateAngles(data.getString(ROLL_ANGLE), data.getString(PITCH_ANGLE), data.getString(YAW_ANGLE));
                         }
                     }
                     break;

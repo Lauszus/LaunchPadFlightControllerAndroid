@@ -98,6 +98,6 @@ public class InfoFragment extends Fragment {
 
         LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
         if (activity != null && activity.mChatService != null && activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED && activity.checkTab(ViewPagerAdapter.INFO_FRAGMENT))
-            activity.mChatService.mBluetoothProtocol.startInfo(); // Request data
+            activity.mChatService.mBluetoothProtocol.sendInfo((byte) 1); // Request data
     }
 }

@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/acc" />
+                android:text="@string/roll" />
 
             <CheckBox
                 android:id="@+id/checkBox2"
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/checkBox1"
                 android:checked="true"
-                android:text="@string/gyro" />
+                android:text="@string/pitch" />
 
             <CheckBox
                 android:id="@+id/checkBox3"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/checkBox2"
                 android:checked="true"
-                android:text="@string/kalman" />
+                android:text="@string/yaw" />
 
             <LinearLayout
                 android:id="@+id/dummy"
