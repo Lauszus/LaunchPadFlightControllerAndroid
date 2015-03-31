@@ -142,6 +142,7 @@ public class PIDFragment extends Fragment {
             }
         });
 
+        // Use custom OnArrowListener class to handle button click, button long click and if the button is held down
         new OnArrowListener(v.findViewById(R.id.KpUpArrow), mKpSeekBar, true);
         new OnArrowListener(v.findViewById(R.id.KpDownArrow), mKpSeekBar, false);
 
@@ -155,6 +156,7 @@ public class PIDFragment extends Fragment {
         new OnArrowListener(v.findViewById(R.id.IntLimitDownArrow), mIntLimitSeekBar, false);
 
         updateSendButton();
+
         return v;
     }
 
@@ -177,7 +179,7 @@ public class PIDFragment extends Fragment {
     }
 
     private String pidToString(int value) {
-        return String.format("%.2f", (float) value / 100.0f);
+        return String.format("%.2f", (float) value / 100.0f); // SeekBar can only handle integers, so format it to a float with two decimal places
     }
 
     private void updateView() {
