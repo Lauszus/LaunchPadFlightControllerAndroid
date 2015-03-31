@@ -60,11 +60,15 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
 
-    public static final String KP_VALUE = "kp_value";
-    public static final String KI_VALUE = "ki_value";
-    public static final String KD_VALUE = "kd_value";
-    public static final String TARGET_ANGLE = "target_angle";
-    public static final String TURNING_SCALE = "turning_scale";
+    public static final String KP_ROLL_PITCH_VALUE = "kp_roll_pitch_value";
+    public static final String KI_ROLL_PITCH_VALUE = "ki_roll_pitch_value";
+    public static final String KD_ROLL_PITCH_VALUE = "kd_roll_pitch_value";
+    public static final String INT_LIMIT_ROLL_PITCH_VALUE = "int_limit_roll_pitch_value";
+
+    public static final String KP_YAW_VALUE = "kp_yaw_value";
+    public static final String KI_YAW_VALUE = "ki_yaw_value";
+    public static final String KD_YAW_VALUE = "kd_yaw_value";
+    public static final String INT_LIMIT_YAW_VALUE = "int_limit_yaw_value";
 
     public static final String SPEED_VALUE = "speed_value";
     public static final String CURRENT_DRAW = "current_draw";
@@ -433,7 +437,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                     }
                     pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                     if (pidFragment != null)
-                        pidFragment.updateButton();
+                        pidFragment.updateSendButton();
                     break;
 
                 case MESSAGE_READ:
@@ -441,12 +445,10 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                     if (data != null) {
                         pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                         if (pidFragment != null) {
-                            if (data.containsKey(KP_VALUE) && data.containsKey(KI_VALUE) && data.containsKey(KD_VALUE))
-                                pidFragment.updatePID(data.getString(KP_VALUE), data.getString(KI_VALUE), data.getString(KD_VALUE));
-                            else if (data.containsKey(TARGET_ANGLE))
-                                pidFragment.updateAngle(data.getString(TARGET_ANGLE));
-                            else if (data.containsKey(TURNING_SCALE))
-                                pidFragment.updateTurning(data.getInt(TURNING_SCALE));
+                            if (data.containsKey(KP_ROLL_PITCH_VALUE) && data.containsKey(KI_ROLL_PITCH_VALUE) && data.containsKey(KD_ROLL_PITCH_VALUE) && data.containsKey(INT_LIMIT_ROLL_PITCH_VALUE))
+                                pidFragment.updatePIDRollPitch(data.getInt(KP_ROLL_PITCH_VALUE), data.getInt(KI_ROLL_PITCH_VALUE), data.getInt(KD_ROLL_PITCH_VALUE), data.getInt(INT_LIMIT_ROLL_PITCH_VALUE));
+                            else if (data.containsKey(KP_YAW_VALUE) && data.containsKey(KI_YAW_VALUE) && data.containsKey(KD_YAW_VALUE) && data.containsKey(INT_LIMIT_YAW_VALUE))
+                                pidFragment.updatePIDYaw(data.getInt(KP_YAW_VALUE), data.getInt(KI_YAW_VALUE), data.getInt(KD_YAW_VALUE), data.getInt(INT_LIMIT_YAW_VALUE));
                         }
 
                         if (data.containsKey(SPEED_VALUE) && data.containsKey(CURRENT_DRAW) && data.containsKey(TURNING_VALUE) && data.containsKey(BATTERY_LEVEL) && data.containsKey(RUN_TIME)) {
@@ -476,7 +478,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                     mLaunchPadFlightControllerActivity.supportInvalidateOptionsMenu();
                     pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                     if (pidFragment != null)
-                        pidFragment.updateButton();
+                        pidFragment.updateSendButton();
                     if (msg.getData() != null)
                         mLaunchPadFlightControllerActivity.showToast(msg.getData().getString(TOAST), Toast.LENGTH_SHORT);
                     break;

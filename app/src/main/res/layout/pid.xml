@@ -11,6 +11,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/margin">
+
+            <RadioButton
+                android:id="@+id/rollPitchRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Roll_pitch"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/yawRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/yaw" />
+        </RadioGroup>
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +66,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
-                        android:id="@+id/textView1"
+                        android:id="@+id/KpView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -65,7 +85,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
-                        android:id="@+id/textView2"
+                        android:id="@+id/KiView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -84,7 +104,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/KdView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -106,30 +126,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetAngle"
+                        android:text="@string/intLimit"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/turningScale"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <TextView
-                        android:id="@+id/textView5"
+                        android:id="@+id/IntLimitView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -311,10 +312,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin"
                     android:layout_weight="0"
-                    android:text="@string/targetAngle" />
+                    android:text="@string/intLimit" />
 
                 <TextView
-                    android:id="@+id/TargetAngleValue"
+                    android:id="@+id/IntLimitValue"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -326,73 +327,23 @@
                 android:layout_marginTop="5dp" >
 
                 <Button
-                    android:id="@+id/TargetAngleDownArrow"
+                    android:id="@+id/IntLimitDownArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
                     android:background="@drawable/arrow_down"
                     android:layout_alignParentLeft="true" />
 
                 <SeekBar
-                    android:id="@+id/TargetAngleSeekBar"
+                    android:id="@+id/IntLimitSeekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/TargetAngleDownArrow"
-                    android:layout_toLeftOf="@+id/TargetAngleUpArrow"
+                    android:layout_toRightOf="@+id/IntLimitDownArrow"
+                    android:layout_toLeftOf="@+id/IntLimitUpArrow"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp" />
 
                 <Button
-                    android:id="@+id/TargetAngleUpArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
-                    android:layout_alignParentRight="true" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
-                    android:layout_weight="0"
-                    android:text="@string/turningScale" />
-
-                <TextView
-                    android:id="@+id/TurningValue"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:textIsSelectable="false" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_marginTop="5dp" >
-
-                <Button
-                    android:id="@+id/TurningDownArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
-                    android:layout_alignParentLeft="true" />
-
-                <SeekBar
-                    android:id="@+id/TurningSeekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/TurningDownArrow"
-                    android:layout_toLeftOf="@+id/TurningUpArrow"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
-
-                <Button
-                    android:id="@+id/TurningUpArrow"
+                    android:id="@+id/IntLimitUpArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
                     android:background="@drawable/arrow_up"

@@ -57,7 +57,6 @@ public class BluetoothProtocol {
         this.mHandler = handler;
     }
 
-
     private void sendCommand(byte output[]) {
         mChatService.write(commandHeader);
         mChatService.write(output);
@@ -71,9 +70,9 @@ public class BluetoothProtocol {
      * @param Ki Ki value.
      * @param Kd Kd value.
      */
-    public void setPIDRollPitch(int Kp, int Ki, int Kd, int integrationLimit) {
+    public void setPIDRollPitch(int Kp, int Ki, int Kd, int IntLimit) {
         if (D)
-            Log.i(TAG, "setPID roll & pitch: " + Kp + " " + Ki + " " + Kd + " " + integrationLimit);
+            Log.i(TAG, "setPIDRollPitch: " + Kp + " " + Ki + " " + Kd + " " + IntLimit);
 
         byte output[] = {
                 SET_PID_ROLL_PITCH, // Cmd
@@ -84,8 +83,8 @@ public class BluetoothProtocol {
                 (byte) (Ki >> 8),
                 (byte) (Kd & 0xFF),
                 (byte) (Kd >> 8),
-                (byte) (integrationLimit & 0xFF),
-                (byte) (integrationLimit >> 8),
+                (byte) (IntLimit & 0xFF),
+                (byte) (IntLimit >> 8),
         };
         sendCommand(output); // Set PID values
     }
@@ -94,6 +93,9 @@ public class BluetoothProtocol {
      * Use this to request PID values for roll and pitch.
      */
     public void getPIDRollPitch() {
+        if (D)
+            Log.i(TAG, "getPIDRollPitch");
+
         byte output[] = {
                 GET_PID_ROLL_PITCH, // Cmd
                 0, // Length
@@ -110,7 +112,7 @@ public class BluetoothProtocol {
      */
     public void setPIDYaw(int Kp, int Ki, int Kd, int integrationLimit) {
         if (D)
-            Log.i(TAG, "setPID yaw: " + Kp + " " + Ki + " " + Kd + " " + integrationLimit);
+            Log.i(TAG, "setPIDYaw: " + Kp + " " + Ki + " " + Kd + " " + integrationLimit);
 
         byte output[] = {
                 SET_PID_YAW, // Cmd
@@ -131,6 +133,9 @@ public class BluetoothProtocol {
      * Use this to request PID values for yaw.
      */
     public void getPIDYaw() {
+        if (D)
+            Log.i(TAG, "getPIDYaw");
+
         byte output[] = {
                 GET_PID_YAW, // Cmd
                 0, // Length
@@ -148,7 +153,7 @@ public class BluetoothProtocol {
      */
     public void setKalman(int Qangle, int Qbias, int Rmeasure) {
         if (D)
-            Log.i(TAG, "setKalman " + Qangle + " " + Qbias + " " + Rmeasure);
+            Log.i(TAG, "setKalman: " + Qangle + " " + Qbias + " " + Rmeasure);
 
         byte output[] = {
                 SET_KALMAN, // Cmd
@@ -164,6 +169,9 @@ public class BluetoothProtocol {
     }
 
     public void getKalman() {
+        if (D)
+            Log.i(TAG, "getKalman");
+
         byte output[] = {
                 GET_KALMAN, // Cmd
                 0, // Length
@@ -172,6 +180,9 @@ public class BluetoothProtocol {
     }
 
     public void sendAngles(byte enable) {
+        if (D)
+            Log.i(TAG, "sendAngles: " + enable);
+
         byte output[] = {
                 SEND_ANGLES, // Cmd
                 1, // Length
@@ -181,6 +192,9 @@ public class BluetoothProtocol {
     }
 
     public void sendInfo(byte enable) {
+        if (D)
+            Log.i(TAG, "sendInfo: " + enable);
+
         byte output[] = {
                 SEND_INFO, // Cmd
                 1, // Length
@@ -236,27 +250,47 @@ public class BluetoothProtocol {
 
                 switch (cmd) {
                     case GET_PID_ROLL_PITCH:
-                        int Kp = input[0] | (input[1] << 8);
-                        int Ki = input[2] | (input[3] << 8);
-                        int Kd = input[4] | (input[5] << 8);
-                        int integrationLimit = input[6] | (input[7] << 8);
+                        int KpRollPitch = input[0] | (input[1] << 8);
+                        int KiRollPitch = input[2] | (input[3] << 8);
+                        int KdRollPitch = input[4] | (input[5] << 8);
+                        int IntLimitRollPitch = input[6] | (input[7] << 8);
 
-                        // TODO: Just store this as an int
-                        bundle.putString(LaunchPadFlightControllerActivity.KP_VALUE, String.format("%.2f", (float) Kp / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.KI_VALUE, String.format("%.2f", (float) Ki / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.KD_VALUE, String.format("%.2f", (float) Kd / 100.0f));
+                        bundle.putInt(LaunchPadFlightControllerActivity.KP_ROLL_PITCH_VALUE, KpRollPitch);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KI_ROLL_PITCH_VALUE, KiRollPitch);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KD_ROLL_PITCH_VALUE, KdRollPitch);
+                        bundle.putInt(LaunchPadFlightControllerActivity.INT_LIMIT_ROLL_PITCH_VALUE, IntLimitRollPitch);
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
 
                         if (D)
-                            Log.i(TAG, "PID: " + Kp + " " + Ki + " " + Kd + " " + integrationLimit);
+                            Log.i(TAG, "Received PID roll & pitch: " + KpRollPitch + " " + KiRollPitch + " " + KdRollPitch + " " + IntLimitRollPitch);
                         break;
+
+                    case GET_PID_YAW:
+                        int KpYaw = input[0] | (input[1] << 8);
+                        int KiYAw = input[2] | (input[3] << 8);
+                        int KdYAw = input[4] | (input[5] << 8);
+                        int IntLimitYaw = input[6] | (input[7] << 8);
+
+                        bundle.putInt(LaunchPadFlightControllerActivity.KP_YAW_VALUE, KpYaw);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KI_YAW_VALUE, KiYAw);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KD_YAW_VALUE, KdYAw);
+                        bundle.putInt(LaunchPadFlightControllerActivity.INT_LIMIT_YAW_VALUE, IntLimitYaw);
+
+                        message.setData(bundle);
+                        mHandler.sendMessage(message);
+
+                        if (D)
+                            Log.i(TAG, "Received PID yaw: " + KpYaw + " " + KiYAw + " " + KdYAw + " " + IntLimitYaw);
+                        break;
+
                     case GET_KALMAN:
                         int Qangle = input[0] | (input[1] << 8);
                         int Qbias = input[2] | (input[3] << 8);
                         int Rmeasure = input[4] | (input[5] << 8);
 
+                        // TODO: Just store this as an int
                         bundle.putString(LaunchPadFlightControllerActivity.QANGLE_VALUE, String.format("%.4f", (float) Qangle / 10000.0f));
                         bundle.putString(LaunchPadFlightControllerActivity.QBIAS_VALUE, String.format("%.4f", (float) Qbias / 10000.0f));
                         bundle.putString(LaunchPadFlightControllerActivity.RMEASURE_VALUE, String.format("%.4f", (float) Rmeasure / 10000.0f));
@@ -293,6 +327,7 @@ public class BluetoothProtocol {
                         int pitch = input[2] | ((byte) input[3] << 8); // This can be negative as well
                         int yaw = input[4] | ((byte) input[5] << 8); // This can be negative as well
 
+                        // TODO: Just store this as an int
                         bundle.putString(LaunchPadFlightControllerActivity.ROLL_ANGLE, String.format("%.2f", (float) roll / 100.0f));
                         bundle.putString(LaunchPadFlightControllerActivity.PITCH_ANGLE, String.format("%.2f", (float) pitch / 100.0f));
                         bundle.putString(LaunchPadFlightControllerActivity.YAW_ANGLE, String.format("%.2f", (float) yaw / 100.0f));
@@ -303,9 +338,10 @@ public class BluetoothProtocol {
                         if (D)
                             Log.v(TAG, "Acc: " + roll + " Gyro: " + pitch + " Kalman: " + yaw);
                         break;
+
                     default:
                         if (D)
-                            Log.e(TAG, "Unknown command");
+                            Log.e(TAG, "Unknown command: " + cmd);
                         break;
                 }
             } else {
