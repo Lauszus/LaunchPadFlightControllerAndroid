@@ -149,13 +149,13 @@ public class PIDFragment extends Fragment {
                             }
                         }); // Wait before sending the message
                         counter += 25;
-                        mHandler.post(new Runnable() {
+                        mHandler.postDelayed(new Runnable() {
                             public void run() {
                                 LaunchPadFlightControllerActivity activity = (LaunchPadFlightControllerActivity) getActivity();
                                 if (activity != null)
                                     activity.mChatService.mBluetoothProtocol.getPIDRollPitch();
                             }
-                        }); // Wait before sending the message
+                        }, counter); // Wait before sending the message
                         counter += 25;
                     }
 /*
