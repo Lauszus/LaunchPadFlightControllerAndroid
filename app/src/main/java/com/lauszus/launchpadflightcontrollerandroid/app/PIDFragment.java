@@ -31,6 +31,8 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 public class PIDFragment extends Fragment {
     private static final String TAG = PIDFragment.class.getSimpleName();
     private static final boolean D = LaunchPadFlightControllerActivity.D;
@@ -179,7 +181,7 @@ public class PIDFragment extends Fragment {
     }
 
     private String pidToString(int value) {
-        return String.format("%.2f", (float) value / 100.0f); // SeekBar can only handle integers, so format it to a float with two decimal places
+        return String.format(Locale.US, "%.2f", (float) value / 100.0f); // SeekBar can only handle integers, so format it to a float with two decimal places
     }
 
     private void updateView() {

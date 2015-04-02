@@ -107,18 +107,16 @@ public class GraphFragment extends Fragment {
         graphView.setLegendAlign(LegendAlign.BOTTOM);
         graphView.scrollToEnd();
 
-        LinearLayout layout = (LinearLayout) v.findViewById(R.id.linegraph);
-
         GraphViewStyle mGraphViewStyle = new GraphViewStyle();
         mGraphViewStyle.setNumHorizontalLabels(11);
-        mGraphViewStyle.setNumVerticalLabels(9);
+        graphView.setVerticalLabels(new String[]{ "180", "135", "90", "45", "0", "-45", "-90", "-135", "-180" });
         mGraphViewStyle.setTextSize(15);
         mGraphViewStyle.setLegendWidth(140);
         mGraphViewStyle.setLegendMarginBottom(30);
 
         graphView.setGraphViewStyle(mGraphViewStyle);
 
-        layout.addView(graphView);
+        ((LinearLayout) v.findViewById(R.id.linegraph)).addView(graphView);
 
         mCheckBox1 = (CheckBox) v.findViewById(R.id.checkBox1);
         mCheckBox1.setOnClickListener(new OnClickListener() {
