@@ -45,6 +45,7 @@ public class PIDFragment extends Fragment {
 
     private int KpRollPitch, KiRollPitch, KdRollPitch, IntLimitRollPitch;
     private int KpYaw, KiYaw, KdYaw, IntLimitYaw;
+    boolean receivedPIDValues;
 
     private final Handler mHandler = new Handler();
     private int counter = 0;
@@ -95,21 +96,38 @@ public class PIDFragment extends Fragment {
         mKpSeekBar.setMax(1000); // 0-10
         mKpSeekBar.setOnSeekBarChangeListener(new SeekBarListener(v.findViewById(R.id.KpValue)));
         mKpSeekBar.setProgress(mKpSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
+        KpRollPitch = KpYaw = mKpSeekBar.getProgress();
 
         mKiSeekBar = (SeekBar) v.findViewById(R.id.KiSeekBar);
         mKiSeekBar.setMax(1000); // 0-10
         mKiSeekBar.setOnSeekBarChangeListener(new SeekBarListener(v.findViewById(R.id.KiValue)));
         mKiSeekBar.setProgress(mKiSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
+        KiRollPitch = KiYaw = mKpSeekBar.getProgress();
 
         mKdSeekBar = (SeekBar) v.findViewById(R.id.KdSeekBar);
         mKdSeekBar.setMax(1000); // 0-10
         mKdSeekBar.setOnSeekBarChangeListener(new SeekBarListener(v.findViewById(R.id.KdValue)));
         mKdSeekBar.setProgress(mKdSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
+        KdRollPitch = KdYaw = mKpSeekBar.getProgress();
 
         mIntLimitSeekBar = (SeekBar) v.findViewById(R.id.IntLimitSeekBar);
         mIntLimitSeekBar.setMax(1000); // 0-10
         mIntLimitSeekBar.setOnSeekBarChangeListener(new SeekBarListener(v.findViewById(R.id.IntLimitValue)));
         mIntLimitSeekBar.setProgress(mIntLimitSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
+        IntLimitRollPitch = IntLimitYaw = mIntLimitSeekBar.getProgress();
+
+        // Use custom OnArrowListener class to handle button click, button long click and if the button is held down
+        new OnArrowListener(v.findViewById(R.id.KpUpArrow), mKpSeekBar, true);
+        new OnArrowListener(v.findViewById(R.id.KpDownArrow), mKpSeekBar, false);
+
+        new OnArrowListener(v.findViewById(R.id.KiUpArrow), mKiSeekBar, true);
+        new OnArrowListener(v.findViewById(R.id.KiDownArrow), mKiSeekBar, false);
+
+        new OnArrowListener(v.findViewById(R.id.KdUpArrow), mKdSeekBar, true);
+        new OnArrowListener(v.findViewById(R.id.KdDownArrow), mKdSeekBar, false);
+
+        new OnArrowListener(v.findViewById(R.id.IntLimitUpArrow), mIntLimitSeekBar, true);
+        new OnArrowListener(v.findViewById(R.id.IntLimitDownArrow), mIntLimitSeekBar, false);
 
         mSendButton = (Button) v.findViewById(R.id.button);
         mSendButton.setOnClickListener(new OnClickListener() {
@@ -144,39 +162,29 @@ public class PIDFragment extends Fragment {
             }
         });
 
-        // Use custom OnArrowListener class to handle button click, button long click and if the button is held down
-        new OnArrowListener(v.findViewById(R.id.KpUpArrow), mKpSeekBar, true);
-        new OnArrowListener(v.findViewById(R.id.KpDownArrow), mKpSeekBar, false);
-
-        new OnArrowListener(v.findViewById(R.id.KiUpArrow), mKiSeekBar, true);
-        new OnArrowListener(v.findViewById(R.id.KiDownArrow), mKiSeekBar, false);
-
-        new OnArrowListener(v.findViewById(R.id.KdUpArrow), mKdSeekBar, true);
-        new OnArrowListener(v.findViewById(R.id.KdDownArrow), mKdSeekBar, false);
-
-        new OnArrowListener(v.findViewById(R.id.IntLimitUpArrow), mIntLimitSeekBar, true);
-        new OnArrowListener(v.findViewById(R.id.IntLimitDownArrow), mIntLimitSeekBar, false);
-
+        receivedPIDValues = false;
         updateSendButton();
 
         return v;
     }
 
-    public void updatePIDRollPitch(int Kp, int Ki, int Kd, int intLimit) {
+    public void updatePIDRollPitch(int Kp, int Ki, int Kd, int IntLimit) {
         KpRollPitch = Kp;
         KiRollPitch = Ki;
         KdRollPitch = Kd;
-        IntLimitRollPitch = intLimit;
+        IntLimitRollPitch = IntLimit;
 
+        receivedPIDValues = true;
         updateView();
     }
 
-    public void updatePIDYaw(int Kp, int Ki, int Kd, int intLimit) {
+    public void updatePIDYaw(int Kp, int Ki, int Kd, int IntLimit) {
         KpYaw = Kp;
         KiYaw = Ki;
         KdYaw = Kd;
-        IntLimitYaw = intLimit;
+        IntLimitYaw = IntLimit;
 
+        receivedPIDValues = true;
         updateView();
     }
 
@@ -187,22 +195,26 @@ public class PIDFragment extends Fragment {
     private void updateView() {
         if (mKpView != null && mKpSeekBar != null) {
             int Kp = rollPitchRadio.isChecked() ? KpRollPitch : KpYaw;
-            mKpView.setText(pidToString(Kp));
+            if (receivedPIDValues)
+                mKpView.setText(pidToString(Kp));
             mKpSeekBar.setProgress(Kp);
         }
         if (mKiView != null && mKiSeekBar != null) {
             int Ki = rollPitchRadio.isChecked() ? KiRollPitch : KiYaw;
-            mKiView.setText(pidToString(Ki));
+            if (receivedPIDValues)
+                mKiView.setText(pidToString(Ki));
             mKiSeekBar.setProgress(Ki);
         }
         if (mKdView != null && mKdSeekBar != null) {
             int Kd = rollPitchRadio.isChecked() ? KdRollPitch : KdYaw;
-            mKdView.setText(pidToString(Kd));
+            if (receivedPIDValues)
+                mKdView.setText(pidToString(Kd));
             mKdSeekBar.setProgress(Kd);
         }
         if (mIntLimitView != null && mIntLimitSeekBar != null) {
             int IntLimit = rollPitchRadio.isChecked() ? IntLimitRollPitch : IntLimitYaw;
-            mIntLimitView.setText(pidToString(IntLimit));
+            if (receivedPIDValues)
+                mIntLimitView.setText(pidToString(IntLimit));
             mIntLimitSeekBar.setProgress(IntLimit);
         }
     }
