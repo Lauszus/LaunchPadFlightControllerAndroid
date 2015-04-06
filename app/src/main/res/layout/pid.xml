@@ -66,7 +66,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
-                        android:id="@+id/KpView"
+                        android:id="@+id/KpCurrentValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -85,7 +85,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
-                        android:id="@+id/KiView"
+                        android:id="@+id/KiCurrentValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -104,7 +104,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
-                        android:id="@+id/KdView"
+                        android:id="@+id/KdCurrentValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -126,11 +126,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/intLimit"
+                        android:text="@string/IntLimit"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
-                        android:id="@+id/IntLimitView"
+                        android:id="@+id/IntLimitCurrentValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -151,205 +151,17 @@
                     android:textColor="#ff33b5e5" />
             </TableRow>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
+            <include layout="@layout/seekbar_arrows"
+                android:id="@+id/Kp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
-                    android:layout_weight="0"
-                    android:text="@string/Kp" />
+            <include layout="@layout/seekbar_arrows"
+                android:id="@+id/Ki" />
 
-                <TextView
-                    android:id="@+id/KpValue"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:textIsSelectable="false" />
-            </LinearLayout>
+            <include layout="@layout/seekbar_arrows"
+                android:id="@+id/Kd" />
 
-            <RelativeLayout
-                android:layout_marginTop="5dp" >
-
-                <Button
-                    android:id="@+id/KpDownArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
-                    android:layout_alignParentLeft="true" />
-
-                <SeekBar
-                    android:id="@+id/KpSeekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/KpDownArrow"
-                    android:layout_toLeftOf="@+id/KpUpArrow"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
-
-                <Button
-                    android:id="@+id/KpUpArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
-                    android:layout_alignParentRight="true" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
-                    android:layout_weight="0"
-                    android:text="@string/Ki" />
-
-                <TextView
-                    android:id="@+id/KiValue"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:textIsSelectable="false" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_marginTop="5dp" >
-
-                <Button
-                    android:id="@+id/KiDownArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
-                    android:layout_alignParentLeft="true" />
-
-                <SeekBar
-                    android:id="@+id/KiSeekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/KiDownArrow"
-                    android:layout_toLeftOf="@+id/KiUpArrow"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
-
-                <Button
-                    android:id="@+id/KiUpArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
-                    android:layout_alignParentRight="true" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
-                    android:layout_weight="0"
-                    android:text="@string/Kd" />
-
-                <TextView
-                    android:id="@+id/KdValue"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:textIsSelectable="false" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_marginTop="5dp" >
-
-                <Button
-                    android:id="@+id/KdDownArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
-                    android:layout_alignParentLeft="true" />
-
-                <SeekBar
-                    android:id="@+id/KdSeekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/KdDownArrow"
-                    android:layout_toLeftOf="@+id/KdUpArrow"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
-
-                <Button
-                    android:id="@+id/KdUpArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
-                    android:layout_alignParentRight="true" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
-                    android:layout_weight="0"
-                    android:text="@string/intLimit" />
-
-                <TextView
-                    android:id="@+id/IntLimitValue"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:textIsSelectable="false" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_marginTop="5dp" >
-
-                <Button
-                    android:id="@+id/IntLimitDownArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
-                    android:layout_alignParentLeft="true" />
-
-                <SeekBar
-                    android:id="@+id/IntLimitSeekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/IntLimitDownArrow"
-                    android:layout_toLeftOf="@+id/IntLimitUpArrow"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
-
-                <Button
-                    android:id="@+id/IntLimitUpArrow"
-                    android:layout_width="@dimen/arrow_size"
-                    android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
-                    android:layout_alignParentRight="true" />
-
-            </RelativeLayout>
+            <include layout="@layout/seekbar_arrows"
+                android:id="@+id/IntLimit" />
 
         </TableLayout>
 

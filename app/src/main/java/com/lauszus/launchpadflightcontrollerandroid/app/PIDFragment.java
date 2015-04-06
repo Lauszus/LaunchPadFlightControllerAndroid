@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class PIDFragment extends Fragment {
     private Button mSendButton;
     private RadioButton rollPitchRadio;
 
-    private TextView mKpView, mKiView, mKdView, mIntLimitView;
+    private TextView mKpCurrentValue, mKiCurrentValue, mKdCurrentValue, mIntLimitCurrentValue;
     private SeekBar mKpSeekBar, mKiSeekBar, mKdSeekBar, mIntLimitSeekBar;
 
     private int KpRollPitch, KiRollPitch, KdRollPitch, IntLimitRollPitch;
@@ -69,10 +70,19 @@ public class PIDFragment extends Fragment {
         RadioButton yawRadio = (RadioButton) v.findViewById(R.id.yawRadio);
         yawRadio.setOnClickListener(radioOnClickListener);
 
-        mKpView = (TextView) v.findViewById(R.id.KpView);
-        mKiView = (TextView) v.findViewById(R.id.KiView);
-        mKdView = (TextView) v.findViewById(R.id.KdView);
-        mIntLimitView = (TextView) v.findViewById(R.id.IntLimitView);
+        mKpCurrentValue = (TextView) v.findViewById(R.id.KpCurrentValue);
+        mKiCurrentValue = (TextView) v.findViewById(R.id.KiCurrentValue);
+        mKdCurrentValue = (TextView) v.findViewById(R.id.KdCurrentValue);
+        mIntLimitCurrentValue = (TextView) v.findViewById(R.id.IntLimitCurrentValue);
+
+        LinearLayout mKp = (LinearLayout) v.findViewById(R.id.Kp);
+        ((TextView) mKp.findViewById(R.id.text)).setText(getResources().getText(R.string.Kp));
+        LinearLayout mKi = (LinearLayout) v.findViewById(R.id.Ki);
+        ((TextView) mKi.findViewById(R.id.text)).setText(getResources().getText(R.string.Ki));
+        LinearLayout mKd = (LinearLayout) v.findViewById(R.id.Kd);
+        ((TextView) mKd.findViewById(R.id.text)).setText(getResources().getText(R.string.Kd));
+        LinearLayout mIntLimit = (LinearLayout) v.findViewById(R.id.IntLimit);
+        ((TextView) mIntLimit.findViewById(R.id.text)).setText(getResources().getText(R.string.IntLimit));
 
         class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
             TextView SeekBarValue;
@@ -92,42 +102,42 @@ public class PIDFragment extends Fragment {
             }
         }
 
-        mKpSeekBar = (SeekBar) v.findViewById(R.id.KpSeekBar);
+        mKpSeekBar = (SeekBar) mKp.findViewById(R.id.seekBar);
         mKpSeekBar.setMax(1000); // 0-10
-        mKpSeekBar.setOnSeekBarChangeListener(new SeekBarListener(v.findViewById(R.id.KpValue)));
+        mKpSeekBar.setOnSeekBarChangeListener(new SeekBarListener(mKp.findViewById(R.id.value)));
         mKpSeekBar.setProgress(mKpSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
         KpRollPitch = KpYaw = mKpSeekBar.getProgress();
 
-        mKiSeekBar = (SeekBar) v.findViewById(R.id.KiSeekBar);
+        mKiSeekBar = (SeekBar) mKi.findViewById(R.id.seekBar);
         mKiSeekBar.setMax(1000); // 0-10
-        mKiSeekBar.setOnSeekBarChangeListener(new SeekBarListener(v.findViewById(R.id.KiValue)));
+        mKiSeekBar.setOnSeekBarChangeListener(new SeekBarListener(mKi.findViewById(R.id.value)));
         mKiSeekBar.setProgress(mKiSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
         KiRollPitch = KiYaw = mKpSeekBar.getProgress();
 
-        mKdSeekBar = (SeekBar) v.findViewById(R.id.KdSeekBar);
+        mKdSeekBar = (SeekBar) mKd.findViewById(R.id.seekBar);
         mKdSeekBar.setMax(1000); // 0-10
-        mKdSeekBar.setOnSeekBarChangeListener(new SeekBarListener(v.findViewById(R.id.KdValue)));
+        mKdSeekBar.setOnSeekBarChangeListener(new SeekBarListener(mKd.findViewById(R.id.value)));
         mKdSeekBar.setProgress(mKdSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
         KdRollPitch = KdYaw = mKpSeekBar.getProgress();
 
-        mIntLimitSeekBar = (SeekBar) v.findViewById(R.id.IntLimitSeekBar);
+        mIntLimitSeekBar = (SeekBar) mIntLimit.findViewById(R.id.seekBar);
         mIntLimitSeekBar.setMax(1000); // 0-10
-        mIntLimitSeekBar.setOnSeekBarChangeListener(new SeekBarListener(v.findViewById(R.id.IntLimitValue)));
+        mIntLimitSeekBar.setOnSeekBarChangeListener(new SeekBarListener(mIntLimit.findViewById(R.id.value)));
         mIntLimitSeekBar.setProgress(mIntLimitSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
         IntLimitRollPitch = IntLimitYaw = mIntLimitSeekBar.getProgress();
 
         // Use custom OnArrowListener class to handle button click, button long click and if the button is held down
-        new OnArrowListener(v.findViewById(R.id.KpUpArrow), mKpSeekBar, true);
-        new OnArrowListener(v.findViewById(R.id.KpDownArrow), mKpSeekBar, false);
+        new OnArrowListener(mKp.findViewById(R.id.upArrow), mKpSeekBar, true);
+        new OnArrowListener(mKp.findViewById(R.id.downArrow), mKpSeekBar, false);
 
-        new OnArrowListener(v.findViewById(R.id.KiUpArrow), mKiSeekBar, true);
-        new OnArrowListener(v.findViewById(R.id.KiDownArrow), mKiSeekBar, false);
+        new OnArrowListener(mKi.findViewById(R.id.upArrow), mKiSeekBar, true);
+        new OnArrowListener(mKi.findViewById(R.id.downArrow), mKiSeekBar, false);
 
-        new OnArrowListener(v.findViewById(R.id.KdUpArrow), mKdSeekBar, true);
-        new OnArrowListener(v.findViewById(R.id.KdDownArrow), mKdSeekBar, false);
+        new OnArrowListener(mKd.findViewById(R.id.upArrow), mKdSeekBar, true);
+        new OnArrowListener(mKd.findViewById(R.id.downArrow), mKdSeekBar, false);
 
-        new OnArrowListener(v.findViewById(R.id.IntLimitUpArrow), mIntLimitSeekBar, true);
-        new OnArrowListener(v.findViewById(R.id.IntLimitDownArrow), mIntLimitSeekBar, false);
+        new OnArrowListener(mIntLimit.findViewById(R.id.upArrow), mIntLimitSeekBar, true);
+        new OnArrowListener(mIntLimit.findViewById(R.id.downArrow), mIntLimitSeekBar, false);
 
         mSendButton = (Button) v.findViewById(R.id.button);
         mSendButton.setOnClickListener(new OnClickListener() {
@@ -193,28 +203,28 @@ public class PIDFragment extends Fragment {
     }
 
     private void updateView() {
-        if (mKpView != null && mKpSeekBar != null) {
+        if (mKpCurrentValue != null && mKpSeekBar != null) {
             int Kp = rollPitchRadio.isChecked() ? KpRollPitch : KpYaw;
             if (receivedPIDValues)
-                mKpView.setText(pidToString(Kp));
+                mKpCurrentValue.setText(pidToString(Kp));
             mKpSeekBar.setProgress(Kp);
         }
-        if (mKiView != null && mKiSeekBar != null) {
+        if (mKiCurrentValue != null && mKiSeekBar != null) {
             int Ki = rollPitchRadio.isChecked() ? KiRollPitch : KiYaw;
             if (receivedPIDValues)
-                mKiView.setText(pidToString(Ki));
+                mKiCurrentValue.setText(pidToString(Ki));
             mKiSeekBar.setProgress(Ki);
         }
-        if (mKdView != null && mKdSeekBar != null) {
+        if (mKdCurrentValue != null && mKdSeekBar != null) {
             int Kd = rollPitchRadio.isChecked() ? KdRollPitch : KdYaw;
             if (receivedPIDValues)
-                mKdView.setText(pidToString(Kd));
+                mKdCurrentValue.setText(pidToString(Kd));
             mKdSeekBar.setProgress(Kd);
         }
-        if (mIntLimitView != null && mIntLimitSeekBar != null) {
+        if (mIntLimitCurrentValue != null && mIntLimitSeekBar != null) {
             int IntLimit = rollPitchRadio.isChecked() ? IntLimitRollPitch : IntLimitYaw;
             if (receivedPIDValues)
-                mIntLimitView.setText(pidToString(IntLimit));
+                mIntLimitCurrentValue.setText(pidToString(IntLimit));
             mIntLimitSeekBar.setProgress(IntLimit);
         }
     }
