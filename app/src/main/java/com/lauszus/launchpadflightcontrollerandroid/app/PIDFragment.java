@@ -46,7 +46,7 @@ public class PIDFragment extends Fragment {
 
     private int KpRollPitch, KiRollPitch, KdRollPitch, IntLimitRollPitch;
     private int KpYaw, KiYaw, KdYaw, IntLimitYaw;
-    boolean receivedPIDValues;
+    private boolean receivedPIDValues;
 
     private final Handler mHandler = new Handler();
     private int counter = 0;
@@ -233,7 +233,7 @@ public class PIDFragment extends Fragment {
         LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
         if (activity != null && activity.mChatService != null && mSendButton != null) {
             if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED)
-                mSendButton.setText(R.string.updateValues);
+                mSendButton.setText(R.string.updatePIDValues);
             else
                 mSendButton.setText(R.string.button);
         }

@@ -33,16 +33,12 @@ public class BluetoothProtocol {
     static final byte GET_PID_ROLL_PITCH = 1;
     static final byte SET_PID_YAW = 2;
     static final byte GET_PID_YAW = 3;
-    static final byte SET_ANGLE_KP = 4;
-    static final byte GET_ANGLE_KP = 5;
-    static final byte SET_STICK_SCALING = 6;
-    static final byte GET_STICK_SCALING = 7;
-    static final byte SET_ANGLE_MAX_INC = 8;
-    static final byte GET_ANGLE_MAX_INC = 9;
-    static final byte SET_KALMAN = 10;
-    static final byte GET_KALMAN = 11;
-    static final byte SEND_ANGLES = 12;
-    static final byte SEND_INFO = 13;
+    static final byte SET_SETTINGS = 4;
+    static final byte GET_SETTINGS = 5;
+    static final byte SET_KALMAN = 6;
+    static final byte GET_KALMAN = 7;
+    static final byte SEND_ANGLES = 8;
+    static final byte SEND_INFO = 9;
 
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
@@ -138,6 +134,35 @@ public class BluetoothProtocol {
 
         byte output[] = {
                 GET_PID_YAW, // Cmd
+                0, // Length
+        };
+        sendCommand(output); // Send output
+    }
+
+    public void setSettings(int AngleKp, byte AngleMaxInc, int StickScalingRollPitch, int StickScalingYaw) {
+        if (D)
+            Log.i(TAG, "setSettings: " + AngleKp + " " + AngleMaxInc + " " + StickScalingRollPitch + " " + StickScalingYaw);
+
+        byte output[] = {
+                SET_SETTINGS, // Cmd
+                7, // Length
+                (byte) (AngleKp & 0xFF),
+                (byte) (AngleKp >> 8),
+                AngleMaxInc,
+                (byte) (StickScalingRollPitch & 0xFF),
+                (byte) (StickScalingRollPitch >> 8),
+                (byte) (StickScalingYaw & 0xFF),
+                (byte) (StickScalingYaw >> 8),
+        };
+        sendCommand(output); // Send output
+    }
+
+    public void getSettings() {
+        if (D)
+            Log.i(TAG, "getSettings");
+
+        byte output[] = {
+                GET_SETTINGS, // Cmd
                 0, // Length
         };
         sendCommand(output); // Send output
@@ -283,6 +308,24 @@ public class BluetoothProtocol {
 
                         if (D)
                             Log.i(TAG, "Received PID yaw: " + KpYaw + " " + KiYAw + " " + KdYAw + " " + IntLimitYaw);
+                        break;
+
+                    case GET_SETTINGS:
+                        int AngleKp = input[0] | (input[1] << 8);
+                        byte AngleMaxInc = (byte) input[2];
+                        int StickScalingRollPitch = input[3] | (input[4] << 8);
+                        int StickScalingYaw = input[5] | (input[6] << 8);
+
+                        bundle.putInt(LaunchPadFlightControllerActivity.ANGLE_KP_VALUE, AngleKp);
+                        bundle.putByte(LaunchPadFlightControllerActivity.ANGLE_MAX_INC_VALUE, AngleMaxInc);
+                        bundle.putInt(LaunchPadFlightControllerActivity.STICK_SCALING_ROLL_PITCH_VALUE, StickScalingRollPitch);
+                        bundle.putInt(LaunchPadFlightControllerActivity.STICK_SCALING_YAW_VALUE, StickScalingYaw);
+
+                        message.setData(bundle);
+                        mHandler.sendMessage(message);
+
+                        if (D)
+                            Log.i(TAG, "Received settings: " + AngleKp + " " + AngleMaxInc + " " + StickScalingRollPitch + " " + StickScalingYaw);
                         break;
 
                     case GET_KALMAN:

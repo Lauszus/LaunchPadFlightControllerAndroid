@@ -24,9 +24,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     public static final int INFO_FRAGMENT = 0;
-    public static final int PID_FRAGMENT = 1;
-    public static final int MAP_FRAGMENT = 2;
-    public static final int GRAPH_FRAGMENT = 3;
+    public static final int SETTINGS_FRAGMENT = 1;
+    public static final int PID_FRAGMENT = 2;
+    public static final int MAP_FRAGMENT = 3;
+    public static final int GRAPH_FRAGMENT = 4;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -37,6 +38,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case INFO_FRAGMENT:
                 return new InfoFragment();
+            case SETTINGS_FRAGMENT:
+                return new SettingsFragment();
             case PID_FRAGMENT:
                 return new PIDFragment();
             case MAP_FRAGMENT:
@@ -49,7 +52,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4; // Return number of tabs
+        return 5; // Return number of tabs
     }
 
     @Override
@@ -57,6 +60,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case INFO_FRAGMENT:
                 return "Info";
+            case SETTINGS_FRAGMENT:
+                return "Settings";
             case PID_FRAGMENT:
                 return "PID";
             case MAP_FRAGMENT:

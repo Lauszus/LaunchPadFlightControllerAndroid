@@ -60,6 +60,11 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
 
+    public static final String ANGLE_KP_VALUE = "angle_kp_value";
+    public static final String ANGLE_MAX_INC_VALUE = "angle_max_inc_value";
+    public static final String STICK_SCALING_ROLL_PITCH_VALUE = "stick_scaling_roll_pitch_value";
+    public static final String STICK_SCALING_YAW_VALUE = "stick_scaling_yaw_value";
+
     public static final String KP_ROLL_PITCH_VALUE = "kp_roll_pitch_value";
     public static final String KI_ROLL_PITCH_VALUE = "ki_roll_pitch_value";
     public static final String KD_ROLL_PITCH_VALUE = "kd_roll_pitch_value";
@@ -277,6 +282,8 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
         if (mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
             if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
                 mChatService.mBluetoothProtocol.sendInfo((byte) 1); // Request info
+            else if (checkTab(ViewPagerAdapter.SETTINGS_FRAGMENT))
+                mChatService.mBluetoothProtocol.getSettings();
             else if (checkTab(ViewPagerAdapter.PID_FRAGMENT)) {
                 mChatService.mBluetoothProtocol.getPIDRollPitch();
                 mChatService.mBluetoothProtocol.getPIDYaw();
@@ -374,6 +381,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     // The Handler class that gets information back from the BluetoothChatService
     private static class BluetoothHandler extends Handler {
         private final WeakReference<LaunchPadFlightControllerActivity> mActivity; // See: http://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
+        SettingsFragment settingsFragment;
         PIDFragment pidFragment;
         InfoFragment infoFragment;
         GraphFragment graphFragment;
@@ -403,6 +411,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                                 public void run() {
                                     LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
                                     if (mLaunchPadFlightControllerActivity != null) {
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getSettings();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDRollPitch();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDYaw();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getKalman();
@@ -435,6 +444,9 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                         case BluetoothChatService.STATE_CONNECTING:
                             break;
                     }
+                    settingsFragment = (SettingsFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.SETTINGS_FRAGMENT);
+                    if (settingsFragment != null)
+                        settingsFragment.updateSendButton();
                     pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                     if (pidFragment != null)
                         pidFragment.updateSendButton();
@@ -443,6 +455,12 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                 case MESSAGE_READ:
                     Bundle data = msg.getData();
                     if (data != null) {
+                        if (data.containsKey(ANGLE_KP_VALUE) && data.containsKey(ANGLE_MAX_INC_VALUE) && data.containsKey(STICK_SCALING_ROLL_PITCH_VALUE) && data.containsKey(STICK_SCALING_YAW_VALUE)) {
+                            settingsFragment = (SettingsFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.SETTINGS_FRAGMENT);
+                            if (settingsFragment != null)
+                                settingsFragment.updateSettings(data.getInt(ANGLE_KP_VALUE), data.getByte(ANGLE_MAX_INC_VALUE), data.getInt(STICK_SCALING_ROLL_PITCH_VALUE), data.getInt(STICK_SCALING_YAW_VALUE));
+                        }
+
                         pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                         if (pidFragment != null) {
                             if (data.containsKey(KP_ROLL_PITCH_VALUE) && data.containsKey(KI_ROLL_PITCH_VALUE) && data.containsKey(KD_ROLL_PITCH_VALUE) && data.containsKey(INT_LIMIT_ROLL_PITCH_VALUE))
@@ -476,6 +494,9 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                     break;
                 case MESSAGE_DISCONNECTED:
                     mLaunchPadFlightControllerActivity.supportInvalidateOptionsMenu();
+                    settingsFragment = (SettingsFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.SETTINGS_FRAGMENT);
+                    if (settingsFragment != null)
+                        settingsFragment.updateSendButton();
                     pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                     if (pidFragment != null)
                         pidFragment.updateSendButton();

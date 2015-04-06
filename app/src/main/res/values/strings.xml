@@ -27,6 +27,13 @@
     <string name="battery">Battery level:</string>
     <string name="runTime">Run time:</string>
 
+    <!-- Settings Fragment -->
+    <string name="AngleKp">Angle Kp:</string>
+    <string name="AngleMaxInc">Max angle inclination:</string>
+    <string name="StickScalingRollPitch">Stick scaling (roll &amp; pitch):</string>
+    <string name="StickScalingYaw">Stick scaling (yaw):</string>
+    <string name="updateSettings">Press to update settings</string>
+
     <!-- PID Fragment -->
     <string name="Roll_pitch">Roll &amp; pitch</string>
     <string name="Kp">P:</string>
@@ -35,7 +42,7 @@
     <string name="IntLimit">Integration limit:</string>
     <string name="currentValues">Current Values:</string>
     <string name="adjustValues">Adjust Values:</string>
-    <string name="updateValues">Press to update PID values</string>
+    <string name="updatePIDValues">Press to update PID values</string>
 
     <!-- Graph Fragment -->
     <string name="roll">Roll</string>
