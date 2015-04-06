@@ -32,15 +32,12 @@ public class OnArrowListener implements View.OnClickListener, View.OnLongClickLi
 
     OnArrowListener(View v, SeekBar mSeekbar, boolean positive) {
         Button mButton = (Button) v;
-        if (mButton == null)
-            throw new RuntimeException();
+        this.mSeekbar = mSeekbar;
+        this.positive = positive;
 
         mButton.setOnClickListener(this);
         mButton.setOnLongClickListener(this);
         mButton.setOnTouchListener(this);
-
-        this.mSeekbar = mSeekbar;
-        this.positive = positive;
     }
 
     private int round10(int n) {
@@ -48,7 +45,7 @@ public class OnArrowListener implements View.OnClickListener, View.OnLongClickLi
     }
 
     private void longClick() {
-        mSeekbar.setProgress(round10(mSeekbar.getProgress() + (positive ? 10 : -10))); // Increase/decrease with 0.1 and round to nearest multiple of 10
+        mSeekbar.setProgress(round10(mSeekbar.getProgress() + (positive ? 10 : -10))); // Increase/decrease with 10 and round to nearest multiple of 10
     }
 
     private Runnable runnable = new Runnable() {
@@ -61,7 +58,7 @@ public class OnArrowListener implements View.OnClickListener, View.OnLongClickLi
 
     @Override
     public void onClick(View v) {
-        mSeekbar.setProgress(mSeekbar.getProgress() + (positive ? 1 : -1)); // Increase/decrease with 0.01
+        mSeekbar.setProgress(mSeekbar.getProgress() + (positive ? 1 : -1)); // Increase/decrease with 1
     }
 
     @Override

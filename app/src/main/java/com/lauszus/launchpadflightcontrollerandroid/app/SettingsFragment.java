@@ -27,10 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
-
-import java.util.Locale;
 
 public class SettingsFragment extends Fragment {
     private static final String TAG = SettingsFragment.class.getSimpleName();
@@ -39,7 +36,7 @@ public class SettingsFragment extends Fragment {
     private Button mSendButton;
 
     private TextView mAngleKpCurrentValue, mAngleMaxIncCurrentValue, mStickScalingRollPitchCurrentValue, mStickScalingYawCurrentValue;
-    private SeekBar mAngleKpSeekBar, mAngleMaxIncSeekBar, mStickScalingRollPitchSeekBar, mStickScalingYawSeekBar;
+    private SeekBarArrows mAngleKpSeekBar, mAngleMaxIncSeekBar, mStickScalingRollPitchSeekBar, mStickScalingYawSeekBar;
 
     private int AngleKpValue, StickScalingRollPitchValue, StickScalingYawValue;
     private byte AngleMaxIncValue;
@@ -61,73 +58,24 @@ public class SettingsFragment extends Fragment {
         mStickScalingYawCurrentValue = (TextView) v.findViewById(R.id.StickScalingYawCurrentValue);
 
         LinearLayout mAngleKp = (LinearLayout) v.findViewById(R.id.AngleKp);
-        ((TextView) mAngleKp.findViewById(R.id.text)).setText(getResources().getText(R.string.AngleKp));
         LinearLayout mAngleMaxInc = (LinearLayout) v.findViewById(R.id.AngleMaxInc);
-        ((TextView) mAngleMaxInc.findViewById(R.id.text)).setText(getResources().getText(R.string.AngleMaxInc));
         LinearLayout mStickScalingRollPitch = (LinearLayout) v.findViewById(R.id.StickScalingRollPitch);
-        ((TextView) mStickScalingRollPitch.findViewById(R.id.text)).setText(getResources().getText(R.string.StickScalingRollPitch));
         LinearLayout mStickScalingYaw = (LinearLayout) v.findViewById(R.id.StickScalingYaw);
-        ((TextView) mStickScalingYaw.findViewById(R.id.text)).setText(getResources().getText(R.string.StickScalingYaw));
 
-        class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
-            TextView SeekBarValue;
-            boolean divide;
+        ((TextView) mAngleKp.findViewById(R.id.text)).setText(R.string.AngleKp);
+        ((TextView) mAngleMaxInc.findViewById(R.id.text)).setText(R.string.AngleMaxInc);
+        ((TextView) mStickScalingRollPitch.findViewById(R.id.text)).setText(R.string.StickScalingRollPitch);
+        ((TextView) mStickScalingYaw.findViewById(R.id.text)).setText(R.string.StickScalingYaw);
 
-            SeekBarListener(View SeekBarValue, boolean divide) {
-                this.SeekBarValue = (TextView) SeekBarValue;
-                this.divide = divide;
-            }
+        mAngleKpSeekBar = new SeekBarArrows(mAngleKp, 1000, true); // 0-10 in 0.01 steps
+        mAngleMaxIncSeekBar = new SeekBarArrows(mAngleMaxInc, 90, false); // 0-90 in 1 steps
+        mStickScalingRollPitchSeekBar = new SeekBarArrows(mStickScalingRollPitch, 1000, true); // 0-10 in 0.01 steps
+        mStickScalingYawSeekBar = new SeekBarArrows(mStickScalingYaw, 1000, true); // 0-10 in 0.01 steps
 
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-                if (divide)
-                    SeekBarValue.setText(settingsToString(progress)); // SeekBar can only handle integers, so format it to a float with two decimal places
-                else
-                    SeekBarValue.setText(Integer.toString(progress)); // The maximum angle inclination value should not be divided
-            }
-
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        }
-
-        mAngleKpSeekBar = (SeekBar) mAngleKp.findViewById(R.id.seekBar);
-        mAngleKpSeekBar.setMax(1000); // 0-10
-        mAngleKpSeekBar.setOnSeekBarChangeListener(new SeekBarListener(mAngleKp.findViewById(R.id.value), true));
-        mAngleKpSeekBar.setProgress(mAngleKpSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
         AngleKpValue = mAngleKpSeekBar.getProgress();
-
-        mAngleMaxIncSeekBar = (SeekBar) mAngleMaxInc.findViewById(R.id.seekBar);
-        mAngleMaxIncSeekBar.setMax(90); // 0-90
-        mAngleMaxIncSeekBar.setOnSeekBarChangeListener(new SeekBarListener(mAngleMaxInc.findViewById(R.id.value), false));
-        mAngleMaxIncSeekBar.setProgress(mAngleMaxIncSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
         AngleMaxIncValue = (byte) mAngleMaxIncSeekBar.getProgress();
-
-        mStickScalingRollPitchSeekBar = (SeekBar) mStickScalingRollPitch.findViewById(R.id.seekBar);
-        mStickScalingRollPitchSeekBar.setMax(1000); // 0-10
-        mStickScalingRollPitchSeekBar.setOnSeekBarChangeListener(new SeekBarListener(mStickScalingRollPitch.findViewById(R.id.value), true));
-        mStickScalingRollPitchSeekBar.setProgress(mStickScalingRollPitchSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
         StickScalingRollPitchValue = mStickScalingRollPitchSeekBar.getProgress();
-
-        mStickScalingYawSeekBar = (SeekBar) mStickScalingYaw.findViewById(R.id.seekBar);
-        mStickScalingYawSeekBar.setMax(1000); // 0-10
-        mStickScalingYawSeekBar.setOnSeekBarChangeListener(new SeekBarListener(mStickScalingYaw.findViewById(R.id.value), true));
-        mStickScalingYawSeekBar.setProgress(mStickScalingYawSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
         StickScalingYawValue = mStickScalingYawSeekBar.getProgress();
-
-        // Use custom OnArrowListener class to handle button click, button long click and if the button is held down
-        new OnArrowListener(mAngleKp.findViewById(R.id.upArrow), mAngleKpSeekBar, true);
-        new OnArrowListener(mAngleKp.findViewById(R.id.downArrow), mAngleKpSeekBar, false);
-
-        new OnArrowListener(mAngleMaxInc.findViewById(R.id.upArrow), mAngleMaxIncSeekBar, true);
-        new OnArrowListener(mAngleMaxInc.findViewById(R.id.downArrow), mAngleMaxIncSeekBar, false);
-
-        new OnArrowListener(mStickScalingRollPitch.findViewById(R.id.upArrow), mStickScalingRollPitchSeekBar, true);
-        new OnArrowListener(mStickScalingRollPitch.findViewById(R.id.downArrow), mStickScalingRollPitchSeekBar, false);
-
-        new OnArrowListener(mStickScalingYaw.findViewById(R.id.upArrow), mStickScalingYawSeekBar, true);
-        new OnArrowListener(mStickScalingYaw.findViewById(R.id.downArrow), mStickScalingYawSeekBar, false);
 
         mSendButton = (Button) v.findViewById(R.id.button);
         mSendButton.setOnClickListener(new View.OnClickListener() {
@@ -172,29 +120,25 @@ public class SettingsFragment extends Fragment {
         updateView();
     }
 
-    private String settingsToString(int value) {
-        return String.format(Locale.US, "%.2f", (float) value / 100.0f); // SeekBar can only handle integers, so format it to a float with two decimal places
-    }
-
     private void updateView() {
         if (mAngleKpCurrentValue != null && mAngleKpSeekBar != null) {
             if (receivedSettings)
-                mAngleKpCurrentValue.setText(settingsToString(AngleKpValue));
+                mAngleKpCurrentValue.setText(mAngleKpSeekBar.progressToString(AngleKpValue));
             mAngleKpSeekBar.setProgress(AngleKpValue);
         }
         if (mAngleMaxIncCurrentValue != null && mAngleMaxIncSeekBar != null) {
             if (receivedSettings)
-                mAngleMaxIncCurrentValue.setText(Integer.toString(AngleMaxIncValue));
+                mAngleMaxIncCurrentValue.setText(mAngleMaxIncSeekBar.progressToString(AngleMaxIncValue));
             mAngleMaxIncSeekBar.setProgress(AngleMaxIncValue);
         }
         if (mStickScalingRollPitchCurrentValue != null && mStickScalingRollPitchSeekBar != null) {
             if (receivedSettings)
-                mStickScalingRollPitchCurrentValue.setText(settingsToString(StickScalingRollPitchValue));
+                mStickScalingRollPitchCurrentValue.setText(mStickScalingRollPitchSeekBar.progressToString(StickScalingRollPitchValue));
             mStickScalingRollPitchSeekBar.setProgress(StickScalingRollPitchValue);
         }
         if (mStickScalingYawCurrentValue != null && mStickScalingYawSeekBar != null) {
             if (receivedSettings)
-                mStickScalingYawCurrentValue.setText(settingsToString(StickScalingYawValue));
+                mStickScalingYawCurrentValue.setText(mStickScalingYawSeekBar.progressToString(StickScalingYawValue));
             mStickScalingYawSeekBar.setProgress(StickScalingYawValue);
         }
     }
