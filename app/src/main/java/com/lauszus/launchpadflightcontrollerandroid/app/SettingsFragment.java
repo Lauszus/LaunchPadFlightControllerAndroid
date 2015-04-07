@@ -26,7 +26,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class SettingsFragment extends Fragment {
@@ -57,20 +56,10 @@ public class SettingsFragment extends Fragment {
         mStickScalingRollPitchCurrentValue = (TextView) v.findViewById(R.id.StickScalingRollPitchCurrentValue);
         mStickScalingYawCurrentValue = (TextView) v.findViewById(R.id.StickScalingYawCurrentValue);
 
-        LinearLayout mAngleKp = (LinearLayout) v.findViewById(R.id.AngleKp);
-        LinearLayout mAngleMaxInc = (LinearLayout) v.findViewById(R.id.AngleMaxInc);
-        LinearLayout mStickScalingRollPitch = (LinearLayout) v.findViewById(R.id.StickScalingRollPitch);
-        LinearLayout mStickScalingYaw = (LinearLayout) v.findViewById(R.id.StickScalingYaw);
-
-        ((TextView) mAngleKp.findViewById(R.id.text)).setText(R.string.AngleKp);
-        ((TextView) mAngleMaxInc.findViewById(R.id.text)).setText(R.string.AngleMaxInc);
-        ((TextView) mStickScalingRollPitch.findViewById(R.id.text)).setText(R.string.StickScalingRollPitch);
-        ((TextView) mStickScalingYaw.findViewById(R.id.text)).setText(R.string.StickScalingYaw);
-
-        mAngleKpSeekBar = new SeekBarArrows(mAngleKp, 1000, true); // 0-10 in 0.01 steps
-        mAngleMaxIncSeekBar = new SeekBarArrows(mAngleMaxInc, 90, false); // 0-90 in 1 steps
-        mStickScalingRollPitchSeekBar = new SeekBarArrows(mStickScalingRollPitch, 1000, true); // 0-10 in 0.01 steps
-        mStickScalingYawSeekBar = new SeekBarArrows(mStickScalingYaw, 1000, true); // 0-10 in 0.01 steps
+        mAngleKpSeekBar = new SeekBarArrows(v.findViewById(R.id.AngleKp), R.string.AngleKp, 1000, true); // 0-10 in 0.01 steps
+        mAngleMaxIncSeekBar = new SeekBarArrows(v.findViewById(R.id.AngleMaxInc), R.string.AngleMaxInc, 90, false); // 0-90 in 1 steps
+        mStickScalingRollPitchSeekBar = new SeekBarArrows(v.findViewById(R.id.StickScalingRollPitch), R.string.StickScalingRollPitch, 1000, true); // 0-10 in 0.01 steps
+        mStickScalingYawSeekBar = new SeekBarArrows(v.findViewById(R.id.StickScalingYaw), R.string.StickScalingYaw, 1000, true); // 0-10 in 0.01 steps
 
         AngleKpValue = mAngleKpSeekBar.getProgress();
         AngleMaxIncValue = (byte) mAngleMaxIncSeekBar.getProgress();

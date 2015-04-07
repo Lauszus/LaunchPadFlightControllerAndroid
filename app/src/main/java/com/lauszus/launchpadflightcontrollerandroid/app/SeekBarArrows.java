@@ -18,7 +18,8 @@
 
 package com.lauszus.launchpadflightcontrollerandroid.app;
 
-import android.widget.LinearLayout;
+import android.support.annotation.StringRes;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -26,12 +27,13 @@ import java.util.Locale;
 
 public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
     private SeekBar mSeekBar;
-    private TextView SeekBarValue;
+    private TextView mSeekBarValue;
     private boolean divide;
 
-    SeekBarArrows(LinearLayout layout, int max, boolean divide) {
-        mSeekBar = (SeekBar) layout.findViewById(R.id.seekBar);
-        SeekBarValue = (TextView) layout.findViewById(R.id.value);
+    SeekBarArrows(View v, @StringRes int resid, int max, boolean divide) {
+        mSeekBar = (SeekBar) v.findViewById(R.id.seekBar);
+        ((TextView) v.findViewById(R.id.text)).setText(resid);
+        mSeekBarValue = (TextView) v.findViewById(R.id.value);
         this.divide = divide;
 
         mSeekBar.setMax(max);
@@ -39,8 +41,8 @@ public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
         mSeekBar.setProgress(mSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
 
         // Use custom OnArrowListener class to handle button click, button long click and if the button is held down
-        new OnArrowListener(layout.findViewById(R.id.upArrow), mSeekBar, true);
-        new OnArrowListener(layout.findViewById(R.id.downArrow), mSeekBar, false);
+        new OnArrowListener(v.findViewById(R.id.upArrow), mSeekBar, true);
+        new OnArrowListener(v.findViewById(R.id.downArrow), mSeekBar, false);
     }
 
     public int getProgress() {
@@ -60,7 +62,7 @@ public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-        SeekBarValue.setText(progressToString(progress));
+        mSeekBarValue.setText(progressToString(progress));
     }
 
     @Override

@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -72,20 +71,10 @@ public class PIDFragment extends Fragment {
         mKdCurrentValue = (TextView) v.findViewById(R.id.KdCurrentValue);
         mIntLimitCurrentValue = (TextView) v.findViewById(R.id.IntLimitCurrentValue);
 
-        LinearLayout mKp = (LinearLayout) v.findViewById(R.id.Kp);
-        LinearLayout mKi = (LinearLayout) v.findViewById(R.id.Ki);
-        LinearLayout mKd = (LinearLayout) v.findViewById(R.id.Kd);
-        LinearLayout mIntLimit = (LinearLayout) v.findViewById(R.id.IntLimit);
-
-        ((TextView) mKp.findViewById(R.id.text)).setText(R.string.Kp);
-        ((TextView) mKi.findViewById(R.id.text)).setText(R.string.Ki);
-        ((TextView) mKd.findViewById(R.id.text)).setText(R.string.Kd);
-        ((TextView) mIntLimit.findViewById(R.id.text)).setText(R.string.IntLimit);
-
-        mKpSeekBar = new SeekBarArrows(mKp, 1000, true); // 0-10 in 0.01 steps
-        mKiSeekBar = new SeekBarArrows(mKi, 1000, true); // 0-10 in 0.01 steps
-        mKdSeekBar = new SeekBarArrows(mKd, 1000, true); // 0-10 in 0.01 steps
-        mIntLimitSeekBar = new SeekBarArrows(mIntLimit, 1000, true); // 0-10 in 0.01 steps
+        mKpSeekBar = new SeekBarArrows(v.findViewById(R.id.Kp), R.string.Kp, 1000, true); // 0-10 in 0.01 steps
+        mKiSeekBar = new SeekBarArrows(v.findViewById(R.id.Ki), R.string.Ki, 1000, true); // 0-10 in 0.01 steps
+        mKdSeekBar = new SeekBarArrows(v.findViewById(R.id.Kd), R.string.Kd, 1000, true); // 0-10 in 0.01 steps
+        mIntLimitSeekBar = new SeekBarArrows(v.findViewById(R.id.IntLimit), R.string.IntLimit, 1000, true); // 0-10 in 0.01 steps
 
         KpRollPitch = KpYaw = mKpSeekBar.getProgress();
         KiRollPitch = KiYaw = mKpSeekBar.getProgress();
