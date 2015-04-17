@@ -53,4 +53,11 @@
     <string name="Rmeasure">R<small><small>measure</small></small></string>
     <string name="update">Update</string>
 
+    <!-- Settings Dialog Fragment -->
+    <string name="dialog_title">Settings</string>
+    <string name="calibrateAccText">Press the button below to calibrate the accelerometer.</string>
+    <string name="calibrateAccButtonText">Calibrate accelerometer</string>
+    <string name="restoreText">Press the button below to restore the default configuration values.</string>
+    <string name="restoreButtonText">Restore values</string>
+
 </resources>

@@ -39,6 +39,8 @@ public class BluetoothProtocol {
     static final byte GET_KALMAN = 7;
     static final byte SEND_ANGLES = 8;
     static final byte SEND_INFO = 9;
+    static final byte CAL_ACC = 10;
+    static final byte RESTORE_DEFAULTS = 11;
 
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
@@ -224,6 +226,28 @@ public class BluetoothProtocol {
                 SEND_INFO, // Cmd
                 1, // Length
                 enable,
+        };
+        sendCommand(output); // Send output
+    }
+
+    public void calibrateAccelerometer() {
+        if (D)
+            Log.i(TAG, "calibrateAccelerometer");
+
+        byte output[] = {
+                CAL_ACC, // Cmd
+                0, // Length
+        };
+        sendCommand(output); // Send output
+    }
+
+    public void restoreDefaults() {
+        if (D)
+            Log.i(TAG, "restoreDefaults");
+
+        byte output[] = {
+                RESTORE_DEFAULTS, // Cmd
+                0, // Length
         };
         sendCommand(output); // Send output
     }

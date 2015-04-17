@@ -263,9 +263,10 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                 Intent serverIntent = new Intent(this, DeviceListActivity.class);
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
                 return true;
-            /*case R.id.action_settings:
-                // TODO: Make settings dialog
-                return true;*/
+            case R.id.action_settings:
+                // Open up the settings dialog
+                new SettingsDialogFragment().show(getSupportFragmentManager(), null);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
