@@ -28,15 +28,15 @@ import java.util.Locale;
 public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
     private SeekBar mSeekBar;
     private TextView mSeekBarValue;
-    private boolean divide;
+    private float divider;
 
-    SeekBarArrows(View v, @StringRes int resid, int max, boolean divide) {
+    SeekBarArrows(View v, @StringRes int resid, float max, float divider) {
         mSeekBar = (SeekBar) v.findViewById(R.id.seekBar);
         ((TextView) v.findViewById(R.id.text)).setText(resid);
         mSeekBarValue = (TextView) v.findViewById(R.id.value);
-        this.divide = divide;
+        this.divider = divider;
 
-        mSeekBar.setMax(max);
+        mSeekBar.setMax((int)(max * divider));
         mSeekBar.setOnSeekBarChangeListener(this);
         mSeekBar.setProgress(mSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
 
@@ -54,10 +54,8 @@ public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
     }
 
     public String progressToString(int value) {
-        if (divide)
-            return String.format(Locale.US, "%.2f", (float) value / 100.0f); // SeekBar can only handle integers, so format it to a float with two decimal places
-        else
-            return Integer.toString(value); // It is simply converted to a string
+        final String format = divider == 10000.0f ? "%.4f" : divider == 1000.0f ? "%.3f" : divider == 100.0f ? "%.2f" : divider == 10.0f ? "%.1f" : "%.0f"; // Set decimal places according to divider
+        return String.format(Locale.US, format, (float) value / divider); // SeekBar can only handle integers, so format it to a float with two decimal places
     }
 
     @Override

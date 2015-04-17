@@ -71,10 +71,10 @@ public class PIDFragment extends Fragment {
         mKdCurrentValue = (TextView) v.findViewById(R.id.KdCurrentValue);
         mIntLimitCurrentValue = (TextView) v.findViewById(R.id.IntLimitCurrentValue);
 
-        mKpSeekBar = new SeekBarArrows(v.findViewById(R.id.Kp), R.string.Kp, 1000, true); // 0-10 in 0.01 steps
-        mKiSeekBar = new SeekBarArrows(v.findViewById(R.id.Ki), R.string.Ki, 1000, true); // 0-10 in 0.01 steps
-        mKdSeekBar = new SeekBarArrows(v.findViewById(R.id.Kd), R.string.Kd, 1000, true); // 0-10 in 0.01 steps
-        mIntLimitSeekBar = new SeekBarArrows(v.findViewById(R.id.IntLimit), R.string.IntLimit, 1000, true); // 0-10 in 0.01 steps
+        mKpSeekBar = new SeekBarArrows(v.findViewById(R.id.Kp), R.string.Kp, 1, 1000); // 0-1 in 0.001 steps
+        mKiSeekBar = new SeekBarArrows(v.findViewById(R.id.Ki), R.string.Ki, 1, 1000); // 0-1 in 0.001 steps
+        mKdSeekBar = new SeekBarArrows(v.findViewById(R.id.Kd), R.string.Kd, 0.1f, 10000); // 0-0.1 in 0.0001 steps
+        mIntLimitSeekBar = new SeekBarArrows(v.findViewById(R.id.IntLimit), R.string.IntLimit, 10, 100); // 0-10 in 0.01 steps
 
         KpRollPitch = KpYaw = mKpSeekBar.getProgress();
         KiRollPitch = KiYaw = mKpSeekBar.getProgress();

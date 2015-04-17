@@ -56,10 +56,10 @@ public class SettingsFragment extends Fragment {
         mStickScalingRollPitchCurrentValue = (TextView) v.findViewById(R.id.StickScalingRollPitchCurrentValue);
         mStickScalingYawCurrentValue = (TextView) v.findViewById(R.id.StickScalingYawCurrentValue);
 
-        mAngleKpSeekBar = new SeekBarArrows(v.findViewById(R.id.AngleKp), R.string.AngleKp, 1000, true); // 0-10 in 0.01 steps
-        mAngleMaxIncSeekBar = new SeekBarArrows(v.findViewById(R.id.AngleMaxInc), R.string.AngleMaxInc, 90, false); // 0-90 in 1 steps
-        mStickScalingRollPitchSeekBar = new SeekBarArrows(v.findViewById(R.id.StickScalingRollPitch), R.string.StickScalingRollPitch, 1000, true); // 0-10 in 0.01 steps
-        mStickScalingYawSeekBar = new SeekBarArrows(v.findViewById(R.id.StickScalingYaw), R.string.StickScalingYaw, 1000, true); // 0-10 in 0.01 steps
+        mAngleKpSeekBar = new SeekBarArrows(v.findViewById(R.id.AngleKp), R.string.AngleKp, 10, 100); // 0-10 in 0.01 steps
+        mAngleMaxIncSeekBar = new SeekBarArrows(v.findViewById(R.id.AngleMaxInc), R.string.AngleMaxInc, 90, 1); // 0-90 in 1 steps
+        mStickScalingRollPitchSeekBar = new SeekBarArrows(v.findViewById(R.id.StickScalingRollPitch), R.string.StickScalingRollPitch, 10, 100); // 0-10 in 0.01 steps
+        mStickScalingYawSeekBar = new SeekBarArrows(v.findViewById(R.id.StickScalingYaw), R.string.StickScalingYaw, 10, 100); // 0-10 in 0.01 steps
 
         AngleKpValue = mAngleKpSeekBar.getProgress();
         AngleMaxIncValue = (byte) mAngleMaxIncSeekBar.getProgress();
