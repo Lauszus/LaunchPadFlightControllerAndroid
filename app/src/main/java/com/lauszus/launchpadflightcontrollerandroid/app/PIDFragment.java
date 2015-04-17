@@ -72,8 +72,8 @@ public class PIDFragment extends Fragment {
         mIntLimitCurrentValue = (TextView) v.findViewById(R.id.IntLimitCurrentValue);
 
         mKpSeekBar = new SeekBarArrows(v.findViewById(R.id.Kp), R.string.Kp, 1, 0.001f); // 0-1 in 0.001 steps
-        mKiSeekBar = new SeekBarArrows(v.findViewById(R.id.Ki), R.string.Ki, 1, 0.001f); // 0-1 in 0.001 steps
-        mKdSeekBar = new SeekBarArrows(v.findViewById(R.id.Kd), R.string.Kd, 0.1f, 0.0001f); // 0-0.1 in 0.0001 steps
+        mKiSeekBar = new SeekBarArrows(v.findViewById(R.id.Ki), R.string.Ki, 10, 0.01f); // 0-10 in 0.01 steps
+        mKdSeekBar = new SeekBarArrows(v.findViewById(R.id.Kd), R.string.Kd, 0.01f, 0.00001f); // 0-0.01 in 0.00001 steps
         mIntLimitSeekBar = new SeekBarArrows(v.findViewById(R.id.IntLimit), R.string.IntLimit, 10, 0.01f); // 0-10 in 0.01 steps
 
         KpRollPitch = KpYaw = mKpSeekBar.getProgress();

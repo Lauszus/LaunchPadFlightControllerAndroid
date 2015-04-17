@@ -54,7 +54,7 @@ public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
     }
 
     public String progressToString(int value) {
-        final String format = multiplier == 0.0001f ? "%.4f" : multiplier == 0.001f ? "%.3f" : multiplier == 0.01f ? "%.2f" : multiplier == 0.1f ? "%.1f" : "%.0f"; // Set decimal places according to divider
+        final String format = multiplier == 0.00001f ? "%.5f" : multiplier == 0.0001f ? "%.4f" : multiplier == 0.001f ? "%.3f" : multiplier == 0.01f ? "%.2f" : multiplier == 0.1f ? "%.1f" : "%.0f"; // Set decimal places according to divider
         return String.format(Locale.US, format, (float) value * multiplier); // SeekBar can only handle integers, so format it to a float with two decimal places
     }
 
