@@ -28,15 +28,15 @@ import java.util.Locale;
 public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
     private SeekBar mSeekBar;
     private TextView mSeekBarValue;
-    private float divider;
+    private float multiplier;
 
-    SeekBarArrows(View v, @StringRes int resid, float max, float divider) {
+    SeekBarArrows(View v, @StringRes int resid, float max, float multiplier) {
         mSeekBar = (SeekBar) v.findViewById(R.id.seekBar);
         ((TextView) v.findViewById(R.id.text)).setText(resid);
         mSeekBarValue = (TextView) v.findViewById(R.id.value);
-        this.divider = divider;
+        this.multiplier = multiplier;
 
-        mSeekBar.setMax((int)(max * divider));
+        mSeekBar.setMax((int)(max / multiplier));
         mSeekBar.setOnSeekBarChangeListener(this);
         mSeekBar.setProgress(mSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
 
@@ -54,8 +54,8 @@ public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
     }
 
     public String progressToString(int value) {
-        final String format = divider == 10000.0f ? "%.4f" : divider == 1000.0f ? "%.3f" : divider == 100.0f ? "%.2f" : divider == 10.0f ? "%.1f" : "%.0f"; // Set decimal places according to divider
-        return String.format(Locale.US, format, (float) value / divider); // SeekBar can only handle integers, so format it to a float with two decimal places
+        final String format = multiplier == 0.0001f ? "%.4f" : multiplier == 0.001f ? "%.3f" : multiplier == 0.01f ? "%.2f" : multiplier == 0.1f ? "%.1f" : "%.0f"; // Set decimal places according to divider
+        return String.format(Locale.US, format, (float) value * multiplier); // SeekBar can only handle integers, so format it to a float with two decimal places
     }
 
     @Override
