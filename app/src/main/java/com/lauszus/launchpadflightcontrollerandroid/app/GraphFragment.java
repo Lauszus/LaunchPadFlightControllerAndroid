@@ -46,13 +46,14 @@ public class GraphFragment extends Fragment {
 
     private static LineGraphView graphView;
     private static GraphViewSeries rollSeries, pitchSeries, yawSeries;
-    private static double counter = 100.0;
+    private static int bufferSize = 1000;
+    private static double counter = bufferSize;
 
     private static CheckBox mCheckBox1, mCheckBox2, mCheckBox3;
     private static EditText mQangle, mQbias, mRmeasure;
     public static ToggleButton mToggleButton;
 
-    private static double[][] buffer = new double[3][101]; // Used to store the 101 last readings
+    private static double[][] buffer = new double[3][bufferSize + 1]; // Used to store last readings
 
     public GraphFragment() {
         for (int i = 0; i < 3; i++)
@@ -67,14 +68,14 @@ public class GraphFragment extends Fragment {
         if (v == null)
             throw new RuntimeException();
 
-        GraphViewData[] data0 = new GraphViewData[101];
-        GraphViewData[] data1 = new GraphViewData[101];
-        GraphViewData[] data2 = new GraphViewData[101];
+        GraphViewData[] data0 = new GraphViewData[bufferSize + 1];
+        GraphViewData[] data1 = new GraphViewData[bufferSize + 1];
+        GraphViewData[] data2 = new GraphViewData[bufferSize + 1];
 
-        for (int i = 0; i < 101; i++) { // Restore last data
-            data0[i] = new GraphViewData(counter - 100 + i, buffer[0][i]);
-            data1[i] = new GraphViewData(counter - 100 + i, buffer[1][i]);
-            data2[i] = new GraphViewData(counter - 100 + i, buffer[2][i]);
+        for (int i = 0; i < bufferSize + 1; i++) { // Restore last data
+            data0[i] = new GraphViewData(counter - bufferSize + i, buffer[0][i]);
+            data1[i] = new GraphViewData(counter - bufferSize + i, buffer[1][i]);
+            data2[i] = new GraphViewData(counter - bufferSize + i, buffer[2][i]);
         }
 
         rollSeries = new GraphViewSeries("Roll", new GraphViewSeriesStyle(Color.RED, 2), data0);
@@ -99,7 +100,7 @@ public class GraphFragment extends Fragment {
             graphView.addSeries(yawSeries);
 
         graphView.setManualYAxisBounds(180, -180);
-        graphView.setViewPort(0, 100);
+        graphView.setViewPort(0, bufferSize);
         graphView.setScrollable(true);
         graphView.setDisableTouch(true);
 
@@ -211,12 +212,12 @@ public class GraphFragment extends Fragment {
             return;
 
         for (int i = 0; i < 3; i++)
-            System.arraycopy(buffer[i], 1, buffer[i], 0, 100);
+            System.arraycopy(buffer[i], 1, buffer[i], 0, bufferSize);
 
         try { // In some rare occasions the values can be corrupted
-            buffer[0][100] = Double.parseDouble(rollValue);
-            buffer[1][100] = Double.parseDouble(pitchValue);
-            buffer[2][100] = Double.parseDouble(yawValue);
+            buffer[0][bufferSize] = Double.parseDouble(rollValue);
+            buffer[1][bufferSize] = Double.parseDouble(pitchValue);
+            buffer[2][bufferSize] = Double.parseDouble(yawValue) - 180.0;
         } catch (NumberFormatException e) {
             if (D)
                 Log.e(TAG, "Error in input", e);
@@ -226,9 +227,9 @@ public class GraphFragment extends Fragment {
         boolean scroll = mCheckBox1.isChecked() || mCheckBox2.isChecked() || mCheckBox3.isChecked();
 
         counter++;
-        rollSeries.appendData(new GraphViewData(counter, buffer[0][100]), scroll, 101);
-        pitchSeries.appendData(new GraphViewData(counter, buffer[1][100]), scroll, 101);
-        yawSeries.appendData(new GraphViewData(counter, buffer[2][100]), scroll, 101);
+        rollSeries.appendData(new GraphViewData(counter, buffer[0][bufferSize]), scroll, bufferSize + 1);
+        pitchSeries.appendData(new GraphViewData(counter, buffer[1][bufferSize]), scroll, bufferSize + 1);
+        yawSeries.appendData(new GraphViewData(counter, buffer[2][bufferSize]), scroll, bufferSize + 1);
 
         if (!scroll)
             graphView.redrawAll();

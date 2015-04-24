@@ -392,7 +392,7 @@ public class BluetoothProtocol {
                     case SEND_ANGLES:
                         int roll = input[0] | ((byte) input[1] << 8); // This can be negative as well
                         int pitch = input[2] | ((byte) input[3] << 8); // This can be negative as well
-                        int yaw = input[4] | ((byte) input[5] << 8); // This can be negative as well
+                        int yaw = input[4] | (input[5] << 8); // Heading is always positive
 
                         // TODO: Just store this as an int
                         bundle.putString(LaunchPadFlightControllerActivity.ROLL_ANGLE, String.format("%.2f", (float) roll / 100.0f));
