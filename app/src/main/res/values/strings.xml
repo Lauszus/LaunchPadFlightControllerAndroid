@@ -29,6 +29,7 @@
 
     <!-- Settings Fragment -->
     <string name="AngleKp">Angle Kp:</string>
+    <string name="HeadingKp">Heading Kp:</string>
     <string name="AngleMaxInc">Max angle inclination:</string>
     <string name="StickScalingRollPitch">Stick scaling (roll &amp; pitch):</string>
     <string name="StickScalingYaw">Stick scaling (yaw):</string>

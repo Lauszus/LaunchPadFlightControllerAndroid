@@ -141,15 +141,17 @@ public class BluetoothProtocol {
         sendCommand(output); // Send output
     }
 
-    public void setSettings(int AngleKp, byte AngleMaxInc, int StickScalingRollPitch, int StickScalingYaw) {
+    public void setSettings(int AngleKp, int HeadingKp, byte AngleMaxInc, int StickScalingRollPitch, int StickScalingYaw) {
         if (D)
-            Log.i(TAG, "setSettings: " + AngleKp + " " + AngleMaxInc + " " + StickScalingRollPitch + " " + StickScalingYaw);
+            Log.i(TAG, "setSettings: " + AngleKp + " " + HeadingKp + " " + AngleMaxInc + " " + StickScalingRollPitch + " " + StickScalingYaw);
 
         byte output[] = {
                 SET_SETTINGS, // Cmd
-                7, // Length
+                9, // Length
                 (byte) (AngleKp & 0xFF),
                 (byte) (AngleKp >> 8),
+                (byte) (HeadingKp & 0xFF),
+                (byte) (HeadingKp >> 8),
                 AngleMaxInc,
                 (byte) (StickScalingRollPitch & 0xFF),
                 (byte) (StickScalingRollPitch >> 8),
@@ -336,11 +338,13 @@ public class BluetoothProtocol {
 
                     case GET_SETTINGS:
                         int AngleKp = input[0] | (input[1] << 8);
-                        byte AngleMaxInc = (byte) input[2];
-                        int StickScalingRollPitch = input[3] | (input[4] << 8);
-                        int StickScalingYaw = input[5] | (input[6] << 8);
+                        int HeadingKp = input[2] | (input[3] << 8);
+                        byte AngleMaxInc = (byte) input[4];
+                        int StickScalingRollPitch = input[5] | (input[6] << 8);
+                        int StickScalingYaw = input[7] | (input[8] << 8);
 
                         bundle.putInt(LaunchPadFlightControllerActivity.ANGLE_KP_VALUE, AngleKp);
+                        bundle.putInt(LaunchPadFlightControllerActivity.HEADING_KP_VALUE, HeadingKp);
                         bundle.putByte(LaunchPadFlightControllerActivity.ANGLE_MAX_INC_VALUE, AngleMaxInc);
                         bundle.putInt(LaunchPadFlightControllerActivity.STICK_SCALING_ROLL_PITCH_VALUE, StickScalingRollPitch);
                         bundle.putInt(LaunchPadFlightControllerActivity.STICK_SCALING_YAW_VALUE, StickScalingYaw);
@@ -349,7 +353,7 @@ public class BluetoothProtocol {
                         mHandler.sendMessage(message);
 
                         if (D)
-                            Log.i(TAG, "Received settings: " + AngleKp + " " + AngleMaxInc + " " + StickScalingRollPitch + " " + StickScalingYaw);
+                            Log.i(TAG, "Received settings: " + AngleKp + " " + HeadingKp + " " + AngleMaxInc + " " + StickScalingRollPitch + " " + StickScalingYaw);
                         break;
 
                     case GET_KALMAN:
@@ -368,27 +372,7 @@ public class BluetoothProtocol {
                         if (D)
                             Log.i(TAG, "Kalman: " + Qangle + " " + Qbias + " " + Rmeasure);
                         break;
-/*
-                    case START_INFO:
-                        int speed = input[0] | (input[1] << 8);
-                        int current = input[2] | ((byte) input[3] << 8); // This can be negative as well
-                        int turning = input[4] | ((byte) input[5] << 8); // This can be negative as well
-                        int battery = input[6] | (input[7] << 8);
-                        long runTime = input[8] | (input[9] << 8) | ((long) input[10] << 16) | ((long) input[11] << 24);
 
-                        bundle.putInt(LaunchPadFlightControllerActivity.SPEED_VALUE, speed);
-                        bundle.putInt(LaunchPadFlightControllerActivity.CURRENT_DRAW, current);
-                        bundle.putInt(LaunchPadFlightControllerActivity.TURNING_VALUE, turning);
-                        bundle.putInt(LaunchPadFlightControllerActivity.BATTERY_LEVEL, battery);
-                        bundle.putLong(LaunchPadFlightControllerActivity.RUN_TIME, runTime);
-
-                        message.setData(bundle);
-                        mHandler.sendMessage(message);
-
-                        if (D)
-                            Log.v(TAG, "Speed: " + speed + " Current: " + current + " Turning: " + turning + " Battery: " + battery + " Run time: " + runTime);
-                        break;
-*/
                     case SEND_ANGLES:
                         int roll = input[0] | ((byte) input[1] << 8); // This can be negative as well
                         int pitch = input[2] | ((byte) input[3] << 8); // This can be negative as well
