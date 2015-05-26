@@ -35,12 +35,10 @@ public class BluetoothProtocol {
     static final byte GET_PID_YAW = 3;
     static final byte SET_SETTINGS = 4;
     static final byte GET_SETTINGS = 5;
-    static final byte SET_KALMAN = 6;
-    static final byte GET_KALMAN = 7;
-    static final byte SEND_ANGLES = 8;
-    static final byte SEND_INFO = 9;
-    static final byte CAL_ACC = 10;
-    static final byte RESTORE_DEFAULTS = 11;
+    static final byte SEND_ANGLES = 6;
+    static final byte SEND_INFO = 7;
+    static final byte CAL_ACC = 8;
+    static final byte RESTORE_DEFAULTS = 9;
 
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
@@ -167,42 +165,6 @@ public class BluetoothProtocol {
 
         byte output[] = {
                 GET_SETTINGS, // Cmd
-                0, // Length
-        };
-        sendCommand(output); // Send output
-    }
-
-    /**
-     * Set the Kalman coeficients. All floats/doubles are multiplied by 10000.0 before sending.
-     * See: http://blog.tkjelectronics.dk/2012/09/a-practical-approach-to-kalman-filter-and-how-to-implement-it/.
-     *
-     * @param Qangle   Qangle
-     * @param Qbias    Qbias
-     * @param Rmeasure Rmeasure
-     */
-    public void setKalman(int Qangle, int Qbias, int Rmeasure) {
-        if (D)
-            Log.i(TAG, "setKalman: " + Qangle + " " + Qbias + " " + Rmeasure);
-
-        byte output[] = {
-                SET_KALMAN, // Cmd
-                6, // Length
-                (byte) (Qangle & 0xFF),
-                (byte) (Qangle >> 8),
-                (byte) (Qbias & 0xFF),
-                (byte) (Qbias >> 8),
-                (byte) (Rmeasure & 0xFF),
-                (byte) (Rmeasure >> 8),
-        };
-        sendCommand(output); // Set PID values
-    }
-
-    public void getKalman() {
-        if (D)
-            Log.i(TAG, "getKalman");
-
-        byte output[] = {
-                GET_KALMAN, // Cmd
                 0, // Length
         };
         sendCommand(output); // Send output
@@ -354,23 +316,6 @@ public class BluetoothProtocol {
 
                         if (D)
                             Log.i(TAG, "Received settings: " + AngleKp + " " + HeadingKp + " " + AngleMaxInc + " " + StickScalingRollPitch + " " + StickScalingYaw);
-                        break;
-
-                    case GET_KALMAN:
-                        int Qangle = input[0] | (input[1] << 8);
-                        int Qbias = input[2] | (input[3] << 8);
-                        int Rmeasure = input[4] | (input[5] << 8);
-
-                        // TODO: Just store this as an int
-                        bundle.putString(LaunchPadFlightControllerActivity.QANGLE_VALUE, String.format("%.4f", (float) Qangle / 10000.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.QBIAS_VALUE, String.format("%.4f", (float) Qbias / 10000.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.RMEASURE_VALUE, String.format("%.4f", (float) Rmeasure / 10000.0f));
-
-                        message.setData(bundle);
-                        mHandler.sendMessage(message);
-
-                        if (D)
-                            Log.i(TAG, "Kalman: " + Qangle + " " + Qbias + " " + Rmeasure);
                         break;
 
                     case SEND_ANGLES:

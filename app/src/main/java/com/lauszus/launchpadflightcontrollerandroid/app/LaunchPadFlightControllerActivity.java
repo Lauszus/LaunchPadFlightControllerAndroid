@@ -82,10 +82,6 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     public static final String BATTERY_LEVEL = "battery_level";
     public static final String RUN_TIME = "run_time";
 
-    public static final String QANGLE_VALUE = "qangle_value";
-    public static final String QBIAS_VALUE = "qbias_value";
-    public static final String RMEASURE_VALUE = "rmeasure_value";
-
     public static final String ROLL_ANGLE = "roll_angle";
     public static final String PITCH_ANGLE = "pitch_angle";
     public static final String YAW_ANGLE = "yaw_angle";
@@ -290,7 +286,6 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                 mChatService.mBluetoothProtocol.getPIDRollPitch();
                 mChatService.mBluetoothProtocol.getPIDYaw();
             } else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
-                mChatService.mBluetoothProtocol.getKalman();
                 if (GraphFragment.mToggleButton != null) {
                     if (GraphFragment.mToggleButton.isChecked())
                         mChatService.mBluetoothProtocol.sendAngles((byte) 1); // Request data
@@ -416,7 +411,6 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getSettings();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDRollPitch();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDYaw();
-                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getKalman();
                                     }
                                 }
                             }, 1000); // Wait 1 second before sending the message
@@ -475,12 +469,6 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                             infoFragment = (InfoFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.INFO_FRAGMENT);
                             if (infoFragment != null)
                                 infoFragment.updateView(data.getInt(SPEED_VALUE), data.getInt(CURRENT_DRAW), data.getInt(TURNING_VALUE), data.getInt(BATTERY_LEVEL), data.getLong(RUN_TIME));
-                        }
-
-                        if (data.containsKey(QANGLE_VALUE) && data.containsKey(QBIAS_VALUE) && data.containsKey(RMEASURE_VALUE)) {
-                            graphFragment = (GraphFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.GRAPH_FRAGMENT);
-                            if (graphFragment != null)
-                                graphFragment.updateKalman(data.getString(QANGLE_VALUE), data.getString(QBIAS_VALUE), data.getString(RMEASURE_VALUE));
                         }
 
                         if (data.containsKey(ROLL_ANGLE) && data.containsKey(PITCH_ANGLE) && data.containsKey(YAW_ANGLE)) {

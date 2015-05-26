@@ -49,10 +49,6 @@
     <string name="roll">Roll</string>
     <string name="pitch">Pitch</string>
     <string name="yaw">Yaw</string>
-    <string name="Qangle">Q<small><small>angle</small></small></string>
-    <string name="Qbias">Q<small><small>bias</small></small></string>
-    <string name="Rmeasure">R<small><small>measure</small></small></string>
-    <string name="update">Update</string>
 
     <!-- Settings Dialog Fragment -->
     <string name="dialog_title">Settings</string>

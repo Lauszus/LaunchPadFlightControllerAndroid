@@ -46,11 +46,10 @@ public class GraphFragment extends Fragment {
 
     private static LineGraphView graphView;
     private static GraphViewSeries rollSeries, pitchSeries, yawSeries;
-    private static int bufferSize = 1000;
+    private final static int bufferSize = 1000;
     private static double counter = bufferSize;
 
-    private static CheckBox mCheckBox1, mCheckBox2, mCheckBox3;
-    private static EditText mQangle, mQbias, mRmeasure;
+    private static CheckBox mCheckBoxRoll, mCheckBoxPitch, mCheckBoxYaw;
     public static ToggleButton mToggleButton;
 
     private static double[][] buffer = new double[3][bufferSize + 1]; // Used to store last readings
@@ -83,18 +82,18 @@ public class GraphFragment extends Fragment {
         yawSeries = new GraphViewSeries("Yaw", new GraphViewSeriesStyle(Color.BLUE, 2), data2);
 
         graphView = new LineGraphView(getActivity(), "");
-        if (mCheckBox1 != null) {
-            if (mCheckBox1.isChecked())
+        if (mCheckBoxRoll != null) {
+            if (mCheckBoxRoll.isChecked())
                 graphView.addSeries(rollSeries);
         } else
             graphView.addSeries(rollSeries);
-        if (mCheckBox2 != null) {
-            if (mCheckBox2.isChecked())
+        if (mCheckBoxPitch != null) {
+            if (mCheckBoxPitch.isChecked())
                 graphView.addSeries(pitchSeries);
         } else
             graphView.addSeries(pitchSeries);
-        if (mCheckBox3 != null) {
-            if (mCheckBox3.isChecked())
+        if (mCheckBoxYaw != null) {
+            if (mCheckBoxYaw.isChecked())
                 graphView.addSeries(yawSeries);
         } else
             graphView.addSeries(yawSeries);
@@ -119,8 +118,8 @@ public class GraphFragment extends Fragment {
 
         ((LinearLayout) v.findViewById(R.id.linegraph)).addView(graphView);
 
-        mCheckBox1 = (CheckBox) v.findViewById(R.id.checkBox1);
-        mCheckBox1.setOnClickListener(new OnClickListener() {
+        mCheckBoxRoll = (CheckBox) v.findViewById(R.id.checkBoxRoll);
+        mCheckBoxRoll.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked())
@@ -129,8 +128,8 @@ public class GraphFragment extends Fragment {
                     graphView.removeSeries(rollSeries);
             }
         });
-        mCheckBox2 = (CheckBox) v.findViewById(R.id.checkBox2);
-        mCheckBox2.setOnClickListener(new OnClickListener() {
+        mCheckBoxPitch = (CheckBox) v.findViewById(R.id.checkBoxPitch);
+        mCheckBoxPitch.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked())
@@ -139,8 +138,8 @@ public class GraphFragment extends Fragment {
                     graphView.removeSeries(pitchSeries);
             }
         });
-        mCheckBox3 = (CheckBox) v.findViewById(R.id.checkBox3);
-        mCheckBox3.setOnClickListener(new OnClickListener() {
+        mCheckBoxYaw = (CheckBox) v.findViewById(R.id.checkBoxYaw);
+        mCheckBoxYaw.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked())
@@ -171,40 +170,7 @@ public class GraphFragment extends Fragment {
             }
         });
 
-        mQangle = (EditText) v.findViewById(R.id.editText1);
-        mQbias = (EditText) v.findViewById(R.id.editText2);
-        mRmeasure = (EditText) v.findViewById(R.id.editText3);
-        Button mButton = (Button) v.findViewById(R.id.updateButton);
-        mButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
-                if (activity == null || activity.mChatService == null) {
-                    if (D)
-                        Log.e(TAG, "mChatService == null");
-                    return;
-                }
-                if (!mQangle.getText().toString().isEmpty() && !mQbias.getText().toString().isEmpty() && !mRmeasure.getText().toString().isEmpty())
-                    activity.mChatService.mBluetoothProtocol.setKalman((int) (Float.parseFloat(mQangle.getText().toString()) * 10000.0f), (int) (Float.parseFloat(mQbias.getText().toString()) * 10000.0f), (int) (Float.parseFloat(mRmeasure.getText().toString()) * 10000.0f));
-            }
-        });
-
         return v;
-    }
-
-    public void updateKalman(String Qangle, String Qbias, String Rmeasure) {
-        if (!Qangle.isEmpty() && mQangle != null && mQangle.getText() != null) {
-            if (!(mQangle.getText().toString().equals(Qangle)))
-                mQangle.setText(Qangle);
-        }
-        if (!Qbias.isEmpty() && mQbias != null && mQbias.getText() != null) {
-            if (!(mQbias.getText().toString().equals(Qbias)))
-                mQbias.setText(Qbias);
-        }
-        if (!Rmeasure.isEmpty() && mRmeasure != null && mRmeasure.getText() != null) {
-            if (!(mRmeasure.getText().toString().equals(Rmeasure)))
-                mRmeasure.setText(Rmeasure);
-        }
     }
 
     public void updateAngles(String rollValue, String pitchValue, String yawValue) {
@@ -224,7 +190,7 @@ public class GraphFragment extends Fragment {
             return;
         }
 
-        boolean scroll = mCheckBox1.isChecked() || mCheckBox2.isChecked() || mCheckBox3.isChecked();
+        boolean scroll = mCheckBoxRoll.isChecked() || mCheckBoxPitch.isChecked() || mCheckBoxYaw.isChecked();
 
         counter++;
         rollSeries.appendData(new GraphViewData(counter, buffer[0][bufferSize]), scroll, bufferSize + 1);
