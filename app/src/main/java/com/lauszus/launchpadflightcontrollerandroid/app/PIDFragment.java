@@ -35,13 +35,14 @@ public class PIDFragment extends Fragment {
     private static final boolean D = LaunchPadFlightControllerActivity.D;
 
     private Button mSendButton;
-    private RadioButton rollPitchRadio;
+    private RadioButton rollPitchRadio, yawRadio;
 
     private TextView mKpCurrentValue, mKiCurrentValue, mKdCurrentValue, mIntLimitCurrentValue;
     private SeekBarArrows mKpSeekBar, mKiSeekBar, mKdSeekBar, mIntLimitSeekBar;
 
     private int KpRollPitch, KiRollPitch, KdRollPitch, IntLimitRollPitch;
     private int KpYaw, KiYaw, KdYaw, IntLimitYaw;
+    private int KpAltHold, KiAltHold, KdAltHold, IntLimitAltHold;
     private boolean receivedPIDValues;
 
     private final Handler mHandler = new Handler();
@@ -63,8 +64,10 @@ public class PIDFragment extends Fragment {
 
         rollPitchRadio = (RadioButton) v.findViewById(R.id.rollPitchRadio);
         rollPitchRadio.setOnClickListener(radioOnClickListener);
-        RadioButton yawRadio = (RadioButton) v.findViewById(R.id.yawRadio);
+        yawRadio = (RadioButton) v.findViewById(R.id.yawRadio);
         yawRadio.setOnClickListener(radioOnClickListener);
+        RadioButton altHoldRadio = (RadioButton) v.findViewById(R.id.altHoldRadio);
+        altHoldRadio.setOnClickListener(radioOnClickListener);
 
         mKpCurrentValue = (TextView) v.findViewById(R.id.KpCurrentValue);
         mKiCurrentValue = (TextView) v.findViewById(R.id.KiCurrentValue);
@@ -76,10 +79,11 @@ public class PIDFragment extends Fragment {
         mKdSeekBar = new SeekBarArrows(v.findViewById(R.id.Kd), R.string.Kd, 0.01f, 0.00001f); // 0-0.01 in 0.00001 steps
         mIntLimitSeekBar = new SeekBarArrows(v.findViewById(R.id.IntLimit), R.string.IntLimit, 10, 0.01f); // 0-10 in 0.01 steps
 
-        KpRollPitch = KpYaw = mKpSeekBar.getProgress();
-        KiRollPitch = KiYaw = mKpSeekBar.getProgress();
-        KdRollPitch = KdYaw = mKpSeekBar.getProgress();
-        IntLimitRollPitch = IntLimitYaw = mIntLimitSeekBar.getProgress();
+        // Set default values
+        KpRollPitch = KpYaw = KpAltHold = mKpSeekBar.getProgress();
+        KiRollPitch = KiYaw = KiAltHold = mKpSeekBar.getProgress();
+        KdRollPitch = KdYaw = KdAltHold = mKpSeekBar.getProgress();
+        IntLimitRollPitch = IntLimitYaw = IntLimitAltHold = mIntLimitSeekBar.getProgress();
 
         mSendButton = (Button) v.findViewById(R.id.button);
         mSendButton.setOnClickListener(new OnClickListener() {
@@ -94,10 +98,16 @@ public class PIDFragment extends Fragment {
                 if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
                     mHandler.post(new Runnable() {
                         public void run() {
+                            int Kp = mKpSeekBar.getProgress();
+                            int Ki = mKiSeekBar.getProgress();
+                            int Kd = mKdSeekBar.getProgress();
+                            int IntLimit = mIntLimitSeekBar.getProgress();
                             if (rollPitchRadio.isChecked())
-                                activity.mChatService.mBluetoothProtocol.setPIDRollPitch(mKpSeekBar.getProgress(), mKiSeekBar.getProgress(), mKdSeekBar.getProgress(), mIntLimitSeekBar.getProgress());
+                                activity.mChatService.mBluetoothProtocol.setPIDRollPitch(Kp, Ki, Kd, IntLimit);
+                            else if (yawRadio.isChecked())
+                                activity.mChatService.mBluetoothProtocol.setPIDYaw(Kp, Ki, Kd, IntLimit);
                             else
-                                activity.mChatService.mBluetoothProtocol.setPIDYaw(mKpSeekBar.getProgress(), mKiSeekBar.getProgress(), mKdSeekBar.getProgress(), mIntLimitSeekBar.getProgress());
+                                activity.mChatService.mBluetoothProtocol.setPIDAltHold(Kp, Ki, Kd, IntLimit);
                         }
                     }); // Wait before sending the message
                     counter += 100;
@@ -105,8 +115,10 @@ public class PIDFragment extends Fragment {
                         public void run() {
                             if (rollPitchRadio.isChecked())
                                 activity.mChatService.mBluetoothProtocol.getPIDRollPitch();
-                            else
+                            else if (yawRadio.isChecked())
                                 activity.mChatService.mBluetoothProtocol.getPIDYaw();
+                            else
+                                activity.mChatService.mBluetoothProtocol.getPIDAltHold();
                         }
                     }, counter); // Wait before sending the message
                     counter = 0; // Reset counter
@@ -140,27 +152,37 @@ public class PIDFragment extends Fragment {
         updateView();
     }
 
+    public void updatePIDAltHold(int Kp, int Ki, int Kd, int IntLimit) {
+        KpAltHold = Kp;
+        KiAltHold = Ki;
+        KdAltHold = Kd;
+        IntLimitAltHold = IntLimit;
+
+        receivedPIDValues = true;
+        updateView();
+    }
+
     private void updateView() {
         if (mKpCurrentValue != null && mKpSeekBar != null) {
-            int Kp = rollPitchRadio.isChecked() ? KpRollPitch : KpYaw;
+            int Kp = rollPitchRadio.isChecked() ? KpRollPitch : yawRadio.isChecked() ? KpYaw : KpAltHold;
             if (receivedPIDValues)
                 mKpCurrentValue.setText(mKpSeekBar.progressToString(Kp));
             mKpSeekBar.setProgress(Kp);
         }
         if (mKiCurrentValue != null && mKiSeekBar != null) {
-            int Ki = rollPitchRadio.isChecked() ? KiRollPitch : KiYaw;
+            int Ki = rollPitchRadio.isChecked() ? KiRollPitch : yawRadio.isChecked() ? KiYaw : KiAltHold;
             if (receivedPIDValues)
                 mKiCurrentValue.setText(mKiSeekBar.progressToString(Ki));
             mKiSeekBar.setProgress(Ki);
         }
         if (mKdCurrentValue != null && mKdSeekBar != null) {
-            int Kd = rollPitchRadio.isChecked() ? KdRollPitch : KdYaw;
+            int Kd = rollPitchRadio.isChecked() ? KdRollPitch : yawRadio.isChecked() ? KdYaw : KdAltHold;
             if (receivedPIDValues)
                 mKdCurrentValue.setText(mKdSeekBar.progressToString(Kd));
             mKdSeekBar.setProgress(Kd);
         }
         if (mIntLimitCurrentValue != null && mIntLimitSeekBar != null) {
-            int IntLimit = rollPitchRadio.isChecked() ? IntLimitRollPitch : IntLimitYaw;
+            int IntLimit = rollPitchRadio.isChecked() ? IntLimitRollPitch : yawRadio.isChecked() ? IntLimitYaw : IntLimitAltHold;
             if (receivedPIDValues)
                 mIntLimitCurrentValue.setText(mIntLimitSeekBar.progressToString(IntLimit));
             mIntLimitSeekBar.setProgress(IntLimit);

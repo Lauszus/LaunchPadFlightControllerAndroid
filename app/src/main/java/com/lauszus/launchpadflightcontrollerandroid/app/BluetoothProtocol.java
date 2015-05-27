@@ -33,12 +33,14 @@ public class BluetoothProtocol {
     static final byte GET_PID_ROLL_PITCH = 1;
     static final byte SET_PID_YAW = 2;
     static final byte GET_PID_YAW = 3;
-    static final byte SET_SETTINGS = 4;
-    static final byte GET_SETTINGS = 5;
-    static final byte SEND_ANGLES = 6;
-    static final byte SEND_INFO = 7;
-    static final byte CAL_ACC = 8;
-    static final byte RESTORE_DEFAULTS = 9;
+    static final byte SET_PID_ALT_HOLD = 4;
+    static final byte GET_PID_ALT_HOLD = 5;
+    static final byte SET_SETTINGS = 6;
+    static final byte GET_SETTINGS = 7;
+    static final byte SEND_ANGLES = 8;
+    static final byte SEND_INFO = 9;
+    static final byte CAL_ACC = 10;
+    static final byte RESTORE_DEFAULTS = 11;
 
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
@@ -59,19 +61,9 @@ public class BluetoothProtocol {
         mChatService.write(getChecksum(output));
     }
 
-    /**
-     * Set PID values for roll and pitch. All floats/doubles are multiplied by 100.0 before sending.
-     *
-     * @param Kp Kp value.
-     * @param Ki Ki value.
-     * @param Kd Kd value.
-     */
-    public void setPIDRollPitch(int Kp, int Ki, int Kd, int IntLimit) {
-        if (D)
-            Log.i(TAG, "setPIDRollPitch: " + Kp + " " + Ki + " " + Kd + " " + IntLimit);
-
+    private void setPID(byte cmd, int Kp, int Ki, int Kd, int IntLimit) {
         byte output[] = {
-                SET_PID_ROLL_PITCH, // Cmd
+                cmd, // Cmd
                 8, // Length
                 (byte) (Kp & 0xFF),
                 (byte) (Kp >> 8),
@@ -85,6 +77,28 @@ public class BluetoothProtocol {
         sendCommand(output); // Set PID values
     }
 
+    private void getPID(byte cmd) {
+        byte output[] = {
+                cmd, // Cmd
+                0, // Length
+        };
+        sendCommand(output); // Send output
+    }
+
+    /**
+     * Set PID values for roll and pitch.
+     *
+     * @param Kp Kp value.
+     * @param Ki Ki value.
+     * @param Kd Kd value.
+     */
+    public void setPIDRollPitch(int Kp, int Ki, int Kd, int IntLimit) {
+        if (D)
+            Log.i(TAG, "setPIDRollPitch: " + Kp + " " + Ki + " " + Kd + " " + IntLimit);
+
+        setPID(SET_PID_ROLL_PITCH, Kp, Ki, Kd, IntLimit);
+    }
+
     /**
      * Use this to request PID values for roll and pitch.
      */
@@ -92,37 +106,21 @@ public class BluetoothProtocol {
         if (D)
             Log.i(TAG, "getPIDRollPitch");
 
-        byte output[] = {
-                GET_PID_ROLL_PITCH, // Cmd
-                0, // Length
-        };
-        sendCommand(output); // Send output
+        getPID(GET_PID_ROLL_PITCH);
     }
 
     /**
-     * Set PID values for yaw. All floats/doubles are multiplied by 100.0 before sending.
+     * Set PID values for yaw.
      *
      * @param Kp Kp value.
      * @param Ki Ki value.
      * @param Kd Kd value.
      */
-    public void setPIDYaw(int Kp, int Ki, int Kd, int integrationLimit) {
+    public void setPIDYaw(int Kp, int Ki, int Kd, int IntLimit) {
         if (D)
-            Log.i(TAG, "setPIDYaw: " + Kp + " " + Ki + " " + Kd + " " + integrationLimit);
+            Log.i(TAG, "setPIDYaw: " + Kp + " " + Ki + " " + Kd + " " + IntLimit);
 
-        byte output[] = {
-                SET_PID_YAW, // Cmd
-                8, // Length
-                (byte) (Kp & 0xFF),
-                (byte) (Kp >> 8),
-                (byte) (Ki & 0xFF),
-                (byte) (Ki >> 8),
-                (byte) (Kd & 0xFF),
-                (byte) (Kd >> 8),
-                (byte) (integrationLimit & 0xFF),
-                (byte) (integrationLimit >> 8),
-        };
-        sendCommand(output); // Set PID values
+        setPID(SET_PID_YAW, Kp, Ki, Kd, IntLimit);
     }
 
     /**
@@ -132,11 +130,31 @@ public class BluetoothProtocol {
         if (D)
             Log.i(TAG, "getPIDYaw");
 
-        byte output[] = {
-                GET_PID_YAW, // Cmd
-                0, // Length
-        };
-        sendCommand(output); // Send output
+        getPID(GET_PID_YAW);
+    }
+
+    /**
+     * Set PID values for altitude hold.
+     *
+     * @param Kp Kp value.
+     * @param Ki Ki value.
+     * @param Kd Kd value.
+     */
+    public void setPIDAltHold(int Kp, int Ki, int Kd, int IntLimit) {
+        if (D)
+            Log.i(TAG, "setPIDAltHold: " + Kp + " " + Ki + " " + Kd + " " + IntLimit);
+
+        setPID(SET_PID_ALT_HOLD, Kp, Ki, Kd, IntLimit);
+    }
+
+    /**
+     * Use this to request PID values for altitude hold.
+     */
+    public void getPIDAltHold() {
+        if (D)
+            Log.i(TAG, "getPIDAltHold");
+
+        getPID(GET_PID_ALT_HOLD);
     }
 
     public void setSettings(int AngleKp, int HeadingKp, byte AngleMaxInc, int StickScalingRollPitch, int StickScalingYaw) {
@@ -296,6 +314,24 @@ public class BluetoothProtocol {
 
                         if (D)
                             Log.i(TAG, "Received PID yaw: " + KpYaw + " " + KiYAw + " " + KdYAw + " " + IntLimitYaw);
+                        break;
+
+                    case GET_PID_ALT_HOLD:
+                        int KpAltHold = input[0] | (input[1] << 8);
+                        int KiAltHold = input[2] | (input[3] << 8);
+                        int KdAltHold = input[4] | (input[5] << 8);
+                        int IntLimitAltHold = input[6] | (input[7] << 8);
+
+                        bundle.putInt(LaunchPadFlightControllerActivity.KP_ALT_HOLD_VALUE, KpAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KI_ALT_HOLD_VALUE, KiAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KD_ALT_HOLD_VALUE, KdAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.INT_LIMIT_ALT_HOLD_VALUE, IntLimitAltHold);
+
+                        message.setData(bundle);
+                        mHandler.sendMessage(message);
+
+                        if (D)
+                            Log.i(TAG, "Received PID altitude hold: " + KpAltHold + " " + KiAltHold + " " + KdAltHold + " " + IntLimitAltHold);
                         break;
 
                     case GET_SETTINGS:

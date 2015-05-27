@@ -44,6 +44,7 @@
     <string name="currentValues">Current Values:</string>
     <string name="adjustValues">Adjust Values:</string>
     <string name="updatePIDValues">Press to update PID values</string>
+    <string name="altHold">Altitude hold</string>
 
     <!-- Graph Fragment -->
     <string name="roll">Roll</string>

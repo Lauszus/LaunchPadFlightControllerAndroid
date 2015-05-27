@@ -76,6 +76,11 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     public static final String KD_YAW_VALUE = "kd_yaw_value";
     public static final String INT_LIMIT_YAW_VALUE = "int_limit_yaw_value";
 
+    public static final String KP_ALT_HOLD_VALUE = "kp_alt_hold_value";
+    public static final String KI_ALT_HOLD_VALUE = "ki_alt_hold_value";
+    public static final String KD_ALT_HOLD_VALUE = "kd_alt_hold_value";
+    public static final String INT_LIMIT_ALT_HOLD_VALUE = "int_limit_alt_hold_value";
+
     public static final String SPEED_VALUE = "speed_value";
     public static final String CURRENT_DRAW = "current_draw";
     public static final String TURNING_VALUE = "turning_value";
@@ -285,6 +290,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
             else if (checkTab(ViewPagerAdapter.PID_FRAGMENT)) {
                 mChatService.mBluetoothProtocol.getPIDRollPitch();
                 mChatService.mBluetoothProtocol.getPIDYaw();
+                mChatService.mBluetoothProtocol.getPIDAltHold();
             } else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
                 if (GraphFragment.mToggleButton != null) {
                     if (GraphFragment.mToggleButton.isChecked())
@@ -411,6 +417,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getSettings();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDRollPitch();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDYaw();
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDAltHold();
                                     }
                                 }
                             }, 1000); // Wait 1 second before sending the message
@@ -463,6 +470,8 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                                 pidFragment.updatePIDRollPitch(data.getInt(KP_ROLL_PITCH_VALUE), data.getInt(KI_ROLL_PITCH_VALUE), data.getInt(KD_ROLL_PITCH_VALUE), data.getInt(INT_LIMIT_ROLL_PITCH_VALUE));
                             else if (data.containsKey(KP_YAW_VALUE) && data.containsKey(KI_YAW_VALUE) && data.containsKey(KD_YAW_VALUE) && data.containsKey(INT_LIMIT_YAW_VALUE))
                                 pidFragment.updatePIDYaw(data.getInt(KP_YAW_VALUE), data.getInt(KI_YAW_VALUE), data.getInt(KD_YAW_VALUE), data.getInt(INT_LIMIT_YAW_VALUE));
+                            else if (data.containsKey(KP_ALT_HOLD_VALUE) && data.containsKey(KI_ALT_HOLD_VALUE) && data.containsKey(KD_ALT_HOLD_VALUE) && data.containsKey(INT_LIMIT_ALT_HOLD_VALUE))
+                                pidFragment.updatePIDAltHold(data.getInt(KP_ALT_HOLD_VALUE), data.getInt(KI_ALT_HOLD_VALUE), data.getInt(KD_ALT_HOLD_VALUE), data.getInt(INT_LIMIT_ALT_HOLD_VALUE));
                         }
 
                         if (data.containsKey(SPEED_VALUE) && data.containsKey(CURRENT_DRAW) && data.containsKey(TURNING_VALUE) && data.containsKey(BATTERY_LEVEL) && data.containsKey(RUN_TIME)) {
