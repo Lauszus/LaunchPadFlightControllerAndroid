@@ -55,7 +55,9 @@
     <!-- Settings Dialog Fragment -->
     <string name="dialog_title">Settings</string>
     <string name="calibrateAccText">Press the button below to calibrate the accelerometer.</string>
+    <string name="calibrateMagText">Press the button below to calibrate the magnetometer.</string>
     <string name="calibrateAccButtonText">Calibrate accelerometer</string>
+    <string name="calibrateMagButtonText">Calibrate magnetometer</string>
     <string name="restoreText">Press the button below to restore the default configuration values.</string>
     <string name="restoreButtonText">Restore values</string>
 

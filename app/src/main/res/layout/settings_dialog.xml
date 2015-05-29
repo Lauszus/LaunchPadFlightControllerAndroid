@@ -27,6 +27,29 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/calibrateMag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin" >
+
+        <TextView
+            android:id="@+id/calibrateMagText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/calibrateMagText" />
+
+        <Button
+            android:id="@+id/calibrateMagButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/calibrateMagText"
+            android:layout_margin="@dimen/margin"
+            android:text="@string/button" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"

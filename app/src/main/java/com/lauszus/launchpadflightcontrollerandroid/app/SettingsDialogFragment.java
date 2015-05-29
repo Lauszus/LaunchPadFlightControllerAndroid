@@ -49,6 +49,20 @@ public class SettingsDialogFragment extends DialogFragment {
             }
         });
 
+        Button mCalibrateMagButton = (Button) view.findViewById(R.id.calibrateMagButton);
+        mCalibrateMagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (activity.mChatService != null) {
+                    if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
+                        activity.mChatService.mBluetoothProtocol.calibrateMagnetometer();
+                        Toast.makeText(activity, "Calibrating magnetometer", Toast.LENGTH_SHORT).show();
+                        dismiss();
+                    }
+                }
+            }
+        });
+
         Button mRestoreButton = (Button) view.findViewById(R.id.restoreButton);
         mRestoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,9 +80,11 @@ public class SettingsDialogFragment extends DialogFragment {
         if (activity.mChatService != null) {
             if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
                 mCalibrateAccButton.setText(R.string.calibrateAccButtonText);
+                mCalibrateMagButton.setText(R.string.calibrateMagButtonText);
                 mRestoreButton.setText(R.string.restoreButtonText);
             } else {
                 mCalibrateAccButton.setText(R.string.button);
+                mCalibrateMagButton.setText(R.string.button);
                 mRestoreButton.setText(R.string.button);
             }
         }

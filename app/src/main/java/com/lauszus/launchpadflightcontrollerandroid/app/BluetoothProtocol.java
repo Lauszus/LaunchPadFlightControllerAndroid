@@ -40,7 +40,8 @@ public class BluetoothProtocol {
     static final byte SEND_ANGLES = 8;
     static final byte SEND_INFO = 9;
     static final byte CAL_ACC = 10;
-    static final byte RESTORE_DEFAULTS = 11;
+    static final byte CAL_MAG = 11;
+    static final byte RESTORE_DEFAULTS = 12;
 
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
@@ -219,6 +220,17 @@ public class BluetoothProtocol {
 
         byte output[] = {
                 CAL_ACC, // Cmd
+                0, // Length
+        };
+        sendCommand(output); // Send output
+    }
+
+    public void calibrateMagnetometer() {
+        if (D)
+            Log.i(TAG, "calibrateMagnetometer");
+
+        byte output[] = {
+                CAL_MAG, // Cmd
                 0, // Length
         };
         sendCommand(output); // Send output
