@@ -34,11 +34,11 @@ public class SettingsFragment extends Fragment {
 
     private Button mSendButton;
 
-    private TextView mAngleKpCurrentValue, mHeadingKpCurrentValue, mAngleMaxIncCurrentValue, mStickScalingRollPitchCurrentValue, mStickScalingYawCurrentValue;
-    private SeekBarArrows mAngleKpSeekBar, mHeadingKpSeekBar, mAngleMaxIncSeekBar, mStickScalingRollPitchSeekBar, mStickScalingYawSeekBar;
+    private TextView mAngleKpCurrentValue, mHeadingKpCurrentValue, mAngleMaxIncCurrentValue, mAngleMaxIncSonarCurrentValue, mStickScalingRollPitchCurrentValue, mStickScalingYawCurrentValue;
+    private SeekBarArrows mAngleKpSeekBar, mHeadingKpSeekBar, mAngleMaxIncSeekBar, mAngleMaxIncSonarSeekBar, mStickScalingRollPitchSeekBar, mStickScalingYawSeekBar;
 
     private int AngleKpValue, HeadingKpValue, StickScalingRollPitchValue, StickScalingYawValue;
-    private byte AngleMaxIncValue;
+    private byte AngleMaxIncValue, AngleMaxIncSonarValue;
     private boolean receivedSettings;
 
     private final Handler mHandler = new Handler();
@@ -54,18 +54,21 @@ public class SettingsFragment extends Fragment {
         mAngleKpCurrentValue = (TextView) v.findViewById(R.id.AngleKpCurrentValue);
         mHeadingKpCurrentValue = (TextView) v.findViewById(R.id.HeadingKpCurrentValue);
         mAngleMaxIncCurrentValue = (TextView) v.findViewById(R.id.AngleMaxIncCurrentValue);
+        mAngleMaxIncSonarCurrentValue = (TextView) v.findViewById(R.id.AngleMaxIncSonarCurrentValue);
         mStickScalingRollPitchCurrentValue = (TextView) v.findViewById(R.id.StickScalingRollPitchCurrentValue);
         mStickScalingYawCurrentValue = (TextView) v.findViewById(R.id.StickScalingYawCurrentValue);
 
         mAngleKpSeekBar = new SeekBarArrows(v.findViewById(R.id.AngleKp), R.string.AngleKp, 10, 0.01f); // 0-10 in 0.01 steps
         mHeadingKpSeekBar = new SeekBarArrows(v.findViewById(R.id.HeadingKp), R.string.HeadingKp, 10, 0.01f); // 0-10 in 0.01 steps
         mAngleMaxIncSeekBar = new SeekBarArrows(v.findViewById(R.id.AngleMaxInc), R.string.AngleMaxInc, 90, 1); // 0-90 in 1 steps
+        mAngleMaxIncSonarSeekBar = new SeekBarArrows(v.findViewById(R.id.AngleMaxIncSonar), R.string.AngleMaxIncSonar, 90, 1); // 0-90 in 1 steps
         mStickScalingRollPitchSeekBar = new SeekBarArrows(v.findViewById(R.id.StickScalingRollPitch), R.string.StickScalingRollPitch, 10, 0.01f); // 0-10 in 0.01 steps
         mStickScalingYawSeekBar = new SeekBarArrows(v.findViewById(R.id.StickScalingYaw), R.string.StickScalingYaw, 10, 0.01f); // 0-10 in 0.01 steps
 
         AngleKpValue = mAngleKpSeekBar.getProgress();
         HeadingKpValue = mHeadingKpSeekBar.getProgress();
         AngleMaxIncValue = (byte) mAngleMaxIncSeekBar.getProgress();
+        AngleMaxIncSonarValue = (byte) mAngleMaxIncSonarSeekBar.getProgress();
         StickScalingRollPitchValue = mStickScalingRollPitchSeekBar.getProgress();
         StickScalingYawValue = mStickScalingYawSeekBar.getProgress();
 
@@ -82,7 +85,7 @@ public class SettingsFragment extends Fragment {
                 if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
                     mHandler.post(new Runnable() {
                         public void run() {
-                            activity.mChatService.mBluetoothProtocol.setSettings(mAngleKpSeekBar.getProgress(), mHeadingKpSeekBar.getProgress(), (byte) mAngleMaxIncSeekBar.getProgress(), mStickScalingRollPitchSeekBar.getProgress(), mStickScalingYawSeekBar.getProgress());
+                            activity.mChatService.mBluetoothProtocol.setSettings(mAngleKpSeekBar.getProgress(), mHeadingKpSeekBar.getProgress(), (byte) mAngleMaxIncSeekBar.getProgress(), (byte) mAngleMaxIncSonarSeekBar.getProgress(), mStickScalingRollPitchSeekBar.getProgress(), mStickScalingYawSeekBar.getProgress());
                         }
                     }); // Wait before sending the message
                     counter += 100;
@@ -102,10 +105,11 @@ public class SettingsFragment extends Fragment {
         return v;
     }
 
-    public void updateSettings(int AngleKpValue, int HeadingKpValue, byte AngleMaxIncValue, int StickScalingRollPitchValue, int StickScalingYawValue) {
+    public void updateSettings(int AngleKpValue, int HeadingKpValue, byte AngleMaxIncValue, byte AngleMaxIncSonarValueValue, int StickScalingRollPitchValue, int StickScalingYawValue) {
         this.AngleKpValue = AngleKpValue;
         this.HeadingKpValue = HeadingKpValue;
         this.AngleMaxIncValue = AngleMaxIncValue;
+        this.AngleMaxIncSonarValue = AngleMaxIncSonarValueValue;
         this.StickScalingRollPitchValue = StickScalingRollPitchValue;
         this.StickScalingYawValue = StickScalingYawValue;
 
@@ -128,6 +132,11 @@ public class SettingsFragment extends Fragment {
             if (receivedSettings)
                 mAngleMaxIncCurrentValue.setText(mAngleMaxIncSeekBar.progressToString(AngleMaxIncValue));
             mAngleMaxIncSeekBar.setProgress(AngleMaxIncValue);
+        }
+        if (mAngleMaxIncSonarCurrentValue != null && mAngleMaxIncSonarSeekBar != null) {
+            if (receivedSettings)
+                mAngleMaxIncSonarCurrentValue.setText(mAngleMaxIncSonarSeekBar.progressToString(AngleMaxIncSonarValue));
+            mAngleMaxIncSonarSeekBar.setProgress(AngleMaxIncSonarValue);
         }
         if (mStickScalingRollPitchCurrentValue != null && mStickScalingRollPitchSeekBar != null) {
             if (receivedSettings)

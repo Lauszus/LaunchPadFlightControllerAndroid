@@ -157,18 +157,19 @@ public class BluetoothProtocol {
         getPID(GET_PID_ALT_HOLD);
     }
 
-    public void setSettings(int AngleKp, int HeadingKp, byte AngleMaxInc, int StickScalingRollPitch, int StickScalingYaw) {
+    public void setSettings(int AngleKp, int HeadingKp, byte AngleMaxInc, byte AngleMaxIncSonar, int StickScalingRollPitch, int StickScalingYaw) {
         if (D)
-            Log.i(TAG, "setSettings: " + AngleKp + " " + HeadingKp + " " + AngleMaxInc + " " + StickScalingRollPitch + " " + StickScalingYaw);
+            Log.i(TAG, "setSettings: " + AngleKp + " " + HeadingKp + " " + AngleMaxInc + " " + AngleMaxIncSonar + " " + StickScalingRollPitch + " " + StickScalingYaw);
 
         byte output[] = {
                 SET_SETTINGS, // Cmd
-                9, // Length
+                10, // Length
                 (byte) (AngleKp & 0xFF),
                 (byte) (AngleKp >> 8),
                 (byte) (HeadingKp & 0xFF),
                 (byte) (HeadingKp >> 8),
                 AngleMaxInc,
+                AngleMaxIncSonar,
                 (byte) (StickScalingRollPitch & 0xFF),
                 (byte) (StickScalingRollPitch >> 8),
                 (byte) (StickScalingYaw & 0xFF),
@@ -338,12 +339,14 @@ public class BluetoothProtocol {
                         int AngleKp = input[0] | (input[1] << 8);
                         int HeadingKp = input[2] | (input[3] << 8);
                         byte AngleMaxInc = (byte) input[4];
-                        int StickScalingRollPitch = input[5] | (input[6] << 8);
-                        int StickScalingYaw = input[7] | (input[8] << 8);
+                        byte AngleMaxIncSonar = (byte) input[5];
+                        int StickScalingRollPitch = input[6] | (input[7] << 8);
+                        int StickScalingYaw = input[8] | (input[9] << 8);
 
                         bundle.putInt(LaunchPadFlightControllerActivity.ANGLE_KP_VALUE, AngleKp);
                         bundle.putInt(LaunchPadFlightControllerActivity.HEADING_KP_VALUE, HeadingKp);
                         bundle.putByte(LaunchPadFlightControllerActivity.ANGLE_MAX_INC_VALUE, AngleMaxInc);
+                        bundle.putByte(LaunchPadFlightControllerActivity.ANGLE_MAX_INC_SONAR_VALUE, AngleMaxIncSonar);
                         bundle.putInt(LaunchPadFlightControllerActivity.STICK_SCALING_ROLL_PITCH_VALUE, StickScalingRollPitch);
                         bundle.putInt(LaunchPadFlightControllerActivity.STICK_SCALING_YAW_VALUE, StickScalingYaw);
 
@@ -351,7 +354,7 @@ public class BluetoothProtocol {
                         mHandler.sendMessage(message);
 
                         if (D)
-                            Log.i(TAG, "Received settings: " + AngleKp + " " + HeadingKp + " " + AngleMaxInc + " " + StickScalingRollPitch + " " + StickScalingYaw);
+                            Log.i(TAG, "Received settings: " + AngleKp + " " + HeadingKp + " " + AngleMaxInc + " " + AngleMaxIncSonar + " " + StickScalingRollPitch + " " + StickScalingYaw);
                         break;
 
                     case SEND_ANGLES:

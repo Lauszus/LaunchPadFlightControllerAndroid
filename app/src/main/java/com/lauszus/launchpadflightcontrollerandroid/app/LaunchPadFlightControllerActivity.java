@@ -63,6 +63,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     public static final String ANGLE_KP_VALUE = "angle_kp_value";
     public static final String HEADING_KP_VALUE = "heading_kp_value";
     public static final String ANGLE_MAX_INC_VALUE = "angle_max_inc_value";
+    public static final String ANGLE_MAX_INC_SONAR_VALUE = "angle_max_inc_sonar_value";
     public static final String STICK_SCALING_ROLL_PITCH_VALUE = "stick_scaling_roll_pitch_value";
     public static final String STICK_SCALING_YAW_VALUE = "stick_scaling_yaw_value";
 
@@ -458,10 +459,10 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
                 case MESSAGE_READ:
                     Bundle data = msg.getData();
                     if (data != null) {
-                        if (data.containsKey(ANGLE_KP_VALUE) && data.containsKey(HEADING_KP_VALUE) && data.containsKey(ANGLE_MAX_INC_VALUE) && data.containsKey(STICK_SCALING_ROLL_PITCH_VALUE) && data.containsKey(STICK_SCALING_YAW_VALUE)) {
+                        if (data.containsKey(ANGLE_KP_VALUE) && data.containsKey(HEADING_KP_VALUE) && data.containsKey(ANGLE_MAX_INC_VALUE) && data.containsKey(ANGLE_MAX_INC_SONAR_VALUE) && data.containsKey(STICK_SCALING_ROLL_PITCH_VALUE) && data.containsKey(STICK_SCALING_YAW_VALUE)) {
                             settingsFragment = (SettingsFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.SETTINGS_FRAGMENT);
                             if (settingsFragment != null)
-                                settingsFragment.updateSettings(data.getInt(ANGLE_KP_VALUE), data.getInt(HEADING_KP_VALUE), data.getByte(ANGLE_MAX_INC_VALUE), data.getInt(STICK_SCALING_ROLL_PITCH_VALUE), data.getInt(STICK_SCALING_YAW_VALUE));
+                                settingsFragment.updateSettings(data.getInt(ANGLE_KP_VALUE), data.getInt(HEADING_KP_VALUE), data.getByte(ANGLE_MAX_INC_VALUE), data.getByte(ANGLE_MAX_INC_SONAR_VALUE), data.getInt(STICK_SCALING_ROLL_PITCH_VALUE), data.getInt(STICK_SCALING_YAW_VALUE));
                         }
 
                         pidFragment = (PIDFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
