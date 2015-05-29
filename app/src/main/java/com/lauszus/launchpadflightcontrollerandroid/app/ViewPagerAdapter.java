@@ -24,10 +24,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     public static final int INFO_FRAGMENT = 0;
+    public static final int PID_FRAGMENT = 0;
     public static final int SETTINGS_FRAGMENT = 1;
-    public static final int PID_FRAGMENT = 2;
+    public static final int GRAPH_FRAGMENT = 2;
     public static final int MAP_FRAGMENT = 3;
-    public static final int GRAPH_FRAGMENT = 4;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -36,38 +36,38 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case INFO_FRAGMENT:
-                return new InfoFragment();
-            case SETTINGS_FRAGMENT:
-                return new SettingsFragment();
+            /*case INFO_FRAGMENT:
+                return new InfoFragment();*/
             case PID_FRAGMENT:
                 return new PIDFragment();
-            case MAP_FRAGMENT:
-                return new MapFragment();
+            case SETTINGS_FRAGMENT:
+                return new SettingsFragment();
             case GRAPH_FRAGMENT:
                 return new GraphFragment();
+            case MAP_FRAGMENT:
+                return new MapFragment();
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 5; // Return number of tabs
+        return 4; // Return number of tabs
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
-            case INFO_FRAGMENT:
-                return "Info";
-            case SETTINGS_FRAGMENT:
-                return "Settings";
+            /*case INFO_FRAGMENT:
+                return "Info";*/
             case PID_FRAGMENT:
                 return "PID";
-            case MAP_FRAGMENT:
-                return "Map";
+            case SETTINGS_FRAGMENT:
+                return "Settings";
             case GRAPH_FRAGMENT:
                 return "Graph";
+            case MAP_FRAGMENT:
+                return "Map";
         }
         return null;
     }
