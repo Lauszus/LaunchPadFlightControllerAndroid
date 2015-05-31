@@ -29,11 +29,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,11 +41,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.viewpagerindicator.UnderlinePageIndicator;
-
 import java.lang.ref.WeakReference;
 
-public class LaunchPadFlightControllerActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class LaunchPadFlightControllerActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
     private static final String TAG = LaunchPadFlightControllerActivity.class.getSimpleName();
     public static final boolean D = BuildConfig.DEBUG; // This is automatically set when building
 
@@ -108,9 +106,6 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
 
     private Toast mToast;
 
-    /** The {@link UnderlinePageIndicator} that will host the section contents. */
-    UnderlinePageIndicator mUnderlinePageIndicator;
-
     public int currentTabSelected;
 
     ViewPager mViewPager;
@@ -121,10 +116,6 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch_pad_flight_controller);
-
-        // Set up the action bar.
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         // Get local Bluetooth adapter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -139,6 +130,9 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
             return;
         }
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the primary sections of the app.
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -146,35 +140,11 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mViewPagerAdapter);
 
-        // Bind the underline indicator to the adapter
-        mUnderlinePageIndicator = (UnderlinePageIndicator) findViewById(R.id.indicator);
-        mUnderlinePageIndicator.setViewPager(mViewPager);
-        mUnderlinePageIndicator.setFades(false);
+        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setOnTabSelectedListener(this);
 
-        // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
-        mUnderlinePageIndicator.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (D)
-                    Log.d(TAG, "ViewPager position: " + position);
-                actionBar.setSelectedNavigationItem(position);
-            }
-        });
-
-        // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < mViewPagerAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by
-            // the adapter. Also specify this Activity object, which implements
-            // the TabListener interface, as the callback (listener) for when
-            // this tab is selected.
-            actionBar.addTab(actionBar.newTab()
-                    .setText(mViewPagerAdapter.getPageTitle(i))
-                    .setTabListener(this));
-        }
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // Keep the screen on while the user is riding the robot
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // Keep the screen on
     }
 
     public void showToast(String message, int duration) {
@@ -275,13 +245,13 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     }
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabSelected(TabLayout.Tab tab) {
         if (D)
             Log.d(TAG, "onTabSelected: " + tab.getPosition());
 
         currentTabSelected = tab.getPosition();
         // When the given tab is selected, switch to the corresponding page in the ViewPager.
-        mUnderlinePageIndicator.setCurrentItem(currentTabSelected);
+        mViewPager.setCurrentItem(currentTabSelected);
 
         if (mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
             if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
@@ -309,7 +279,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     }
 
     @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabUnselected(TabLayout.Tab tab) {
         if (D)
             Log.d(TAG, "onTabUnselected: " + tab.getPosition() + " " + currentTabSelected);
 
@@ -327,7 +297,7 @@ public class LaunchPadFlightControllerActivity extends ActionBarActivity impleme
     }
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabReselected(TabLayout.Tab tab) {
     }
 
     public boolean checkTab(int tab) {
