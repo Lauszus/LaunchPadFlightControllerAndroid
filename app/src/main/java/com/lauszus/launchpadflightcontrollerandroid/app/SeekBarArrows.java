@@ -18,8 +18,11 @@
 
 package com.lauszus.launchpadflightcontrollerandroid.app;
 
+import android.os.Handler;
 import android.support.annotation.StringRes;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -69,5 +72,60 @@ public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+    }
+
+    private class OnArrowListener implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
+        private Handler handler = new Handler();
+        private static final int repeatInterval = 300; // Repeat interval is 300 ms
+        private SeekBar mSeekbar;
+        private boolean positive;
+
+        OnArrowListener(View v, SeekBar mSeekbar, boolean positive) {
+            Button mButton = (Button) v;
+            this.mSeekbar = mSeekbar;
+            this.positive = positive;
+
+            mButton.setOnClickListener(this);
+            mButton.setOnLongClickListener(this);
+            mButton.setOnTouchListener(this);
+        }
+
+        private int round10(int n) {
+            return Math.round((float)n / 10.0f) * 10;
+        }
+
+        private void longClick() {
+            mSeekbar.setProgress(round10(mSeekbar.getProgress() + (positive ? 10 : -10))); // Increase/decrease with 10 and round to nearest multiple of 10
+        }
+
+        private Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                longClick();
+                handler.postDelayed(this, repeatInterval); // Repeat long click if button is held down
+            }
+        };
+
+        @Override
+        public void onClick(View v) {
+            mSeekbar.setProgress(mSeekbar.getProgress() + (positive ? 1 : -1)); // Increase/decrease with 1
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            longClick();
+            handler.postDelayed(runnable, repeatInterval); // Repeat again in 300 ms
+            return true;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch(event.getAction()) {
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    handler.removeCallbacks(runnable); // Remove callback if button is released
+            }
+            return false;
+        }
     }
 }
