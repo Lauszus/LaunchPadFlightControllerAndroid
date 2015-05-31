@@ -23,7 +23,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    public static final int INFO_FRAGMENT = 0;
+    public static final int INFO_FRAGMENT = 4;
     public static final int PID_FRAGMENT = 0;
     public static final int SETTINGS_FRAGMENT = 1;
     public static final int GRAPH_FRAGMENT = 2;
