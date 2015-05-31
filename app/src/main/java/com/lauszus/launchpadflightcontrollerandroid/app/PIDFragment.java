@@ -81,8 +81,8 @@ public class PIDFragment extends Fragment {
 
         // Set default values
         KpRollPitch = KpYaw = KpAltHold = mKpSeekBar.getProgress();
-        KiRollPitch = KiYaw = KiAltHold = mKpSeekBar.getProgress();
-        KdRollPitch = KdYaw = KdAltHold = mKpSeekBar.getProgress();
+        KiRollPitch = KiYaw = KiAltHold = mKiSeekBar.getProgress();
+        KdRollPitch = KdYaw = KdAltHold = mKdSeekBar.getProgress();
         IntLimitRollPitch = IntLimitYaw = IntLimitAltHold = mIntLimitSeekBar.getProgress();
 
         mSendButton = (Button) v.findViewById(R.id.button);
