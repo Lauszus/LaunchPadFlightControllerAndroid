@@ -38,10 +38,10 @@ public class BluetoothProtocol {
     static final byte SET_SETTINGS = 6;
     static final byte GET_SETTINGS = 7;
     static final byte SEND_ANGLES = 8;
-    static final byte SEND_INFO = 9;
-    static final byte CAL_ACC = 10;
-    static final byte CAL_MAG = 11;
-    static final byte RESTORE_DEFAULTS = 12;
+    //static final byte SEND_INFO = 9;
+    static final byte CAL_ACC = 9;
+    static final byte CAL_MAG = 10;
+    static final byte RESTORE_DEFAULTS = 11;
 
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
@@ -205,13 +205,14 @@ public class BluetoothProtocol {
     public void sendInfo(byte enable) {
         if (D)
             Log.i(TAG, "sendInfo: " + enable);
-
+/*
         byte output[] = {
                 SEND_INFO, // Cmd
                 1, // Length
                 enable,
         };
         sendCommand(output); // Send output
+*/
     }
 
     public void calibrateAccelerometer() {
