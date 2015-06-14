@@ -9,4 +9,8 @@ This the Android app intended to be used with my custom flight controller: https
 
 In order to built this project you need to download [Android Studio](http://developer.android.com/sdk/index.html).
 
+# Screenshots
+
+![Screenshots](android_screenshots.png)
+
 For more information send me an email at <kristianl@tkjelectronics.dk>.
