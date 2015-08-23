@@ -13,4 +13,4 @@ In order to built this project you need to download [Android Studio](http://deve
 
 ![Screenshots](android_screenshots.png)
 
-For more information send me an email at <kristianl@tkjelectronics.dk>.
+For more information send me an email at <lauszus@gmail.com>.
