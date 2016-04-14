@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import java.util.Locale;
 
 public class BluetoothProtocol {
     // Debugging
@@ -376,9 +377,9 @@ public class BluetoothProtocol {
                         int yaw = input[4] | (input[5] << 8); // Heading is always positive
 
                         // TODO: Just store this as an int
-                        bundle.putString(LaunchPadFlightControllerActivity.ROLL_ANGLE, String.format("%.2f", (float) roll / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.PITCH_ANGLE, String.format("%.2f", (float) pitch / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.YAW_ANGLE, String.format("%.2f", (float) yaw / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.ROLL_ANGLE, String.format(Locale.ENGLISH, "%.2f", (float) roll / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.PITCH_ANGLE, String.format(Locale.ENGLISH, "%.2f", (float) pitch / 100.0f));
+                        bundle.putString(LaunchPadFlightControllerActivity.YAW_ANGLE, String.format(Locale.ENGLISH, "%.2f", (float) yaw / 100.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);

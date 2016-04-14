@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import java.util.Locale;
 
 import com.cardiomood.android.speedometer.SpeedometerView;
 
@@ -76,13 +77,13 @@ public class InfoFragment extends Fragment {
             mSpeed.setSpeed((float)speed / 100.0f);
 
         if (mCurrentDraw != null)
-            mCurrentDraw.setText(String.format("%.2f", (float)current / 100.0f) + 'A');
+            mCurrentDraw.setText(String.format(Locale.ENGLISH, "%.2f", (float)current / 100.0f) + 'A');
 
         if (mTurning != null)
-            mTurning.setText(String.format("%.2f", (float)turning / 100.0f));
+            mTurning.setText(String.format(Locale.ENGLISH, "%.2f", (float)turning / 100.0f));
 
         if (mBatteryLevel != null)
-            mBatteryLevel.setText(String.format("%.2f", (float)batteryLevel / 100.0f) + 'V');
+            mBatteryLevel.setText(String.format(Locale.ENGLISH, "%.2f", (float)batteryLevel / 100.0f) + 'V');
 
         if (mRunTime != null) { // The run time is is ms
             float runTimeFloat = (float)runTime / 60000.0f;
