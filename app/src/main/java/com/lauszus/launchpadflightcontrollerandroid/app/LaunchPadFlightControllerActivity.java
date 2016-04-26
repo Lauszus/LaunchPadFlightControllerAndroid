@@ -75,16 +75,15 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
     public static final String KD_YAW_VALUE = "kd_yaw_value";
     public static final String INT_LIMIT_YAW_VALUE = "int_limit_yaw_value";
 
-    public static final String KP_ALT_HOLD_VALUE = "kp_alt_hold_value";
-    public static final String KI_ALT_HOLD_VALUE = "ki_alt_hold_value";
-    public static final String KD_ALT_HOLD_VALUE = "kd_alt_hold_value";
-    public static final String INT_LIMIT_ALT_HOLD_VALUE = "int_limit_alt_hold_value";
+    public static final String KP_SONAR_ALT_HOLD_VALUE = "kp_sonar_alt_hold_value";
+    public static final String KI_SONAR_ALT_HOLD_VALUE = "ki_sonar_alt_hold_value";
+    public static final String KD_SONAR_ALT_HOLD_VALUE = "kd_sonar_alt_hold_value";
+    public static final String INT_LIMIT_SONAR_ALT_HOLD_VALUE = "int_limit_sonar_alt_hold_value";
 
-    public static final String SPEED_VALUE = "speed_value";
-    public static final String CURRENT_DRAW = "current_draw";
-    public static final String TURNING_VALUE = "turning_value";
-    public static final String BATTERY_LEVEL = "battery_level";
-    public static final String RUN_TIME = "run_time";
+    public static final String KP_BARO_ALT_HOLD_VALUE = "kp_baro_alt_hold_value";
+    public static final String KI_BARO_ALT_HOLD_VALUE = "ki_baro_alt_hold_value";
+    public static final String KD_BARO_ALT_HOLD_VALUE = "kd_baro_alt_hold_value";
+    public static final String INT_LIMIT_BARO_ALT_HOLD_VALUE = "int_limit_baro_alt_hold_value";
 
     public static final String ROLL_ANGLE = "roll_angle";
     public static final String PITCH_ANGLE = "pitch_angle";
@@ -263,7 +262,8 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
             else if (checkTab(ViewPagerAdapter.PID_FRAGMENT)) {
                 mChatService.mBluetoothProtocol.getPIDRollPitch();
                 mChatService.mBluetoothProtocol.getPIDYaw();
-                mChatService.mBluetoothProtocol.getPIDAltHold();
+                mChatService.mBluetoothProtocol.getPIDSonarAltHold();
+                mChatService.mBluetoothProtocol.getPIDBaroAltHold();
             } else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
                 if (GraphFragment.mToggleButton != null) {
                     if (GraphFragment.mToggleButton.isChecked())
@@ -359,7 +359,7 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
         private final WeakReference<LaunchPadFlightControllerActivity> mActivity; // See: http://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
         SettingsFragment settingsFragment;
         PIDFragment pidFragment;
-        InfoFragment infoFragment;
+        //InfoFragment infoFragment;
         GraphFragment graphFragment;
         private String mConnectedDeviceName; // Name of the connected device
 
@@ -390,7 +390,8 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getSettings();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDRollPitch();
                                         mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDYaw();
-                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDAltHold();
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDSonarAltHold();
+                                        mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.getPIDBaroAltHold();
                                     }
                                 }
                             }, 1000); // Wait 1 second before sending the message
@@ -443,14 +444,10 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
                                 pidFragment.updatePIDRollPitch(data.getInt(KP_ROLL_PITCH_VALUE), data.getInt(KI_ROLL_PITCH_VALUE), data.getInt(KD_ROLL_PITCH_VALUE), data.getInt(INT_LIMIT_ROLL_PITCH_VALUE));
                             else if (data.containsKey(KP_YAW_VALUE) && data.containsKey(KI_YAW_VALUE) && data.containsKey(KD_YAW_VALUE) && data.containsKey(INT_LIMIT_YAW_VALUE))
                                 pidFragment.updatePIDYaw(data.getInt(KP_YAW_VALUE), data.getInt(KI_YAW_VALUE), data.getInt(KD_YAW_VALUE), data.getInt(INT_LIMIT_YAW_VALUE));
-                            else if (data.containsKey(KP_ALT_HOLD_VALUE) && data.containsKey(KI_ALT_HOLD_VALUE) && data.containsKey(KD_ALT_HOLD_VALUE) && data.containsKey(INT_LIMIT_ALT_HOLD_VALUE))
-                                pidFragment.updatePIDAltHold(data.getInt(KP_ALT_HOLD_VALUE), data.getInt(KI_ALT_HOLD_VALUE), data.getInt(KD_ALT_HOLD_VALUE), data.getInt(INT_LIMIT_ALT_HOLD_VALUE));
-                        }
-
-                        if (data.containsKey(SPEED_VALUE) && data.containsKey(CURRENT_DRAW) && data.containsKey(TURNING_VALUE) && data.containsKey(BATTERY_LEVEL) && data.containsKey(RUN_TIME)) {
-                            infoFragment = (InfoFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.INFO_FRAGMENT);
-                            if (infoFragment != null)
-                                infoFragment.updateView(data.getInt(SPEED_VALUE), data.getInt(CURRENT_DRAW), data.getInt(TURNING_VALUE), data.getInt(BATTERY_LEVEL), data.getLong(RUN_TIME));
+                            else if (data.containsKey(KP_SONAR_ALT_HOLD_VALUE) && data.containsKey(KI_SONAR_ALT_HOLD_VALUE) && data.containsKey(KD_SONAR_ALT_HOLD_VALUE) && data.containsKey(INT_LIMIT_SONAR_ALT_HOLD_VALUE))
+                                pidFragment.updatePIDSonarAltHold(data.getInt(KP_SONAR_ALT_HOLD_VALUE), data.getInt(KI_SONAR_ALT_HOLD_VALUE), data.getInt(KD_SONAR_ALT_HOLD_VALUE), data.getInt(INT_LIMIT_SONAR_ALT_HOLD_VALUE));
+                            else if (data.containsKey(KP_BARO_ALT_HOLD_VALUE) && data.containsKey(KI_BARO_ALT_HOLD_VALUE) && data.containsKey(KD_BARO_ALT_HOLD_VALUE) && data.containsKey(INT_LIMIT_BARO_ALT_HOLD_VALUE))
+                                pidFragment.updatePIDBaroAltHold(data.getInt(KP_BARO_ALT_HOLD_VALUE), data.getInt(KI_BARO_ALT_HOLD_VALUE), data.getInt(KD_BARO_ALT_HOLD_VALUE), data.getInt(INT_LIMIT_BARO_ALT_HOLD_VALUE));
                         }
 
                         if (data.containsKey(ROLL_ANGLE) && data.containsKey(PITCH_ANGLE) && data.containsKey(YAW_ANGLE)) {

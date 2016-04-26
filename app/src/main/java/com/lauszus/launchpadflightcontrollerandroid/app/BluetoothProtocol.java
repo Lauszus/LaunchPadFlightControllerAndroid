@@ -34,15 +34,16 @@ public class BluetoothProtocol {
     static final byte GET_PID_ROLL_PITCH = 1;
     static final byte SET_PID_YAW = 2;
     static final byte GET_PID_YAW = 3;
-    static final byte SET_PID_ALT_HOLD = 4;
-    static final byte GET_PID_ALT_HOLD = 5;
-    static final byte SET_SETTINGS = 6;
-    static final byte GET_SETTINGS = 7;
-    static final byte SEND_ANGLES = 8;
-    //static final byte SEND_INFO = 9;
-    static final byte CAL_ACC = 9;
-    static final byte CAL_MAG = 10;
-    static final byte RESTORE_DEFAULTS = 11;
+    static final byte SET_PID_SONAR_ALT_HOLD = 4;
+    static final byte GET_PID_SONAR_ALT_HOLD = 5;
+    static final byte SET_PID_BARO_ALT_HOLD = 6;
+    static final byte GET_PID_BARO_ALT_HOLD = 7;
+    static final byte SET_SETTINGS = 8;
+    static final byte GET_SETTINGS = 9;
+    static final byte SEND_ANGLES = 10;
+    static final byte CAL_ACC = 11;
+    static final byte CAL_MAG = 12;
+    static final byte RESTORE_DEFAULTS = 13;
 
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
@@ -136,27 +137,51 @@ public class BluetoothProtocol {
     }
 
     /**
-     * Set PID values for altitude hold.
+     * Set PID values for sonar altitude hold.
      *
      * @param Kp Kp value.
      * @param Ki Ki value.
      * @param Kd Kd value.
      */
-    public void setPIDAltHold(int Kp, int Ki, int Kd, int IntLimit) {
+    public void setPIDSonarAltHold(int Kp, int Ki, int Kd, int IntLimit) {
         if (D)
-            Log.i(TAG, "setPIDAltHold: " + Kp + " " + Ki + " " + Kd + " " + IntLimit);
+            Log.i(TAG, "setPIDSonarAltHold: " + Kp + " " + Ki + " " + Kd + " " + IntLimit);
 
-        setPID(SET_PID_ALT_HOLD, Kp, Ki, Kd, IntLimit);
+        setPID(SET_PID_SONAR_ALT_HOLD, Kp, Ki, Kd, IntLimit);
     }
 
     /**
-     * Use this to request PID values for altitude hold.
+     * Use this to request PID values for sonar altitude hold.
      */
-    public void getPIDAltHold() {
+    public void getPIDSonarAltHold() {
         if (D)
-            Log.i(TAG, "getPIDAltHold");
+            Log.i(TAG, "getPIDSonarAltHold");
 
-        getPID(GET_PID_ALT_HOLD);
+        getPID(GET_PID_SONAR_ALT_HOLD);
+    }
+
+    /**
+     * Set PID values for baro altitude hold.
+     *
+     * @param Kp Kp value.
+     * @param Ki Ki value.
+     * @param Kd Kd value.
+     */
+    public void setPIDBaroAltHold(int Kp, int Ki, int Kd, int IntLimit) {
+        if (D)
+            Log.i(TAG, "setPIDBaroAltHold: " + Kp + " " + Ki + " " + Kd + " " + IntLimit);
+
+        setPID(SET_PID_BARO_ALT_HOLD, Kp, Ki, Kd, IntLimit);
+    }
+
+    /**
+     * Use this to request PID values for baro altitude hold.
+     */
+    public void getPIDBaroAltHold() {
+        if (D)
+            Log.i(TAG, "getPIDBaroAltHold");
+
+        getPID(GET_PID_BARO_ALT_HOLD);
     }
 
     public void setSettings(int AngleKp, int HeadingKp, byte AngleMaxInc, byte AngleMaxIncSonar, int StickScalingRollPitch, int StickScalingYaw) {
@@ -331,22 +356,40 @@ public class BluetoothProtocol {
                             Log.i(TAG, "Received PID yaw: " + KpYaw + " " + KiYAw + " " + KdYAw + " " + IntLimitYaw);
                         break;
 
-                    case GET_PID_ALT_HOLD:
-                        int KpAltHold = input[0] | (input[1] << 8);
-                        int KiAltHold = input[2] | (input[3] << 8);
-                        int KdAltHold = input[4] | (input[5] << 8);
-                        int IntLimitAltHold = input[6] | (input[7] << 8);
+                    case GET_PID_SONAR_ALT_HOLD:
+                        int KpSonarAltHold = input[0] | (input[1] << 8);
+                        int KiSonarAltHold = input[2] | (input[3] << 8);
+                        int KdSonarAltHold = input[4] | (input[5] << 8);
+                        int IntLimitSonarAltHold = input[6] | (input[7] << 8);
 
-                        bundle.putInt(LaunchPadFlightControllerActivity.KP_ALT_HOLD_VALUE, KpAltHold);
-                        bundle.putInt(LaunchPadFlightControllerActivity.KI_ALT_HOLD_VALUE, KiAltHold);
-                        bundle.putInt(LaunchPadFlightControllerActivity.KD_ALT_HOLD_VALUE, KdAltHold);
-                        bundle.putInt(LaunchPadFlightControllerActivity.INT_LIMIT_ALT_HOLD_VALUE, IntLimitAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KP_SONAR_ALT_HOLD_VALUE, KpSonarAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KI_SONAR_ALT_HOLD_VALUE, KiSonarAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KD_SONAR_ALT_HOLD_VALUE, KdSonarAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.INT_LIMIT_SONAR_ALT_HOLD_VALUE, IntLimitSonarAltHold);
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
 
                         if (D)
-                            Log.i(TAG, "Received PID altitude hold: " + KpAltHold + " " + KiAltHold + " " + KdAltHold + " " + IntLimitAltHold);
+                            Log.i(TAG, "Received PID sonar altitude hold: " + KpSonarAltHold + " " + KiSonarAltHold + " " + KdSonarAltHold + " " + IntLimitSonarAltHold);
+                        break;
+
+                    case GET_PID_BARO_ALT_HOLD:
+                        int KpBaroAltHold = input[0] | (input[1] << 8);
+                        int KiBaroAltHold = input[2] | (input[3] << 8);
+                        int KdBaroAltHold = input[4] | (input[5] << 8);
+                        int IntLimitBaroAltHold = input[6] | (input[7] << 8);
+
+                        bundle.putInt(LaunchPadFlightControllerActivity.KP_BARO_ALT_HOLD_VALUE, KpBaroAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KI_BARO_ALT_HOLD_VALUE, KiBaroAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.KD_BARO_ALT_HOLD_VALUE, KdBaroAltHold);
+                        bundle.putInt(LaunchPadFlightControllerActivity.INT_LIMIT_BARO_ALT_HOLD_VALUE, IntLimitBaroAltHold);
+
+                        message.setData(bundle);
+                        mHandler.sendMessage(message);
+
+                        if (D)
+                            Log.i(TAG, "Received PID baro altitude hold: " + KpBaroAltHold + " " + KiBaroAltHold + " " + KdBaroAltHold + " " + IntLimitBaroAltHold);
                         break;
 
                     case GET_SETTINGS:

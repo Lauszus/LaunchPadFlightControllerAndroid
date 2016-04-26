@@ -31,10 +31,16 @@
                 android:text="@string/yaw" />
 
             <RadioButton
-                android:id="@+id/altHoldRadio"
+                android:id="@+id/sonarAltHoldRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/altHold" />
+                android:text="@string/sonarAltHold" />
+
+            <RadioButton
+                android:id="@+id/baroAltHoldRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/baroAltHold" />
         </RadioGroup>
 
         <TableLayout
