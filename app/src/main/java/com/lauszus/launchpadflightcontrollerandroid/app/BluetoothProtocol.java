@@ -228,19 +228,6 @@ public class BluetoothProtocol {
         sendCommand(output); // Send output
     }
 
-    public void sendInfo(byte enable) {
-        if (D)
-            Log.i(TAG, "sendInfo: " + enable);
-/*
-        byte output[] = {
-                SEND_INFO, // Cmd
-                1, // Length
-                enable,
-        };
-        sendCommand(output); // Send output
-*/
-    }
-
     public void calibrateAccelerometer() {
         if (D)
             Log.i(TAG, "calibrateAccelerometer");

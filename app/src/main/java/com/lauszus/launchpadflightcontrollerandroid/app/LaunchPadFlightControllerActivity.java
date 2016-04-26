@@ -192,7 +192,6 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
             Log.d(TAG, "- ON PAUSE -");
         if (mChatService != null) { // Send stop command and stop sending graph data command
             if (mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
-                mChatService.mBluetoothProtocol.sendInfo((byte) 0); // Stop sending info
                 mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending angles
             }
         }
@@ -255,9 +254,7 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
         mViewPager.setCurrentItem(currentTabSelected);
 
         if (mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
-            if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
-                mChatService.mBluetoothProtocol.sendInfo((byte) 1); // Request info
-            else if (checkTab(ViewPagerAdapter.SETTINGS_FRAGMENT))
+            if (checkTab(ViewPagerAdapter.SETTINGS_FRAGMENT))
                 mChatService.mBluetoothProtocol.getSettings();
             else if (checkTab(ViewPagerAdapter.PID_FRAGMENT)) {
                 mChatService.mBluetoothProtocol.getPIDRollPitch();
@@ -286,9 +283,7 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
             Log.d(TAG, "onTabUnselected: " + tab.getPosition() + " " + currentTabSelected);
 
         if (mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
-            if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
-                mChatService.mBluetoothProtocol.sendInfo((byte) 0); // Stop sending info
-            else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT))
+            if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT))
                 mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending data
         }
 
@@ -359,7 +354,6 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
         private final WeakReference<LaunchPadFlightControllerActivity> mActivity; // See: http://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
         SettingsFragment settingsFragment;
         PIDFragment pidFragment;
-        //InfoFragment infoFragment;
         GraphFragment graphFragment;
         private String mConnectedDeviceName; // Name of the connected device
 
@@ -396,15 +390,7 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
                                 }
                             }, 1000); // Wait 1 second before sending the message
 
-                            if (mLaunchPadFlightControllerActivity.checkTab(ViewPagerAdapter.INFO_FRAGMENT)) {
-                                mHandler.postDelayed(new Runnable() {
-                                    public void run() {
-                                        LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
-                                        if (mLaunchPadFlightControllerActivity != null)
-                                            mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.sendInfo((byte) 1); // Request info
-                                    }
-                                }, 2000); // Wait 2 seconds before sending the message
-                            } else if (mLaunchPadFlightControllerActivity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
+                            if (mLaunchPadFlightControllerActivity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
                                 mHandler.postDelayed(new Runnable() {
                                     public void run() {
                                         LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
