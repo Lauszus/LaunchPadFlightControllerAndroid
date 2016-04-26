@@ -26,9 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
@@ -154,9 +152,9 @@ public class GraphFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (((ToggleButton) v).isChecked())
-                    mToggleButton.setText("Stop");
+                    mToggleButton.setText(R.string.stop);
                 else
-                    mToggleButton.setText("Start");
+                    mToggleButton.setText(R.string.start);
 
                 LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
                 if (activity != null && activity.mChatService != null) {
@@ -205,9 +203,9 @@ public class GraphFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (mToggleButton.isChecked())
-            mToggleButton.setText("Stop");
+            mToggleButton.setText(R.string.stop);
         else
-            mToggleButton.setText("Start");
+            mToggleButton.setText(R.string.start);
 
         LaunchPadFlightControllerActivity activity = ((LaunchPadFlightControllerActivity) getActivity());
         if (activity != null && activity.mChatService != null && activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED && activity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {

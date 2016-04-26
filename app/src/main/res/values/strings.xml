@@ -52,6 +52,8 @@
     <string name="roll">Roll</string>
     <string name="pitch">Pitch</string>
     <string name="yaw">Yaw</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
 
     <!-- Settings Dialog Fragment -->
     <string name="dialog_title">Settings</string>
