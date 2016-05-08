@@ -18,13 +18,16 @@
 
 package com.lauszus.launchpadflightcontrollerandroid.app;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +37,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class MapFragment extends SupportMapFragment {
     private GoogleMap mMap;
+
+    private final int GPS_PERMISSIONS_REQUEST = 0;
 
     @Override
     public void onResume() {
@@ -60,12 +65,19 @@ public class MapFragment extends SupportMapFragment {
                     .create().show();
         } else {
             setUpMapIfNeeded();
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
-            if (location != null) {
-                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 19.0f));
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+                if (location != null) {
+                    LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 19.0f));
+                }
             }
         }
+    }
+
+    private void enableMyLocationLayer() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            mMap.setMyLocationEnabled(true);
     }
 
     private void setUpMapIfNeeded() {
@@ -75,12 +87,33 @@ public class MapFragment extends SupportMapFragment {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                mMap.setMyLocationEnabled(true);
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    enableMyLocationLayer();
+                else
+                    requestPermissions(new String[] { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION }, GPS_PERMISSIONS_REQUEST);
                 mMap.getUiSettings().setCompassEnabled(true);
                 mMap.getUiSettings().setAllGesturesEnabled(true);
             } else {
                 Toast.makeText(getActivity(), "Google Maps is not available!", Toast.LENGTH_LONG).show();
                 getActivity().finish();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case GPS_PERMISSIONS_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted, yay!
+                    Toast.makeText(getActivity(), "Location permission granted", Toast.LENGTH_SHORT).show();
+                    enableMyLocationLayer();
+                } else {
+                    // Permission denied, boo!
+                    Toast.makeText(getActivity(), "Location permission required!", Toast.LENGTH_LONG).show();
+                    getActivity().finish();
+                }
             }
         }
     }
