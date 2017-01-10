@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:SeekBarArrows="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     tools:context=".LaunchPadFlightControllerActivity">
 
@@ -156,17 +157,37 @@
                     android:textColor="#ff33b5e5" />
             </TableRow>
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/Kp" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/Kp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/Kp"
+                SeekBarArrows:max="10"
+                SeekBarArrows:n_values="10000" />
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/Ki" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/Ki"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/Ki"
+                SeekBarArrows:max="100"
+                SeekBarArrows:n_values="10000" />
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/Kd" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/Kd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/Kd"
+                SeekBarArrows:max=".1"
+                SeekBarArrows:n_values="10000" />
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/IntLimit" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/IntLimit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/IntLimit"
+                SeekBarArrows:max="100"
+                SeekBarArrows:n_values="10000" />
 
         </TableLayout>
 

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:SeekBarArrows="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     tools:context=".LaunchPadFlightControllerActivity">
 
@@ -163,23 +164,53 @@
                     android:textColor="#ff33b5e5" />
             </TableRow>
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/AngleKp" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/AngleKp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/AngleKp"
+                SeekBarArrows:max="10"
+                SeekBarArrows:n_values="1000" />
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/HeadingKp" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/HeadingKp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/HeadingKp"
+                SeekBarArrows:max="10"
+                SeekBarArrows:n_values="1000" />
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/AngleMaxInc" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/AngleMaxInc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/AngleMaxInc"
+                SeekBarArrows:max="90"
+                SeekBarArrows:n_values="90" />
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/AngleMaxIncSonar" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/AngleMaxIncSonar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/AngleMaxIncSonar"
+                SeekBarArrows:max="90"
+                SeekBarArrows:n_values="90" />
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/StickScalingRollPitch" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/StickScalingRollPitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/StickScalingRollPitch"
+                SeekBarArrows:max="10"
+                SeekBarArrows:n_values="1000" />
 
-            <include layout="@layout/seekbar_arrows"
-                android:id="@+id/StickScalingYaw" />
+            <com.lauszus.launchpadflightcontrollerandroid.app.SeekBarArrows
+                android:id="@+id/StickScalingYaw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                SeekBarArrows:text="@string/StickScalingYaw"
+                SeekBarArrows:max="10"
+                SeekBarArrows:n_values="1000" />
 
         </TableLayout>
 

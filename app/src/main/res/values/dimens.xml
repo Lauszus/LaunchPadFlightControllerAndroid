@@ -6,7 +6,8 @@
 
     <dimen name="margin">10dp</dimen>
 
-    <!-- Up and down arrow buttons -->
+    <!-- Left and right arrow buttons -->
+    <dimen name="arrow_text_margin">10dp</dimen>
     <dimen name="arrow_size">35dp</dimen>
     <dimen name="arrow_margin">3sp</dimen>
 </resources>

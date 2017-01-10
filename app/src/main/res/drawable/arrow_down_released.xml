@@ -9,6 +9,7 @@
     </item>
 
     <item
+        android:top="@dimen/arrow_margin"
         android:left="@dimen/arrow_margin"
         android:right="@dimen/arrow_margin" >
         <bitmap android:src="@drawable/ic_find_next_mtrl_alpha" />

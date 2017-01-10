@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2015 Kristian Sloth Lauszus. All rights reserved.
+ * Copyright (C) 2016 Kristian Sloth Lauszus. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -18,35 +18,70 @@
 
 package com.lauszus.launchpadflightcontrollerandroid.app;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Handler;
-import android.support.annotation.StringRes;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.Locale;
 
-public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
+public class SeekBarArrows extends LinearLayout implements SeekBar.OnSeekBarChangeListener {
+    private static final String TAG = LaunchPadFlightControllerActivity.class.getSimpleName() + "/" + SeekBarArrows.class.getSimpleName();
     private SeekBar mSeekBar;
     private TextView mSeekBarValue;
     private float multiplier;
+    private int nValues;
 
-    SeekBarArrows(View v, @StringRes int resid, float max, float multiplier) {
-        mSeekBar = (SeekBar) v.findViewById(R.id.seekBar);
-        ((TextView) v.findViewById(R.id.text)).setText(resid);
-        mSeekBarValue = (TextView) v.findViewById(R.id.value);
-        this.multiplier = multiplier;
+    public SeekBarArrows(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
-        mSeekBar.setMax((int)(max / multiplier));
-        mSeekBar.setOnSeekBarChangeListener(this);
-        mSeekBar.setProgress(mSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
+        inflate(context, R.layout.seek_bar_arrows, this); // Use custom layout
+
+        TypedArray styledAttrs = getContext().obtainStyledAttributes(attrs, R.styleable.SeekBarArrows); // Read all attributes from xml
+
+        String mSeekBarText = styledAttrs.getString(R.styleable.SeekBarArrows_text);
+        float max = styledAttrs.getFloat(R.styleable.SeekBarArrows_max, 0);
+        nValues = styledAttrs.getInt(R.styleable.SeekBarArrows_n_values, 0);
+
+        mSeekBar = (SeekBar) findViewById(R.id.seekBar);
+        ((TextView) findViewById(R.id.text)).setText(mSeekBarText);
+        mSeekBarValue = (TextView) findViewById(R.id.value);
+
+        setMax(max); // Set maximum value
+        mSeekBar.setOnSeekBarChangeListener(this); // Set listener
+        mSeekBar.setProgress(mSeekBar.getMax() / 2); // Now center the SeekBar
 
         // Use custom OnArrowListener class to handle button click, button long click and if the button is held down
-        new OnArrowListener(v.findViewById(R.id.upArrow), mSeekBar, true);
-        new OnArrowListener(v.findViewById(R.id.downArrow), mSeekBar, false);
+        new OnArrowListener(findViewById(R.id.rightArrow), mSeekBar, true);
+        new OnArrowListener(findViewById(R.id.leftArrow), mSeekBar, false);
+
+        styledAttrs.recycle();
     }
+
+    public interface OnSeekBarArrowsChangeListener {
+        void onProgressChanged(float progress);
+    }
+
+    private OnSeekBarArrowsChangeListener mOnSeekBarArrowsChangeListener;
+
+    public void setOnSeekBarArrowsChangeListener(OnSeekBarArrowsChangeListener l) {
+        mOnSeekBarArrowsChangeListener = l;
+    }
+
+    /*public float getProgress() {
+        return mSeekBar.getProgress() * multiplier;
+    }
+
+    public void setProgress(float value) {
+        mSeekBar.setProgress((int) (value / multiplier));
+    }*/
 
     public int getProgress() {
         return mSeekBar.getProgress();
@@ -56,14 +91,35 @@ public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
         mSeekBar.setProgress(value);
     }
 
+    public float getMax() {
+        return mSeekBar.getMax() * multiplier;
+    }
+
+    public void setMax(float max) {
+        multiplier = max / (float)nValues;
+        mSeekBar.setMax(nValues);
+        Log.i(TAG, "Max: " + max + " Raw: " + mSeekBar.getMax() + " Multiplier: " + multiplier);
+    }
+
+    private String getFormat() {
+        return multiplier <= 0.00001f ? "%.5f" : multiplier <= 0.0001f ? "%.4f" : multiplier <= 0.001f ? "%.3f" : multiplier <= 0.01f ? "%.2f" : multiplier <= 0.1f ? "%.1f" : "%.0f";
+    }
+
+    public String progressToString(float value) {
+        String format = getFormat(); // Set decimal places according to multiplier
+        return String.format(Locale.US, format, value);
+    }
+
     public String progressToString(int value) {
-        final String format = multiplier == 0.00001f ? "%.5f" : multiplier == 0.0001f ? "%.4f" : multiplier == 0.001f ? "%.3f" : multiplier == 0.01f ? "%.2f" : multiplier == 0.1f ? "%.1f" : "%.0f"; // Set decimal places according to divider
-        return String.format(Locale.US, format, (float) value * multiplier); // SeekBar can only handle integers, so format it to a float with two decimal places
+        String format = getFormat(); // Set decimal places according to multiplier
+        return String.format(Locale.US, format, (float)value * multiplier); // SeekBar can only handle integers, so format it to a float
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mSeekBarValue.setText(progressToString(progress));
+        if (mOnSeekBarArrowsChangeListener != null)
+            mOnSeekBarArrowsChangeListener.onProgressChanged((float)progress * multiplier);
     }
 
     @Override
@@ -120,7 +176,7 @@ public class SeekBarArrows implements SeekBar.OnSeekBarChangeListener {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            switch(event.getAction()) {
+            switch (event.getAction()) {
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     handler.removeCallbacks(runnable); // Remove callback if button is released
