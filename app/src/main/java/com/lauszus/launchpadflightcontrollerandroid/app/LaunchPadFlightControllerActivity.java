@@ -141,7 +141,7 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
 
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.setOnTabSelectedListener(this);
+        mTabLayout.addOnTabSelectedListener(this);
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
 
@@ -358,7 +358,7 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
         private String mConnectedDeviceName; // Name of the connected device
 
         BluetoothHandler(LaunchPadFlightControllerActivity activity) {
-            mActivity  = new WeakReference<LaunchPadFlightControllerActivity>(activity);
+            mActivity  = new WeakReference<>(activity);
         }
 
         @Override

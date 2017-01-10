@@ -2,6 +2,17 @@ language: android
 
 sudo: false
 
+jdk:
+  - oraclejdk8
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
 android:
   components:
     # Use the latest revision of Android SDK Tools
@@ -9,11 +20,14 @@ android:
     - tools
 
     # The BuildTools version used by your project
-    - build-tools-23.0.3
+    - build-tools-25.0.2
 
     # The SDK version used to compile your project
-    - android-23
+    - android-25
 
     # Additional components
     - extra
     - addon
+
+script:
+  ./gradlew build
