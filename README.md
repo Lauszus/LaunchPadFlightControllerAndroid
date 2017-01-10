@@ -3,7 +3,7 @@
 
 The code is released under the GNU General Public License.
 _________
-[![Build Status](https://travis-ci.org/Lauszus/LaunchPadFlightControllerAndroid.svg)](https://travis-ci.org/Lauszus/LaunchPadFlightControllerAndroid)
+[![Build Status](https://travis-ci.org/Lauszus/LaunchPadFlightControllerAndroid.svg?branch=master)](https://travis-ci.org/Lauszus/LaunchPadFlightControllerAndroid)
 
 This the Android app intended to be used with my custom flight controller: https://github.com/Lauszus/LaunchPadFlightController.
 
