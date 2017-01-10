@@ -27,28 +27,24 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphView.LegendAlign;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
-import com.jjoe64.graphview.GraphViewStyle;
-import com.jjoe64.graphview.LineGraphView;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
-// TODO: Remove static
 public class GraphFragment extends Fragment {
     private static final String TAG = GraphFragment.class.getSimpleName();
     private static final boolean D = LaunchPadFlightControllerActivity.D;
 
-    private static LineGraphView graphView;
-    private static GraphViewSeries rollSeries, pitchSeries, yawSeries;
-    private final static int bufferSize = 1000;
+    private GraphView graphView;
+    private LineGraphSeries rollSeries, pitchSeries, yawSeries;
+    private final static int bufferSize = 500;
     private static double counter = bufferSize;
 
-    private static CheckBox mCheckBoxRoll, mCheckBoxPitch, mCheckBoxYaw;
-    public static ToggleButton mToggleButton;
+    private CheckBox mCheckBoxRoll, mCheckBoxPitch, mCheckBoxYaw;
+    public ToggleButton mToggleButton;
 
     private static double[][] buffer = new double[3][bufferSize + 1]; // Used to store last readings
 
@@ -65,56 +61,51 @@ public class GraphFragment extends Fragment {
         if (v == null)
             throw new RuntimeException();
 
-        GraphViewData[] data0 = new GraphViewData[bufferSize + 1];
-        GraphViewData[] data1 = new GraphViewData[bufferSize + 1];
-        GraphViewData[] data2 = new GraphViewData[bufferSize + 1];
+        DataPoint[] data0 = new DataPoint[bufferSize + 1];
+        DataPoint[] data1 = new DataPoint[bufferSize + 1];
+        DataPoint[] data2 = new DataPoint[bufferSize + 1];
 
         for (int i = 0; i < bufferSize + 1; i++) { // Restore last data
-            data0[i] = new GraphViewData(counter - bufferSize + i, buffer[0][i]);
-            data1[i] = new GraphViewData(counter - bufferSize + i, buffer[1][i]);
-            data2[i] = new GraphViewData(counter - bufferSize + i, buffer[2][i]);
+            data0[i] = new DataPoint(counter - bufferSize + i, buffer[0][i]);
+            data1[i] = new DataPoint(counter - bufferSize + i, buffer[1][i]);
+            data2[i] = new DataPoint(counter - bufferSize + i, buffer[2][i]);
         }
 
-        rollSeries = new GraphViewSeries("Roll", new GraphViewSeriesStyle(Color.RED, 2), data0);
-        pitchSeries = new GraphViewSeries("Pitch", new GraphViewSeriesStyle(Color.GREEN, 2), data1);
-        yawSeries = new GraphViewSeries("Yaw", new GraphViewSeriesStyle(Color.BLUE, 2), data2);
+        rollSeries = new LineGraphSeries<>(data0);
+        pitchSeries = new LineGraphSeries<>(data1);
+        yawSeries = new LineGraphSeries<>(data2);
 
-        graphView = new LineGraphView(getActivity(), "");
-        if (mCheckBoxRoll != null) {
-            if (mCheckBoxRoll.isChecked())
-                graphView.addSeries(rollSeries);
-        } else
-            graphView.addSeries(rollSeries);
-        if (mCheckBoxPitch != null) {
-            if (mCheckBoxPitch.isChecked())
-                graphView.addSeries(pitchSeries);
-        } else
-            graphView.addSeries(pitchSeries);
-        if (mCheckBoxYaw != null) {
-            if (mCheckBoxYaw.isChecked())
-                graphView.addSeries(yawSeries);
-        } else
-            graphView.addSeries(yawSeries);
+        rollSeries.setTitle("Roll");
+        pitchSeries.setTitle("Pitch");
+        yawSeries.setTitle("Yaw");
 
-        graphView.setManualYAxisBounds(180, -180);
-        graphView.setViewPort(0, bufferSize);
-        graphView.setScrollable(true);
-        graphView.setDisableTouch(true);
+        rollSeries.setColor(Color.RED);
+        pitchSeries.setColor(Color.GREEN);
+        yawSeries.setColor(Color.BLUE);
 
-        graphView.setShowLegend(true);
-        graphView.setLegendAlign(LegendAlign.BOTTOM);
-        graphView.scrollToEnd();
+        graphView = (GraphView) v.findViewById(R.id.linegraph);
 
-        GraphViewStyle mGraphViewStyle = new GraphViewStyle();
-        mGraphViewStyle.setNumHorizontalLabels(11);
-        graphView.setVerticalLabels(new String[]{ "180", "135", "90", "45", "0", "-45", "-90", "-135", "-180" });
-        mGraphViewStyle.setTextSize(15);
-        mGraphViewStyle.setLegendWidth(140);
-        mGraphViewStyle.setLegendMarginBottom(30);
+        graphView.getViewport().setXAxisBoundsManual(true);
+        graphView.getViewport().setMinX(0);
+        graphView.getViewport().setMaxX(bufferSize);
 
-        graphView.setGraphViewStyle(mGraphViewStyle);
+        graphView.getViewport().setYAxisBoundsManual(true);
+        graphView.getViewport().setMinY(-180);
+        graphView.getViewport().setMaxY(180);
 
-        ((LinearLayout) v.findViewById(R.id.linegraph)).addView(graphView);
+        graphView.getViewport().setScrollable(true);
+        graphView.getViewport().setScrollableY(false);
+
+        graphView.getViewport().setScalable(false);
+        graphView.getViewport().setScalableY(false);
+
+        graphView.getLegendRenderer().setVisible(true);
+        graphView.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
+
+        graphView.getGridLabelRenderer().setGridColor(Color.argb(100, 0x88, 0x88, 0x88)); // Transparent grey color
+        graphView.getGridLabelRenderer().setNumHorizontalLabels(11);
+        graphView.getGridLabelRenderer().setNumVerticalLabels(9);
+        graphView.getGridLabelRenderer().setTextSize(20);
 
         mCheckBoxRoll = (CheckBox) v.findViewById(R.id.checkBoxRoll);
         mCheckBoxRoll.setOnClickListener(new OnClickListener() {
@@ -126,6 +117,8 @@ public class GraphFragment extends Fragment {
                     graphView.removeSeries(rollSeries);
             }
         });
+        mCheckBoxRoll.callOnClick();
+
         mCheckBoxPitch = (CheckBox) v.findViewById(R.id.checkBoxPitch);
         mCheckBoxPitch.setOnClickListener(new OnClickListener() {
             @Override
@@ -136,6 +129,8 @@ public class GraphFragment extends Fragment {
                     graphView.removeSeries(pitchSeries);
             }
         });
+        mCheckBoxPitch.callOnClick();
+
         mCheckBoxYaw = (CheckBox) v.findViewById(R.id.checkBoxYaw);
         mCheckBoxYaw.setOnClickListener(new OnClickListener() {
             @Override
@@ -146,6 +141,9 @@ public class GraphFragment extends Fragment {
                     graphView.removeSeries(yawSeries);
             }
         });
+        mCheckBoxYaw.callOnClick();
+
+        graphView.getViewport().scrollToEnd(); // This has to be called after the series are added
 
         mToggleButton = (ToggleButton) v.findViewById(R.id.toggleButton);
         mToggleButton.setOnClickListener(new OnClickListener() {
@@ -191,12 +189,9 @@ public class GraphFragment extends Fragment {
         boolean scroll = mCheckBoxRoll.isChecked() || mCheckBoxPitch.isChecked() || mCheckBoxYaw.isChecked();
 
         counter++;
-        rollSeries.appendData(new GraphViewData(counter, buffer[0][bufferSize]), scroll, bufferSize + 1);
-        pitchSeries.appendData(new GraphViewData(counter, buffer[1][bufferSize]), scroll, bufferSize + 1);
-        yawSeries.appendData(new GraphViewData(counter, buffer[2][bufferSize]), scroll, bufferSize + 1);
-
-        if (!scroll)
-            graphView.redrawAll();
+        rollSeries.appendData(new DataPoint(counter, buffer[0][bufferSize]), scroll, bufferSize + 1, true);
+        pitchSeries.appendData(new DataPoint(counter, buffer[1][bufferSize]), scroll, bufferSize + 1, true);
+        yawSeries.appendData(new DataPoint(counter, buffer[2][bufferSize]), scroll, bufferSize + 1, false); // The final call will rerender the graph
     }
 
     @Override

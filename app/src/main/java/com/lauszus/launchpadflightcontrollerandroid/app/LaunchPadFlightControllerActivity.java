@@ -262,8 +262,9 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
                 mChatService.mBluetoothProtocol.getPIDSonarAltHold();
                 mChatService.mBluetoothProtocol.getPIDBaroAltHold();
             } else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
-                if (GraphFragment.mToggleButton != null) {
-                    if (GraphFragment.mToggleButton.isChecked())
+                GraphFragment graphFragment = (GraphFragment) getFragment(ViewPagerAdapter.GRAPH_FRAGMENT);
+                if (graphFragment != null) {
+                    if (graphFragment.mToggleButton.isChecked())
                         mChatService.mBluetoothProtocol.sendAngles((byte) 1); // Request data
                     else
                         mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending data
@@ -395,10 +396,13 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
                                     public void run() {
                                         LaunchPadFlightControllerActivity mLaunchPadFlightControllerActivity = mActivity.get();
                                         if (mLaunchPadFlightControllerActivity != null) {
-                                            if (GraphFragment.mToggleButton.isChecked())
-                                                mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.sendAngles((byte) 1); // Request data
-                                            else
-                                                mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending data
+                                            GraphFragment graphFragment = (GraphFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.GRAPH_FRAGMENT);
+                                            if (graphFragment != null) {
+                                                if (graphFragment.mToggleButton.isChecked())
+                                                    mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.sendAngles((byte) 1); // Request data
+                                                else
+                                                    mLaunchPadFlightControllerActivity.mChatService.mBluetoothProtocol.sendAngles((byte) 0); // Stop sending data
+                                            }
                                         }
                                     }
                                 }, 2000); // Wait 2 seconds before sending the message
