@@ -27,14 +27,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Set;
@@ -45,7 +47,7 @@ import java.util.Set;
  * the MAC address of the device is sent back to the parent Activity in the
  * result Intent.
  */
-public class DeviceListActivity extends Activity {
+public class DeviceListActivity extends AppCompatActivity {
     // Debugging
     private static final String TAG = DeviceListActivity.class.getSimpleName();
     private static final boolean D = LaunchPadFlightControllerActivity.D;
@@ -58,14 +60,18 @@ public class DeviceListActivity extends Activity {
     // Member fields
     private BluetoothAdapter mBtAdapter;
     private CustomArrayAdapter mNewDevicesArrayAdapter;
+    private ProgressBar mProgressBar;
 
     @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     protected void onCreate(Bundle savedInstanceState) {
-        // Setup the window
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_list);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.device_list_toolbar));
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_spinner);
+        mProgressBar.setScaleX(.5f); // Make the progress bar half the size
+        mProgressBar.setScaleY(.5f);
 
         LaunchPadFlightControllerActivity.stopRetrying = true; // Stop retrying connecting to another device
 
@@ -76,10 +82,11 @@ public class DeviceListActivity extends Activity {
         Button scanButton = (Button) findViewById(R.id.button_scan);
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (!LaunchPadFlightControllerActivity.isEmulator()) {
+                if (!LaunchPadFlightControllerActivity.isEmulator())
                     doDiscovery();
-                    v.setVisibility(View.GONE);
-                }
+                else
+                    mProgressBar.setVisibility(View.VISIBLE); // Just show the progress bar in the emulator
+                v.setVisibility(View.GONE);
             }
         });
 
@@ -135,9 +142,9 @@ public class DeviceListActivity extends Activity {
     }
 
     private class CustomArrayAdapter extends ArrayAdapter<String> {
-        boolean selectable;
+        private boolean selectable;
 
-        public CustomArrayAdapter(Context context, int resource) {
+        CustomArrayAdapter(Context context, int resource) {
             super(context, resource);
             this.selectable = true; // Selectable by default
         }
@@ -147,7 +154,7 @@ public class DeviceListActivity extends Activity {
          *
          * @param selectable Set to false to set it non-selectable.
          */
-        public void setSelectable(boolean selectable) {
+        void setSelectable(boolean selectable) {
             this.selectable = selectable;
         }
 
@@ -176,7 +183,7 @@ public class DeviceListActivity extends Activity {
             Log.d(TAG, "doDiscovery()");
 
         // Indicate scanning in the title
-        setProgressBarIndeterminateVisibility(true);
+        mProgressBar.setVisibility(View.VISIBLE);
         setTitle(R.string.scanning);
 
         // Turn on sub-title for new devices
@@ -231,7 +238,7 @@ public class DeviceListActivity extends Activity {
                         mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) { // When discovery is finished, change the Activity title
-                setProgressBarIndeterminateVisibility(false);
+                mProgressBar.setVisibility(View.GONE);
                 setTitle(R.string.select_device);
                 if (mNewDevicesArrayAdapter.getCount() == 0) {
                     String noDevices = getResources().getText(R.string.none_found).toString();

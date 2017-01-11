@@ -20,5 +20,8 @@
         <!-- Inspired by "@android:style/Theme.Dialog" -->
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
+
+        <!-- This is used to insert margin at the top and bottom of the activity dialog -->
+        <item name="android:windowBackground">@color/transparent</item>
     </style>
 </resources>

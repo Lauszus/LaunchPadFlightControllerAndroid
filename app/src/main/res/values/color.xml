@@ -4,4 +4,8 @@
     <color name="arrow_background_pressed">#FF575757</color>
     <color name="arrow_background_released">#FF2D2D2D</color>
     <color name="arrow_border">#FF646464</color>
+
+    <!-- Colors for dialog activity -->
+    <color name="dialogBackground">@color/background_floating_material_dark</color>
+    <color name="transparent">#00000000</color>
 </resources>

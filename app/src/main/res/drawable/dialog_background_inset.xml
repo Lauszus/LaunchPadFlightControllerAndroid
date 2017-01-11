@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This inset is used add top and bottom margin to the activity dialog -->
+<inset
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@color/dialogBackground"
+    android:insetTop="@dimen/margin"
+    android:insetBottom="@dimen/margin">
+</inset>
