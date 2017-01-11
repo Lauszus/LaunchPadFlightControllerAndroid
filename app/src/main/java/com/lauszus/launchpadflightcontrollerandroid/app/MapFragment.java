@@ -61,8 +61,10 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                             new DialogInterface.OnClickListener() {
                                 public void onClick(final DialogInterface dialog, final int id) {
                                     dialog.cancel();
-                                    Toast.makeText(getActivity(), "GPS must be on in order to use this application!", Toast.LENGTH_LONG).show();
-                                    getActivity().finish();
+                                    if (!LaunchPadFlightControllerActivity.isEmulator()) {
+                                        Toast.makeText(getActivity(), "GPS must be on in order to use this application!", Toast.LENGTH_LONG).show();
+                                        getActivity().finish();
+                                    }
                                 }
                             })
                     .create().show();

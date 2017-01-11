@@ -110,6 +110,17 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
     ViewPager mViewPager;
     ViewPagerAdapter mViewPagerAdapter;
 
+    /**
+     * Used to check if the app is running on an emulator or not.
+     * See: http://stackoverflow.com/a/5864867.
+     * @return True if the app is running on an emulator.
+     */
+    public static boolean isEmulator() {
+        if (D)
+            Log.d(TAG, "Brand: " + Build.BRAND);
+        return Build.BRAND.startsWith("generic");
+    }
+
     @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +134,7 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // If the adapter is null, then Bluetooth is not supported
-        if (mBluetoothAdapter == null) {
+        if (mBluetoothAdapter == null && !isEmulator()) {
             showToast("Bluetooth is not available", Toast.LENGTH_LONG);
             finish();
             return;
@@ -164,7 +175,7 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
             Log.d(TAG, "++ ON START ++");
         // If BT is not on, request that it be enabled.
         // setupChat() will then be called during onActivityResult
-        if (!mBluetoothAdapter.isEnabled()) {
+        if (!isEmulator() && !mBluetoothAdapter.isEnabled()) {
             if (D)
                 Log.d(TAG, "Request enable BT");
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);

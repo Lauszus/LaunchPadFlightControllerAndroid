@@ -76,8 +76,10 @@ public class DeviceListActivity extends Activity {
         Button scanButton = (Button) findViewById(R.id.button_scan);
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                doDiscovery();
-                v.setVisibility(View.GONE);
+                if (!LaunchPadFlightControllerActivity.isEmulator()) {
+                    doDiscovery();
+                    v.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -111,13 +113,20 @@ public class DeviceListActivity extends Activity {
             mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // Get a set of currently paired devices
-        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+        Set<BluetoothDevice> pairedDevices = null;
+        if (!LaunchPadFlightControllerActivity.isEmulator())
+            pairedDevices = mBtAdapter.getBondedDevices();
 
         // If there are paired devices, add each one to the ArrayAdapter
         if (pairedDevices != null && pairedDevices.size() > 0) {
             findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
             for (BluetoothDevice device : pairedDevices)
                 mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+        } else if (LaunchPadFlightControllerActivity.isEmulator()) {
+            findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
+            mPairedDevicesArrayAdapter.setSelectable(false);
+            for (int i = 0; i < 3; i++)
+                mPairedDevicesArrayAdapter.add("Name" + i + "\nXX:XX:XX:XX:XX:XX");
         } else {
             String noDevices = getResources().getText(R.string.none_paired).toString();
             mPairedDevicesArrayAdapter.add(noDevices);
