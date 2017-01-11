@@ -19,7 +19,6 @@
 package com.lauszus.launchpadflightcontrollerandroid.app;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -319,12 +318,12 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
         switch (requestCode) {
             case REQUEST_CONNECT_DEVICE:
                 // When DeviceListActivity returns with a device to connect to
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == AppCompatActivity.RESULT_OK)
                     connectDevice(data, false);
                 break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == AppCompatActivity.RESULT_OK)
                     setupBTService(); // Bluetooth is now enabled, so set up a chat session
                 else {
                     // User did not enable Bluetooth or an error occurred

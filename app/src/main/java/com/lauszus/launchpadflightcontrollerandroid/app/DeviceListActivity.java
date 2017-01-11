@@ -17,7 +17,6 @@
 package com.lauszus.launchpadflightcontrollerandroid.app;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -76,7 +75,7 @@ public class DeviceListActivity extends AppCompatActivity {
         LaunchPadFlightControllerActivity.stopRetrying = true; // Stop retrying connecting to another device
 
         // Set result CANCELED in case the user backs out
-        setResult(Activity.RESULT_CANCELED);
+        setResult(AppCompatActivity.RESULT_CANCELED);
 
         // Initialize the button to perform device discovery
         Button scanButton = (Button) findViewById(R.id.button_scan);
@@ -218,7 +217,7 @@ public class DeviceListActivity extends AppCompatActivity {
             intent.putExtra(EXTRA_NEW_DEVICE, new_device);
 
             // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent);
+            setResult(AppCompatActivity.RESULT_OK, intent);
             finish();
         }
     };

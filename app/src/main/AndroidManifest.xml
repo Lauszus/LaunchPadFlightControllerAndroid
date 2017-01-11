@@ -44,7 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DeviceListActivity" android:label="@string/select_device" android:theme="@style/dialog_theme" />
+        <activity android:name=".DeviceListActivity" android:label="@string/select_device" android:theme="@style/AppTheme.DialogTheme" />
     </application>
 
 </manifest>
