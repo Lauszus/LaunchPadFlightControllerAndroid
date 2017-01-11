@@ -117,7 +117,7 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
     public static boolean isEmulator() {
         if (D)
             Log.d(TAG, "Brand: " + Build.BRAND);
-        return Build.BRAND.startsWith("generic");
+        return Build.BRAND.startsWith("generic") || Build.BRAND.equalsIgnoreCase("android");
     }
 
     @Override
