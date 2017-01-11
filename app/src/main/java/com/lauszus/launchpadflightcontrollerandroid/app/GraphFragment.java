@@ -169,22 +169,16 @@ public class GraphFragment extends Fragment {
         return v;
     }
 
-    public void updateAngles(String rollValue, String pitchValue, String yawValue) {
-        if (mToggleButton == null || !(mToggleButton.isChecked()))
+    public void updateAngles(float rollValue, float pitchValue, float yawValue) {
+        if (mToggleButton == null || !mToggleButton.isChecked())
             return;
 
         for (int i = 0; i < 3; i++)
             System.arraycopy(buffer[i], 1, buffer[i], 0, bufferSize);
 
-        try { // In some rare occasions the values can be corrupted
-            buffer[0][bufferSize] = Double.parseDouble(rollValue);
-            buffer[1][bufferSize] = Double.parseDouble(pitchValue);
-            buffer[2][bufferSize] = Double.parseDouble(yawValue) - 180.0;
-        } catch (NumberFormatException e) {
-            if (D)
-                Log.e(TAG, "Error in input", e);
-            return;
-        }
+        buffer[0][bufferSize] = rollValue;
+        buffer[1][bufferSize] = pitchValue;
+        buffer[2][bufferSize] = yawValue - 180.0; // Convert from [0,360] to [-180,180]
 
         boolean scroll = mCheckBoxRoll.isChecked() || mCheckBoxPitch.isChecked() || mCheckBoxYaw.isChecked();
 

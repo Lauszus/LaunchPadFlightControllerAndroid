@@ -442,8 +442,9 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
 
                         if (data.containsKey(ROLL_ANGLE) && data.containsKey(PITCH_ANGLE) && data.containsKey(YAW_ANGLE)) {
                             graphFragment = (GraphFragment) mLaunchPadFlightControllerActivity.getFragment(ViewPagerAdapter.GRAPH_FRAGMENT);
-                            if (graphFragment != null)
-                                graphFragment.updateAngles(data.getString(ROLL_ANGLE), data.getString(PITCH_ANGLE), data.getString(YAW_ANGLE));
+                            if (graphFragment != null) {
+                                graphFragment.updateAngles(data.getFloat(ROLL_ANGLE), data.getFloat(PITCH_ANGLE), data.getFloat(YAW_ANGLE));
+                            }
                         }
                     }
                     break;

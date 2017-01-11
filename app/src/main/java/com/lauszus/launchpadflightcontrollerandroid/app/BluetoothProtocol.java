@@ -406,10 +406,9 @@ public class BluetoothProtocol {
                         int pitch = input[2] | ((byte) input[3] << 8); // This can be negative as well
                         int yaw = input[4] | (input[5] << 8); // Heading is always positive
 
-                        // TODO: Just store this as an int
-                        bundle.putString(LaunchPadFlightControllerActivity.ROLL_ANGLE, String.format(Locale.ENGLISH, "%.2f", (float) roll / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.PITCH_ANGLE, String.format(Locale.ENGLISH, "%.2f", (float) pitch / 100.0f));
-                        bundle.putString(LaunchPadFlightControllerActivity.YAW_ANGLE, String.format(Locale.ENGLISH, "%.2f", (float) yaw / 100.0f));
+                        bundle.putFloat(LaunchPadFlightControllerActivity.ROLL_ANGLE, (float) roll / 100.0f);
+                        bundle.putFloat(LaunchPadFlightControllerActivity.PITCH_ANGLE, (float) pitch / 100.0f);
+                        bundle.putFloat(LaunchPadFlightControllerActivity.YAW_ANGLE, (float) yaw / 100.0f);
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
