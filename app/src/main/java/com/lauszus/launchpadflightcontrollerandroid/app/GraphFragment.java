@@ -178,7 +178,9 @@ public class GraphFragment extends Fragment {
 
         buffer[0][bufferSize] = rollValue;
         buffer[1][bufferSize] = pitchValue;
-        buffer[2][bufferSize] = yawValue - 180.0; // Convert from [0,360] to [-180,180]
+        if (yawValue > 180) // Convert from [0,360] to [-180,180]
+            yawValue -= 360;
+        buffer[2][bufferSize] = yawValue;
 
         boolean scroll = mCheckBoxRoll.isChecked() || mCheckBoxPitch.isChecked() || mCheckBoxYaw.isChecked();
 
