@@ -115,9 +115,11 @@ public class LaunchPadFlightControllerActivity extends AppCompatActivity impleme
      * @return True if the app is running on an emulator.
      */
     public static boolean isEmulator() {
-        if (D)
+        if (D) {
             Log.d(TAG, "Brand: " + Build.BRAND);
-        return Build.BRAND.startsWith("generic") || Build.BRAND.equalsIgnoreCase("android");
+            return Build.BRAND.startsWith("generic") || Build.BRAND.equalsIgnoreCase("android");
+        }
+        return false; // Always return false if it is a release build
     }
 
     @Override
